@@ -1,6 +1,7 @@
 package com.example.group_9_project.ui.model;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -21,12 +22,17 @@ public class InspectionReport {
     }
     ArrayList<String> violLump;
 
-
+    //constructor
+    //might change
     public InspectionReport() {
-
+        violLump = new ArrayList<String>();
+        int numCritical=0;
+        int numNonCritical=0;
+        int numTotal=0;
     }
 
-
+    //needs testing
+    //returns "when something happened in intelligent format" as a string
     public String getInspectDateString() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -44,10 +50,15 @@ public class InspectionReport {
             //May 12
             int month = extractMonth();
             int date = extractDate();
-            //put into localdate or smth
+            //put into string
+            inspectDateSt = Month.of(month).name() + date;
         }
         else{
             //May 2018
+            int month = extractMonth();
+            int year = extractYear();
+
+            inspectDateSt = Month.of(month).name() + year;
         }
 
         return inspectDateSt;
@@ -64,7 +75,8 @@ public class InspectionReport {
     }
 
     private int extractYear(){
-        return 0;
+        int year = inspectDate/10000;
+        return year;
     }
 
 }
