@@ -40,11 +40,31 @@ public class InspectionReport {
             inspectDateSt = days + "days ago";
         }
         //less than a year ago
+        else if(inspectDate < currDate + 365){
+            //May 12
+            int month = extractMonth();
+            int date = extractDate();
+            //put into localdate or smth
+        }
+        else{
+            //May 2018
+        }
 
         return inspectDateSt;
     }
 
-    private int dateToInt(LocalDate date){
-
+    private int extractMonth(){
+        int month = (inspectDate % 10000)/100;
+        return month;
     }
+
+    private int extractDate(){
+        int date = inspectDate % 100;
+        return date;
+    }
+
+    private int extractYear(){
+        return 0;
+    }
+
 }
