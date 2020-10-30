@@ -26,12 +26,27 @@ public class RestaurantManager {
         return null;
     }
 
-    //add restaurant r to the manager
+    //needs testing
+    //add restaurant r to the manager, maintain order
     public void addRestaurant(Restaurant r){
-        manager.add(r);
+        if(manager.size() == 0){
+            manager.add(r);
+        }
+        else{
+            int i = 0;
+            Restaurant curr = manager.get(i);
+            while((curr.getName()).compareTo(r.getName()) <= 0 || i <manager.size()){
+                i++;
+                curr = manager.get(i);
+            }
+            manager.add(i, r);
+        }
     }
 
+    //sorts manager in alphabetical order by name
+    private void sortRestaurants(){
 
+    }
 
 
 }
