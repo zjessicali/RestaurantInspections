@@ -8,11 +8,11 @@ public class Restaurant {
     enum FacType{RESTAURANT}
     double latitude;
     double longitude;
-    //inspection reports?
+    InspectionManager inspections;
 
 
-    public Restaurant() {
-
+    public Restaurant(String tracking) {
+        this.trackingNum = tracking;
     }
 
     public String getName() {
@@ -68,5 +68,18 @@ public class Restaurant {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "trackingNum='" + trackingNum + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

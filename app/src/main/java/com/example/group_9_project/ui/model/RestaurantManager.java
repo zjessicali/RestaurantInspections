@@ -43,10 +43,8 @@ public class RestaurantManager {
         }
     }
 
-    //sorts manager in alphabetical order by name
-    private void sortRestaurants(){
 
-    }
+
 
 
 }
