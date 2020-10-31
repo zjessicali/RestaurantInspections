@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        restaurants = new RestaurantManager();
 
         readRestaurantData();
     }
@@ -46,11 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
                 //Read data
                 Restaurant r = new Restaurant(removeQuotes(tokens[0]));
-
+                r.setName(removeQuotes(tokens[1]));
+                r.setAddress(removeQuotes(tokens[2]));
+                r.setCity(removeQuotes(tokens[3]));
+                r.setFacType(removeQuotes(tokens[4]));
+                r.setLatitude(Double.parseDouble(tokens[5]));
+                r.setLongitude(Double.parseDouble(tokens[6]));
 
                 restaurants.addRestaurant(r);
                 Log.d("MyActivity", "Just created: " + r);
-
+                //Log.d("MyActivity", "Manager size: " + r);
             }
 
         }catch(IOException e){
@@ -60,8 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Used https://stackoverflow.com/questions/2608665/how-can-i-trim-beginning-and-ending-double-quotes-from-a-string/34406001#:~:text=To%20remove%20one%20or%20more,%2B%24%22%2C%20%22%22)%3B
     private String removeQuotes(String s){
-        String noQuotes = s.substring(1, s.length()-1);
+        //check if its "" first
+        String noQuotes = "";
+        if(s.startsWith("\"") && s.endsWith("\"")){
+            noQuotes = s.substring(1, s.length()-1);
+        }
         return noQuotes;
     }
 

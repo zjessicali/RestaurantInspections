@@ -1,18 +1,20 @@
 package com.example.group_9_project.ui.model;
 
 public class Restaurant {
-    String trackingNum;
-    String name;
-    String address;
-    String city;
-    enum FacType{RESTAURANT}
-    double latitude;
-    double longitude;
-    InspectionManager inspections;
+    private String trackingNum;
+    private String name;
+    private String address;
+    private String city;
+    public enum FacType{RESTAURANT}
+    private FacType type;
+    private double latitude;
+    private double longitude;
+    private InspectionManager inspections;
 
 
     public Restaurant(String tracking) {
         this.trackingNum = tracking;
+        this.type = FacType.RESTAURANT;
     }
 
     public String getName() {
@@ -44,6 +46,10 @@ public class Restaurant {
         return longitude;
     }
 
+    public FacType getType() {
+        return type;
+    }
+
     //setters
 
     public void setTrackingNum(String trackingNum) {
@@ -70,6 +76,19 @@ public class Restaurant {
         this.longitude = longitude;
     }
 
+    public void setFacType(String s){
+        if(s == "Restaurant"){
+            this.type = FacType.RESTAURANT;
+        }
+    }
+
+    public InspectionManager getInspections() {
+        return inspections;
+    }
+
+    public void setInspections(InspectionManager inspections) {
+        this.inspections = inspections;
+    }
 
     @Override
     public String toString() {
@@ -78,6 +97,7 @@ public class Restaurant {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +
+                ", factype='" + type + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';

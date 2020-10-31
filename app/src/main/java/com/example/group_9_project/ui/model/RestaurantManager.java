@@ -7,7 +7,7 @@ public class RestaurantManager {
     ArrayList<Restaurant> manager;
 
     //constructor
-    public RestaurantManager(ArrayList<Restaurant> manager) {
+    public RestaurantManager() {
         this.manager = new ArrayList<Restaurant>();
     }
 
@@ -26,6 +26,10 @@ public class RestaurantManager {
         return null;
     }
 
+    public int getSize(){
+        return manager.size();
+    }
+
     //needs testing
     //add restaurant r to the manager, maintain order
     public void addRestaurant(Restaurant r){
@@ -33,11 +37,12 @@ public class RestaurantManager {
             manager.add(r);
         }
         else{
+            //manager.add(r);
             int i = 0;
             Restaurant curr = manager.get(i);
-            while((curr.getName()).compareTo(r.getName()) <= 0 || i <manager.size()){
-                i++;
+            while( i <manager.size() && (curr.getName()).compareTo(r.getName()) <= 0 ){
                 curr = manager.get(i);
+                i++;
             }
             manager.add(i, r);
         }
