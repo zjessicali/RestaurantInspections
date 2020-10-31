@@ -1,7 +1,6 @@
-package com.example.group_9_project.ui.model;
+package com.example.group_9_project.main.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 //Stores restaurants in an object
 public class RestaurantManager {
