@@ -13,7 +13,7 @@ public class InspectionReport {
     }
     public enum HazardRating {
         LOW,
-        MEDIUM,
+        MODERATE,
         HIGH
         }
     //private String trackingNum;
@@ -21,7 +21,6 @@ public class InspectionReport {
     private InspType type;
     private int numCritical;
     private int numNonCritical;
-    private int numTotal;
     private HazardRating hazard;
     private ArrayList<String> violLump;
 
@@ -50,10 +49,6 @@ public class InspectionReport {
 
     public int getNumNonCritical() {
         return numNonCritical;
-    }
-
-    public int getNumTotal() {
-        return numTotal;
     }
 
     public HazardRating getHazard() {
@@ -113,6 +108,17 @@ public class InspectionReport {
 
     //public String getFullDate()
 
+    @Override
+    public String toString() {
+        return "InspectionReport{" +
+                "inspectDate=" + inspectDate +
+                ", type=" + type +
+                ", numCritical=" + numCritical +
+                ", numNonCritical=" + numNonCritical +
+                ", hazard=" + hazard +
+                ", violLump=" + violLump +
+                '}';
+    }
 
 
     //setters
@@ -143,15 +149,25 @@ public class InspectionReport {
         this.numNonCritical = numNonCritical;
     }
 
-    public void setNumTotal(int numTotal) {
-        this.numTotal = numTotal;
-    }
-
     public void setHazard(HazardRating hazard) {
         this.hazard = hazard;
     }
 
-    public void setViolLump(ArrayList<String> violLump) {
-        this.violLump = violLump;
+    public void setHazard(String rating){
+        switch(rating){
+            case "Low":
+                this.hazard = HazardRating.LOW;
+                break;
+            case "Moderate":
+                this.hazard = HazardRating.MODERATE;
+                break;
+            case "High":
+                this.hazard = HazardRating.HIGH;
+                break;
+        }
+    }
+
+    public void addViolLump(String s) {
+        this.violLump.add(s);
     }
 }

@@ -51,6 +51,11 @@ public class Restaurant {
         return type;
     }
 
+    //returns the inspection manager
+    public InspectionManager getInspections() {
+        return inspections;
+    }
+
     //setters
 
     public void setTrackingNum(String trackingNum) {
@@ -83,13 +88,13 @@ public class Restaurant {
         }
     }
 
-    public InspectionManager getInspections() {
-        return inspections;
+    //add an inspection report to the manager
+    public void addInspection(InspectionReport report){
+        inspections.addInspection(report);
     }
 
-    public void setInspections(InspectionManager inspections) {
-        this.inspections = inspections;
-    }
+
+
 
     @Override
     public String toString() {

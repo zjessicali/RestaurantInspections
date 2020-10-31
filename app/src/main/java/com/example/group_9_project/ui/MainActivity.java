@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readInspectionData() {
-        InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
+        InputStream is = getResources().openRawResource(R.raw.inspectionreports_itr1);
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is, Charset.forName("UTF-8"))
         );
@@ -48,20 +48,25 @@ public class MainActivity extends AppCompatActivity {
                 //Read data
 
                 InspectionReport inspection = new InspectionReport();
+                String trackingNum = removeQuotes(tokens[0]);
                 inspection.setInspectDate(Integer.parseInt(tokens[1]));
-                inspection.set
+                //inspection.set
+                inspection.setNumCritical(Integer.parseInt(tokens[3]));
+                inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
+                inspection.setHazard(removeQuotes(tokens[5]));
 
-//                Restaurant r = new Restaurant(removeQuotes(tokens[0]));
-//                r.setName(removeQuotes(tokens[1]));
-//                r.setAddress(removeQuotes(tokens[2]));
-//                r.setCity(removeQuotes(tokens[3]));
-//                r.setFacType(removeQuotes(tokens[4]));
-//                r.setLatitude(Double.parseDouble(tokens[5]));
-//                r.setLongitude(Double.parseDouble(tokens[6]));
-//
-//                restaurants.addRestaurant(r);
-//                Log.d("MyActivity", "Just created: " + r);
-//                //Log.d("MyActivity", "Manager size: " + r);
+                if(tokens.length >=7 && tokens[6].length() > 0){
+                    for(int i = 6; i < 9; i++){
+                        inspection.addViolLump(removeQuotes(tokens[i]));
+                    }
+                }
+
+                Log.d("MyActivity", "Tracking number: " + trackingNum);
+                if(restaurants.getRestFromTracking(trackingNum) != null){
+                    restaurants.getRestFromTracking(trackingNum).addInspection(inspection);
+                    Log.d("MyActivity", "Just created: " + inspection);
+                }
+
             }
 
         }catch(IOException e){
@@ -97,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 r.setLongitude(Double.parseDouble(tokens[6]));
 
                 restaurants.addRestaurant(r);
-                Log.d("MyActivity", "Just created: " + r);
-                //Log.d("MyActivity", "Manager size: " + r);
+                //Log.d("MyActivity", "Just created: " + r);
             }
 
         }catch(IOException e){
@@ -114,6 +118,12 @@ public class MainActivity extends AppCompatActivity {
         String noQuotes = "";
         if(s.startsWith("\"") && s.endsWith("\"")){
             noQuotes = s.substring(1, s.length()-1);
+        }
+        else if(s.startsWith("\"")){
+            noQuotes = s.substring(1, s.length());
+        }
+        else if(s.endsWith("\"")){
+            noQuotes = s.substring(0, s.length()-1);
         }
         return noQuotes;
     }

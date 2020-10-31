@@ -40,6 +40,7 @@ public class RestaurantManager {
             //manager.add(r);
             int i = 0;
             Restaurant curr = manager.get(i);
+            i++;
             while( i <manager.size() && (curr.getName()).compareTo(r.getName()) <= 0 ){
                 curr = manager.get(i);
                 i++;
@@ -47,6 +48,8 @@ public class RestaurantManager {
             manager.add(i, r);
         }
     }
+
+
 
 
 
