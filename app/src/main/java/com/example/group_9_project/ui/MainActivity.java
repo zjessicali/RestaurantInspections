@@ -28,23 +28,9 @@ public class MainActivity extends AppCompatActivity {
         readRestaurantData();
         readInspectionData();
 
+
         testOrder();
-    }
-
-    //will delete later
-    private void testOrder() {
-        for(int i = 0; i < restaurants.getSize();i++){
-            Log.d("MyActivity", "Restaurant name: "+ restaurants.getRestFromIndex(i).getName() );
-        }
-        Log.d("MyActivity", "------------------------------------------------------------------------" );
-        for(int i = 0; i < restaurants.getSize();i++){
-            Log.d("MyActivity", "-----------" + i + "----------------" );
-            for(int j = 0; j < restaurants.getRestFromIndex(i).getInspections().getSize(); j++){
-                Log.d("MyActivity", "Inspection Date: "+ restaurants.getRestFromIndex(i).getInspections().getInspection(j).getInspectDate() );
-
-            }
-        }
-
+        testDates();
     }
 
     private void readInspectionData() {
@@ -93,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     //based on Brian Fraser's video
+
     private void readRestaurantData() {
         InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
         BufferedReader reader = new BufferedReader(
@@ -128,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
     //Used https://stackoverflow.com/questions/2608665/how-can-i-trim-beginning-and-ending-double-quotes-from-a-string/34406001#:~:text=To%20remove%20one%20or%20more,%2B%24%22%2C%20%22%22)%3B
     private String removeQuotes(String s){
         //check if its "" first
@@ -144,6 +129,30 @@ public class MainActivity extends AppCompatActivity {
         }
         return noQuotes;
     }
+    //will delete later
 
+    private void testOrder() {
+        for(int i = 0; i < restaurants.getSize();i++){
+            Log.d("MyActivity", "Restaurant name: "+ restaurants.getRestFromIndex(i).getName() );
+        }
+        Log.d("MyActivity", "------------------------------------------------------------------------" );
+        for(int i = 0; i < restaurants.getSize();i++){
+            Log.d("MyActivity", "-----------" + i + "----------------" );
+            for(int j = 0; j < restaurants.getRestFromIndex(i).getInspections().getSize(); j++){
+                Log.d("MyActivity", "Inspection Date: "+ restaurants.getRestFromIndex(i).getInspections().getInspection(j).getInspectDate() );
 
+            }
+        }
+
+    }
+
+    private void testDates() {
+        InspectionReport tested = restaurants.getRestFromIndex(2).getInspections().getInspection(0);
+        int date = tested.getInspectDate();
+        Log.d("MyActivity", "Inspect Date: " + date);
+        String intelligent = tested.getInspectDateString();
+        Log.d("MyActivity", "Inspect Date Intelligent: " + intelligent);
+        String full = tested.getFullDate();
+        Log.d("MyActivity", "Inspect Date Full: " + full);
+    }
 }

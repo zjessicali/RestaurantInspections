@@ -1,5 +1,6 @@
 package com.example.group_9_project.ui.model;
 
+//Restaurant object with data about the restaurant as well as all the inspections
 public class Restaurant {
     private String trackingNum;
     private String name;
@@ -26,6 +27,7 @@ public class Restaurant {
         return address;
     }
 
+    //gets gps coordinates latitude x longitude
     public String getCoords() {
         String coords = "" + latitude + " x " + longitude;
         return coords;

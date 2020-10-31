@@ -5,6 +5,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+//Inspection Report with details about the inspection, as well as the violation
 public class InspectionReport {
     public enum InspType {
         ROUTINE,
@@ -25,7 +26,6 @@ public class InspectionReport {
     private ArrayList<String> violLump;
 
     //constructor
-    //might change
     public InspectionReport() {
         violLump = new ArrayList<String>();
         int numCritical = 0;
@@ -39,10 +39,12 @@ public class InspectionReport {
         return inspectDate;
     }
 
+    //gets inspect type
     public InspType getInspType() {
         return type;
     }
 
+    //gets inspect type formatted as a string
     public String getInspTypeStr(){
         String st = "";
         switch(type){
@@ -81,23 +83,30 @@ public class InspectionReport {
 
         String inspectDateSt = "";
         //within 30 days
-        if (inspectDate <= currDate + 30) {
+        if (inspectDate >= currDate - 100) {
             int days = currDate - inspectDate;
-            inspectDateSt = days + "days ago";
+            inspectDateSt = days + " days ago";
         }
         //less than a year ago
-        else if (inspectDate < currDate + 365) {
+        else if (inspectDate > currDate - 10000) {
             //May 12
             int month = extractMonth();
             int date = extractDate();
+
+            String st = Month.of(month).name();
+            String monthSt = st.substring(0,1) + st.substring(1, st.length()).toLowerCase();
+
             //put into string
-            inspectDateSt = Month.of(month).name() + date;
+            inspectDateSt = monthSt + " " + date;
         } else {
             //May 2018
             int month = extractMonth();
             int year = extractYear();
 
-            inspectDateSt = Month.of(month).name() + year;
+            String st = Month.of(month).name();
+            String monthSt = st.substring(0,1) + st.substring(1, st.length()).toLowerCase();
+
+            inspectDateSt = monthSt + " " + year;
         }
 
         return inspectDateSt;
@@ -118,7 +127,23 @@ public class InspectionReport {
         return year;
     }
 
-    //public String getFullDate()
+    //gets full date, ex: May 12, 2018
+    public String getFullDate(){
+        String fullDate = "";
+        int month = extractMonth();
+        String st = Month.of(month).name();
+        String monthSt = st.substring(0,1) + st.substring(1, st.length()).toLowerCase();
+
+        fullDate += monthSt;
+
+        int day = extractDate();
+        fullDate += " " + day + ", ";
+
+        int year = extractYear();
+        fullDate += year;
+
+        return fullDate;
+    }
 
     @Override
     public String toString() {
@@ -139,10 +164,12 @@ public class InspectionReport {
         this.inspectDate = inspectDate;
     }
 
+    //set inspect type directly
     public void setInspType(InspType type) {
         this.type = type;
     }
 
+    //set inspect type with the string form ie. Follow-up instead of FOLLOWUP
     public void setInspType(String t) {
         switch(t){
             case "Routine":
@@ -161,10 +188,12 @@ public class InspectionReport {
         this.numNonCritical = numNonCritical;
     }
 
+    //set hazard rating directly
     public void setHazard(HazardRating hazard) {
         this.hazard = hazard;
     }
 
+    //set hazard rating with a string
     public void setHazard(String rating){
         switch(rating){
             case "Low":

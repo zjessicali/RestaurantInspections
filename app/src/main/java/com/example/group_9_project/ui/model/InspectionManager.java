@@ -2,6 +2,7 @@ package com.example.group_9_project.ui.model;
 
 import java.util.ArrayList;
 
+//Stores inspection reports
 public class InspectionManager {
     private ArrayList<InspectionReport> manager;
     //private String trackingNum;
@@ -21,11 +22,6 @@ public class InspectionManager {
     public int getSize(){
         return manager.size();
     }
-
-    //returns tracking number
-//    public String getTrackingNum() {
-//        return trackingNum;
-//    }
 
     //setters
 

@@ -3,6 +3,7 @@ package com.example.group_9_project.ui.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+//Stores restaurants in an object
 public class RestaurantManager {
     ArrayList<Restaurant> manager;
 
@@ -60,11 +61,6 @@ public class RestaurantManager {
             }
         }
     }
-
-
-
-
-
 
 
 }
