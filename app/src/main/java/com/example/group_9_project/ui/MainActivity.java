@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.ui.model.InspectionManager;
+import com.example.group_9_project.ui.model.InspectionReport;
 import com.example.group_9_project.ui.model.Restaurant;
 import com.example.group_9_project.ui.model.RestaurantManager;
 
@@ -25,14 +27,54 @@ public class MainActivity extends AppCompatActivity {
         restaurants = new RestaurantManager();
 
         readRestaurantData();
+        readInspectionData();
     }
 
+    private void readInspectionData() {
+        InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(is, Charset.forName("UTF-8"))
+        );
 
+        String line = "";
+        try{
+            //headers
+            reader.readLine();
+
+            while( (line = reader.readLine()) != null){
+                //Split by ","
+                String[] tokens = line.split(",");
+
+                //Read data
+
+                InspectionReport inspection = new InspectionReport();
+                inspection.setInspectDate(Integer.parseInt(tokens[1]));
+                inspection.set
+
+//                Restaurant r = new Restaurant(removeQuotes(tokens[0]));
+//                r.setName(removeQuotes(tokens[1]));
+//                r.setAddress(removeQuotes(tokens[2]));
+//                r.setCity(removeQuotes(tokens[3]));
+//                r.setFacType(removeQuotes(tokens[4]));
+//                r.setLatitude(Double.parseDouble(tokens[5]));
+//                r.setLongitude(Double.parseDouble(tokens[6]));
+//
+//                restaurants.addRestaurant(r);
+//                Log.d("MyActivity", "Just created: " + r);
+//                //Log.d("MyActivity", "Manager size: " + r);
+            }
+
+        }catch(IOException e){
+            Log.wtf("MyActivity", "Error reading data file on line " + line, e);
+            e.printStackTrace();
+        }
+
+    }
 
 
     //based on Brian Fraser's video
     private void readRestaurantData() {
-        InputStream is =getResources().openRawResource(R.raw.restaurants_itr1);
+        InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(is, Charset.forName("UTF-8"))
         );

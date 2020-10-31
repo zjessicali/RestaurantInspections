@@ -15,6 +15,7 @@ public class Restaurant {
     public Restaurant(String tracking) {
         this.trackingNum = tracking;
         this.type = FacType.RESTAURANT;
+        this.inspections = new InspectionManager();
     }
 
     public String getName() {
