@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.group_9_project.R;
-import com.example.group_9_project.ui.model.InspectionManager;
 import com.example.group_9_project.ui.model.InspectionReport;
 import com.example.group_9_project.ui.model.Restaurant;
 import com.example.group_9_project.ui.model.RestaurantManager;
@@ -28,6 +27,24 @@ public class MainActivity extends AppCompatActivity {
 
         readRestaurantData();
         readInspectionData();
+
+        testOrder();
+    }
+
+    //will delete later
+    private void testOrder() {
+        for(int i = 0; i < restaurants.getSize();i++){
+            Log.d("MyActivity", "Restaurant name: "+ restaurants.getRestFromIndex(i).getName() );
+        }
+        Log.d("MyActivity", "------------------------------------------------------------------------" );
+        for(int i = 0; i < restaurants.getSize();i++){
+            Log.d("MyActivity", "-----------" + i + "----------------" );
+            for(int j = 0; j < restaurants.getRestFromIndex(i).getInspections().getSize(); j++){
+                Log.d("MyActivity", "Inspection Date: "+ restaurants.getRestFromIndex(i).getInspections().getInspection(j).getInspectDate() );
+
+            }
+        }
+
     }
 
     private void readInspectionData() {
@@ -50,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 InspectionReport inspection = new InspectionReport();
                 String trackingNum = removeQuotes(tokens[0]);
                 inspection.setInspectDate(Integer.parseInt(tokens[1]));
-                //inspection.set
+                inspection.setInspType(removeQuotes(tokens[2]));
                 inspection.setNumCritical(Integer.parseInt(tokens[3]));
                 inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
                 inspection.setHazard(removeQuotes(tokens[5]));
@@ -61,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                Log.d("MyActivity", "Tracking number: " + trackingNum);
+//                Log.d("MyActivity", "Tracking number: " + trackingNum);
+//                Log.d("MyActivity", "Restaurant: " + restaurants.getRestFromTracking(trackingNum));
                 if(restaurants.getRestFromTracking(trackingNum) != null){
                     restaurants.getRestFromTracking(trackingNum).addInspection(inspection);
-                    Log.d("MyActivity", "Just created: " + inspection);
+                    //Log.d("MyActivity", "Just created: " + inspection);
                 }
-
             }
 
         }catch(IOException e){

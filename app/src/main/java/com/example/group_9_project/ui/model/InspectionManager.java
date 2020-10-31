@@ -35,13 +35,19 @@ public class InspectionManager {
         }
         else{
             int i = 0;
+            int i2 = 1;
             int date = manager.get(i).getInspectDate();
-            i++;
-            while( i < manager.size()  && (report.getInspectDate() > date)){
-                date = manager.get(i).getInspectDate();
+            while( i2 < manager.size()  && (report.getInspectDate() < date)){
+                date = manager.get(i2).getInspectDate();
                 i++;
+                i2++;
             }
-            manager.add(i, report );
+            if(i2>= manager.size() && (report.getInspectDate() < date)){
+                manager.add(report);
+            }
+            else{
+                manager.add(i, report);
+            }
         }
 
     }

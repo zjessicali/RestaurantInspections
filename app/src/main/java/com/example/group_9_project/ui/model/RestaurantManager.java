@@ -19,10 +19,15 @@ public class RestaurantManager {
     //access Restaurant with tracking number t
     public Restaurant getRestFromTracking(String t){
         for(Restaurant r:manager){
-            if(r.getTrackingNum() == t){
+            if(r.getTrackingNum().equals(t)){
                 return r;
             }
         }
+//        for(int i = 0; i < manager.size();i++){
+//            if(manager.get(i).getTrackingNum() == t){
+//                return manager.get(i);
+//            }
+//        }
         return null;
     }
 
@@ -39,13 +44,20 @@ public class RestaurantManager {
         else{
             //manager.add(r);
             int i = 0;
+            int i2 = 1;
             Restaurant curr = manager.get(i);
-            i++;
-            while( i <manager.size() && (curr.getName()).compareTo(r.getName()) <= 0 ){
-                curr = manager.get(i);
+            //i++;
+            while( i2 < manager.size() && (curr.getName()).compareTo(r.getName()) <= 0 ){
+                curr = manager.get(i2);
                 i++;
+                i2++;
             }
-            manager.add(i, r);
+            if(i2>manager.size()){
+                manager.add(r);
+            }
+            else{
+                manager.add(i, r);
+            }
         }
     }
 

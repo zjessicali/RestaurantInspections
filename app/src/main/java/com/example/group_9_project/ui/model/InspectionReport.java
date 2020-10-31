@@ -39,8 +39,20 @@ public class InspectionReport {
         return inspectDate;
     }
 
-    public InspType getType() {
+    public InspType getInspType() {
         return type;
+    }
+
+    public String getInspTypeStr(){
+        String st = "";
+        switch(type){
+            case ROUTINE:
+                st = "Routine";
+                break;
+            case FOLLOWUP:
+                st = "Follow-Up";
+        }
+        return st;
     }
 
     public int getNumCritical() {
@@ -127,11 +139,11 @@ public class InspectionReport {
         this.inspectDate = inspectDate;
     }
 
-    public void setType(InspType type) {
+    public void setInspType(InspType type) {
         this.type = type;
     }
 
-    public void setType(String t) {
+    public void setInspType(String t) {
         switch(t){
             case "Routine":
                 this.type = InspType.ROUTINE;
