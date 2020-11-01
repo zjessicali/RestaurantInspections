@@ -23,11 +23,6 @@ public class RestaurantManager {
                 return r;
             }
         }
-//        for(int i = 0; i < manager.size();i++){
-//            if(manager.get(i).getTrackingNum() == t){
-//                return manager.get(i);
-//            }
-//        }
         return null;
     }
 

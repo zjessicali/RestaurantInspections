@@ -60,9 +60,6 @@ public class Restaurant {
 
     //setters
 
-//    public void setTrackingNum(String trackingNum) {
-//        this.trackingNum = trackingNum;
-//    }
 
     public void setName(String name) {
         this.name = name;

@@ -5,11 +5,9 @@ import java.util.ArrayList;
 //Stores inspection reports
 public class InspectionManager {
     private ArrayList<InspectionReport> manager;
-    //private String trackingNum;
 
     public InspectionManager() {
         this.manager = new ArrayList<InspectionReport>();
-        //this.trackingNum = t;
     }
 
     //getters
