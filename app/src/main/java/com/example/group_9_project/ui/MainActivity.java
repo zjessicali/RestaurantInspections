@@ -2,6 +2,7 @@ package com.example.group_9_project.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -25,12 +26,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         restaurants = new RestaurantManager();
 
+        testRestaurantDetail(); //DELETE THIS
         readRestaurantData();
         readInspectionData();
 
 
         testOrder();
         testDates();
+    }
+
+    private void testRestaurantDetail() {
+        Intent intent = RestaurantDetail.launchIntent(this, 0);
+        startActivity(intent);
     }
 
     private void readInspectionData() {
