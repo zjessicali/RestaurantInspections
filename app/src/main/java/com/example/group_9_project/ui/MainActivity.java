@@ -1,4 +1,4 @@
-package com.example.group_9_project.main.ui;
+package com.example.group_9_project.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.group_9_project.R;
-import com.example.group_9_project.main.model.InspectionReport;
-import com.example.group_9_project.main.model.Restaurant;
-import com.example.group_9_project.main.model.RestaurantManager;
+import com.example.group_9_project.model.InspectionReport;
+import com.example.group_9_project.model.Restaurant;
+import com.example.group_9_project.model.RestaurantManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;

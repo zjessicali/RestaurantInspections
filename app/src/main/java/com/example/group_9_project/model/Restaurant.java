@@ -1,4 +1,4 @@
-package com.example.group_9_project.main.model;
+package com.example.group_9_project.model;
 
 //Restaurant object with data about the restaurant as well as all the inspections
 public class Restaurant {

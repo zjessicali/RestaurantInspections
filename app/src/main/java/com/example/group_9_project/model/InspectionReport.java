@@ -1,4 +1,4 @@
-package com.example.group_9_project.main.model;
+package com.example.group_9_project.model;
 
 import java.time.LocalDate;
 import java.time.Month;
