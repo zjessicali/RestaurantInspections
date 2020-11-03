@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.InspectionManager;
+import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 
@@ -27,11 +33,45 @@ public class RestaurantDetail extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_detail);
 
         popultaeManager(); //DELETE THIS
+        populateInspectionsList();
         extractData();
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
 
+    }
+
+    private void populateInspectionsList() {
+        InspectionManager inspections = manager.getRestFromIndex(index).getInspections();
+        LinearLayout scrollLayout = findViewById(R.id.scrollLayout);
+
+        for (int i = 0; i < inspections.getSize(); i++) {
+            InspectionReport inspection = inspections.getInspection(i);
+            String report = inspection.getNumCritical() + " critical issues     "
+                    + inspection.getNumNonCritical() + " non-critical issues     "
+                    + inspection.getInspectDateString();
+
+
+            TextView text = new TextView(RestaurantDetail.this);
+            text.setText(report);
+
+            switch(inspection.getHazard()) {
+                case LOW:
+                    text.setTextColor(Color.GREEN);
+                    break;
+
+                case MODERATE:
+                    text.setTextColor(Color.YELLOW);
+                    break;
+
+                case HIGH:
+                    text.setTextColor(Color.RED);
+                    break;
+            }
+
+            scrollLayout.addView(text);
+        }
+        
     }
 
     private void popultaeManager() {
@@ -42,6 +82,27 @@ public class RestaurantDetail extends AppCompatActivity {
         restaurant.setCity("Burnaby");
         restaurant.setLatitude(12345.1234);
         restaurant.setLongitude(2345.345);
+
+        InspectionManager inspections = new InspectionManager();
+        InspectionReport report1 = new InspectionReport();
+        report1.setHazard(InspectionReport.HazardRating.HIGH);
+        report1.setInspectDate(20200901);
+        report1.setInspType(InspectionReport.InspType.FOLLOWUP);
+        report1.setNumCritical(10);
+        report1.setNumNonCritical(2);
+
+        InspectionReport report2 = new InspectionReport();
+        report2.setHazard(InspectionReport.HazardRating.LOW);
+        report2.setInspectDate(20201028);
+        report2.setInspType(InspectionReport.InspType.ROUTINE);
+        report2.setNumCritical(0);
+        report2.setNumNonCritical(12);
+
+        inspections.addInspection(report1);
+        restaurant.addInspection(report1);
+
+        inspections.addInspection(report2);
+        restaurant.addInspection(report2);
 
         manager.addRestaurant(restaurant);
     }

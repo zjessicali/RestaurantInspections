@@ -76,18 +76,21 @@
         app:layout_constraintVertical_bias="0.345" />
 
     <ScrollView
-        android:layout_width="408dp"
-        android:layout_height="446dp"
+        android:id="@+id/inspectionScroll"
+        android:layout_width="406dp"
+        android:layout_height="371dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.996">
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
+            android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
