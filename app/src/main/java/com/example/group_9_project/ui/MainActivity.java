@@ -28,9 +28,16 @@ public class MainActivity extends AppCompatActivity {
         readRestaurantData();
         readInspectionData();
 
+        managertest();
+        //testOrder();
+        //testDates();
+    }
 
-        testOrder();
-        testDates();
+    private void managertest() {
+
+        for(int i = 0; i < restaurants.getSize();i++){
+            Log.d("MyActivity", "test: " + restaurants.getRestFromIndex(i));
+        }
     }
 
     private void readInspectionData() {
@@ -58,17 +65,22 @@ public class MainActivity extends AppCompatActivity {
                 inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
                 inspection.setHazard(removeQuotes(tokens[5]));
 
-                if(tokens.length >=7 && tokens[6].length() > 0){
-                    for(int i = 6; i < 9; i++){
-                        inspection.addViolLump(removeQuotes(tokens[i]));
-                    }
+                String lump = "";
+                for(int i = 6; i < tokens.length; i++){
+                    lump += removeQuotes(tokens[i]);
                 }
+                Log.d("MyActivity", "lump looks like: " + lump);
 
-//                Log.d("MyActivity", "Tracking number: " + trackingNum);
-//                Log.d("MyActivity", "Restaurant: " + restaurants.getRestFromTracking(trackingNum));
+//                inspection.processLump(lump);
+//                for(int i = 0; i < inspection.getViolLump().size(); i++){
+//                    Log.d("MyActivity", "Violation: " + inspection.getViolLump().get(i));
+//
+//                }
+//                Log.d("MyActivity", "Violation: " + inspection.getViolLump());
+
+                //adds inspection into it's restaurants inspection manager
                 if(restaurants.getRestFromTracking(trackingNum) != null){
                     restaurants.getRestFromTracking(trackingNum).addInspection(inspection);
-                    //Log.d("MyActivity", "Just created: " + inspection);
                 }
             }
 
@@ -105,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 r.setLongitude(Double.parseDouble(tokens[6]));
 
                 restaurants.addRestaurant(r);
-                //Log.d("MyActivity", "Just created: " + r);
             }
 
         }catch(IOException e){
@@ -126,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(s.endsWith("\"")){
             noQuotes = s.substring(0, s.length()-1);
+        }
+        else{
+            return s;
         }
         return noQuotes;
     }

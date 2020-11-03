@@ -23,11 +23,12 @@ public class InspectionReport {
     private int numCritical;
     private int numNonCritical;
     private HazardRating hazard;
-    private ArrayList<String> violLump;
+    //private ArrayList<String> violLump;
+    private ArrayList<Violation> violLump;
 
     //constructor
     public InspectionReport() {
-        violLump = new ArrayList<String>();
+        violLump = new ArrayList<Violation>();
         int numCritical = 0;
         int numNonCritical = 0;
         int numTotal = 0;
@@ -69,7 +70,7 @@ public class InspectionReport {
         return hazard;
     }
 
-    public ArrayList<String> getViolLump() {
+    public ArrayList<Violation> getViolLump() {
         return violLump;
     }
 
@@ -208,7 +209,39 @@ public class InspectionReport {
         }
     }
 
-    public void addViolLump(String s) {
-        this.violLump.add(s);
+    public void processLump(String lump){
+        int from = 0;
+        int to = 0;
+        while((to = lump.indexOf("|", from)) != -1){
+            int lastComma = from;
+            int nextComma = from;
+            violLump.add(new Violation());
+            Violation viol = violLump.get(violLump.size() -1);
+            //look for commas
+            while((nextComma = lump.indexOf(",",lastComma)) < to && lastComma < nextComma){
+                String tmp = lump.substring(lastComma + 1 , nextComma);
+                viol.addToViol(tmp);
+                lastComma = nextComma;
+            }
+            //from last comma to to
+//            String tmp = lump.substring(lastComma + 1, to);
+//            violLump.get(violLump.size() -1).addToViol(tmp);
+//            //set type here
+//            from = to;
+        }
+        //from to to end
+        //processViolation(from, lump.length(), lump);
+    }
+
+    private void processViolation(int from, int to, String lump){
+        int lastComma = from;
+        int nextComma = from;
+        violLump.add(new Violation());
+        //look for commas
+        while((nextComma = lump.indexOf(",",lastComma)) <= to){
+            String tmp = lump.substring(lastComma + 1 , nextComma);
+            violLump.get(violLump.size() -1).addToViol(tmp);
+            lastComma = nextComma;
+        }
     }
 }
