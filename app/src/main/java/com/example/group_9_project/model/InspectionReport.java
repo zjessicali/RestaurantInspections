@@ -220,12 +220,11 @@ public class InspectionReport {
 
         int from = 0;
         int to = 0;
-        //processViolation(from, to, lump);
         while((to = lump.indexOf("|", from)) != -1){
+            //processViolation(from, to, lump);
             int lastComma = from;
             int nextComma = from;
             Violation viol = new Violation();
-            //Violation viol = violLump.get(violLump.size() -1);
             //look for commas
             while((nextComma = lump.indexOf(",",lastComma)) <= to && lastComma<nextComma){
                 String tmp = lump.substring(lastComma  , nextComma);
@@ -235,7 +234,7 @@ public class InspectionReport {
             //from last comma to to
             String tmp = lump.substring(lastComma, to);
             viol.addToViol(tmp);
-            //set type here
+            viol.setType(Integer.parseInt(viol.getViolation().get(0)));
             from = to+1;
             violLump.add(viol);
         }
@@ -247,7 +246,6 @@ public class InspectionReport {
         int lastComma = from;
         int nextComma = from;
         Violation viol = new Violation();
-        //Violation viol = violLump.get(violLump.size() -1);
         //look for commas
         while((nextComma = lump.indexOf(",",lastComma)) <= to && lastComma<nextComma){
             String tmp = lump.substring(lastComma  , nextComma);
