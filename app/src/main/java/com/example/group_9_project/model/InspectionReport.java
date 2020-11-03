@@ -23,7 +23,6 @@ public class InspectionReport {
     private int numCritical;
     private int numNonCritical;
     private HazardRating hazard;
-    //private ArrayList<String> violLump;
     private ArrayList<Violation> violLump;
 
     //constructor
@@ -215,39 +214,51 @@ public class InspectionReport {
     }
 
     public void processLump(String lump){
+        if(lump.length() == 0){
+            return;
+        }
+
         int from = 0;
         int to = 0;
+        //processViolation(from, to, lump);
         while((to = lump.indexOf("|", from)) != -1){
             int lastComma = from;
             int nextComma = from;
-            violLump.add(new Violation());
-            Violation viol = violLump.get(violLump.size() -1);
+            Violation viol = new Violation();
+            //Violation viol = violLump.get(violLump.size() -1);
             //look for commas
             while((nextComma = lump.indexOf(",",lastComma)) <= to && lastComma<nextComma){
-                String tmp = lump.substring(lastComma + 1 , nextComma);
+                String tmp = lump.substring(lastComma  , nextComma);
                 viol.addToViol(tmp);
-                lastComma = nextComma;
+                lastComma = nextComma+1;
             }
             //from last comma to to
-            String tmp = lump.substring(lastComma + 1, to);
+            String tmp = lump.substring(lastComma, to);
             viol.addToViol(tmp);
             //set type here
-            from = to;
+            from = to+1;
+            violLump.add(viol);
         }
-        //from to to end
-        //processViolation(from, lump.length(), lump);
+        //from 'to' to end
+        processViolation(from, lump.length(), lump);
     }
 
     private void processViolation(int from, int to, String lump){
         int lastComma = from;
         int nextComma = from;
-        violLump.add(new Violation());
-        Violation viol = violLump.get(violLump.size() -1);
+        Violation viol = new Violation();
+        //Violation viol = violLump.get(violLump.size() -1);
         //look for commas
-        while((nextComma = lump.indexOf(",",lastComma)) <= to){
-            String tmp = lump.substring(lastComma + 1 , nextComma);
+        while((nextComma = lump.indexOf(",",lastComma)) <= to && lastComma<nextComma){
+            String tmp = lump.substring(lastComma  , nextComma);
             viol.addToViol(tmp);
-            lastComma = nextComma;
+            lastComma = nextComma+1;
         }
+        //from last comma to to
+        String tmp = lump.substring(lastComma, to);
+        viol.addToViol(tmp);
+        //set type here
+        from = to+1;
+        violLump.add(viol);
     }
 }

@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
                 for(int i = 0; i < inspection.getViolLump().size(); i++){
                     Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
-
                 }
                 //Log.d("MyActivity", "Violation: " + inspection.getViolation(0));
 
