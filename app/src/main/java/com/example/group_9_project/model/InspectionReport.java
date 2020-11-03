@@ -255,7 +255,7 @@ public class InspectionReport {
         //from last comma to to
         String tmp = lump.substring(lastComma, to);
         viol.addToViol(tmp);
-        //set type here
+        viol.setType(Integer.parseInt(viol.getViolation().get(0)));
         from = to+1;
         violLump.add(viol);
     }
