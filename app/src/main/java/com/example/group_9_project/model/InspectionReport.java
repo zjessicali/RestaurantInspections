@@ -158,6 +158,11 @@ public class InspectionReport {
                 '}';
     }
 
+    //get violation at index i
+    public Violation getViolation(int i){
+        return violLump.get(i);
+    }
+
 
     //setters
 
@@ -218,16 +223,16 @@ public class InspectionReport {
             violLump.add(new Violation());
             Violation viol = violLump.get(violLump.size() -1);
             //look for commas
-            while((nextComma = lump.indexOf(",",lastComma)) < to && lastComma < nextComma){
+            while((nextComma = lump.indexOf(",",lastComma)) <= to && lastComma<nextComma){
                 String tmp = lump.substring(lastComma + 1 , nextComma);
                 viol.addToViol(tmp);
                 lastComma = nextComma;
             }
             //from last comma to to
-//            String tmp = lump.substring(lastComma + 1, to);
-//            violLump.get(violLump.size() -1).addToViol(tmp);
-//            //set type here
-//            from = to;
+            String tmp = lump.substring(lastComma + 1, to);
+            viol.addToViol(tmp);
+            //set type here
+            from = to;
         }
         //from to to end
         //processViolation(from, lump.length(), lump);
@@ -237,10 +242,11 @@ public class InspectionReport {
         int lastComma = from;
         int nextComma = from;
         violLump.add(new Violation());
+        Violation viol = violLump.get(violLump.size() -1);
         //look for commas
         while((nextComma = lump.indexOf(",",lastComma)) <= to){
             String tmp = lump.substring(lastComma + 1 , nextComma);
-            violLump.get(violLump.size() -1).addToViol(tmp);
+            viol.addToViol(tmp);
             lastComma = nextComma;
         }
     }

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         readRestaurantData();
         readInspectionData();
 
-        managertest();
+        //managertest();
         //testOrder();
         //testDates();
     }
@@ -67,16 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
                 String lump = "";
                 for(int i = 6; i < tokens.length; i++){
-                    lump += removeQuotes(tokens[i]);
+                    lump += removeQuotes(tokens[i]) + ",";
                 }
                 Log.d("MyActivity", "lump looks like: " + lump);
 
-//                inspection.processLump(lump);
-//                for(int i = 0; i < inspection.getViolLump().size(); i++){
-//                    Log.d("MyActivity", "Violation: " + inspection.getViolLump().get(i));
-//
-//                }
-//                Log.d("MyActivity", "Violation: " + inspection.getViolLump());
+                inspection.processLump(lump);
+                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
+                for(int i = 0; i < inspection.getViolLump().size(); i++){
+                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
+
+                }
+                //Log.d("MyActivity", "Violation: " + inspection.getViolation(0));
 
                 //adds inspection into it's restaurants inspection manager
                 if(restaurants.getRestFromTracking(trackingNum) != null){
