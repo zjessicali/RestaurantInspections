@@ -30,7 +30,7 @@ public class MessageFragment extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 TextView textView=(TextView)getActivity().findViewById(R.id.dialog);
-                textView.setText(manager.violationList.get(position).toString());
+                textView.setText(manager.getViolLump().get(position).toString());
             }
         };
         return new AlertDialog.Builder(getActivity())

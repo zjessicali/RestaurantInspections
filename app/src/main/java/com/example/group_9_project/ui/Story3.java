@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
-import android.os.strictmode.Violation;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionReport;
+import com.example.group_9_project.model.Violation;
 import com.example.group_9_project.model.ViolationManager;
 
 public class Story3 extends AppCompatActivity {
@@ -63,7 +64,7 @@ public class Story3 extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Violation clicked = manager.violationList.get(position);
+                Violation clicked = manager.getViolLump().get(position);
                 MessageFragment.getposition(position);
                 FragmentManager manager = getSupportFragmentManager();
                 MessageFragment dialog = new MessageFragment();
@@ -81,7 +82,7 @@ public class Story3 extends AppCompatActivity {
 
     private class MyListAdapter extends ArrayAdapter<Violation> {
         public MyListAdapter() {
-            super(Story3.this, R.layout.list_items, manager.violationList);
+            super(Story3.this, R.layout.list_items, manager.getViolLump());
 
 
         }
@@ -93,9 +94,33 @@ public class Story3 extends AppCompatActivity {
             if (itemview == null) {
                 itemview = getLayoutInflater().inflate(R.layout.list_items, parent, false);
             }
-            Violation violation=manager.violationList.get(position) ;
+            Violation violation=manager.getViolLump().get(position) ;
             TextView textView = (TextView) findViewById(R.id.list_violation_header);
             textView.setText(violation.toString());
+            if(violation.getViolTypeString().equals("FOOD")){
+                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                imageView.setImageResource(R.drawable.food);
+            }
+            else if(violation.getViolTypeString().equals("EQUIPMENT")){
+                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                imageView.setImageResource(R.drawable.equipment);
+            }
+            else if(violation.getViolTypeString().equals("CONTAINER")){
+                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                imageView.setImageResource(R.drawable.utensils);
+            }
+            else if(violation.getViolTypeString().equals("LOCATION")){
+                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                imageView.setImageResource(R.drawable.location);
+            }
+            else if(violation.getViolTypeString().equals("REQUIREMENT")){
+                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                imageView.setImageResource(R.drawable.requirement);
+            }
+            else if(violation.getViolTypeString().equals("HYGIENE")){
+                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                imageView.setImageResource(R.drawable.hygiene);
+            }
             return itemview;
         }
 
