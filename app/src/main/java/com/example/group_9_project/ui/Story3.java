@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,14 +47,17 @@ public class Story3 extends AppCompatActivity {
         if(report.getHazard().equals("LOW")) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView2);
             imageView.setImageResource(R.drawable.green);
+            textView2.setTextColor(Color.GREEN);
         }
         else if(report.getHazard().equals("MODERATE")){
             ImageView imageView=(ImageView)findViewById(R.id.imageView2);
             imageView.setImageResource(R.drawable.orange);
+            textView2.setTextColor(Color.YELLOW);
         }
         else{
             ImageView imageView=(ImageView)findViewById(R.id.imageView2);
             imageView.setImageResource(R.drawable.red);
+            textView2.setTextColor(Color.RED);
 
         }
 
