@@ -2,6 +2,7 @@ package com.example.group_9_project.model;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -84,7 +85,11 @@ public class InspectionReport {
         String inspectDateSt = "";
         //within 30 days
         if (inspectDate >= currDate - 100) {
-            int days = currDate - inspectDate;
+            //https://www.baeldung.com/java-date-difference
+            LocalDate inspect = LocalDate.of(extractYear(), extractMonth(), extractDate());
+
+            Period period = Period.between(today, inspect);
+            int days = Math.abs(period.getDays());
             inspectDateSt = days + " days ago";
         }
         //less than a year ago

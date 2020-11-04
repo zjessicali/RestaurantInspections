@@ -5,10 +5,18 @@ import java.util.ArrayList;
 //Stores restaurants in an object
 public class RestaurantManager {
     ArrayList<Restaurant> manager;
+    private static RestaurantManager instance;
 
     //constructor
-    public RestaurantManager() {
+    private RestaurantManager() {
         this.manager = new ArrayList<Restaurant>();
+    }
+    //singleton
+    public static RestaurantManager getInstance(){
+        if(instance == null){
+            instance = new RestaurantManager();
+        }
+        return instance;
     }
 
     //access Restaurant at index i

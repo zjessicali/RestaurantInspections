@@ -2,6 +2,7 @@ package com.example.group_9_project.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -23,22 +24,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        restaurants = new RestaurantManager();
+        restaurants = restaurants.getInstance();
 
+        testRestaurantDetail(); //DELETE THIS
         readRestaurantData();
         readInspectionData();
 
-        //managertest();
-        //testOrder();
-        //testDates();
     }
 
-    private void managertest() {
 
-        for(int i = 0; i < restaurants.getSize();i++){
-            Log.d("MyActivity", "test: " + restaurants.getRestFromIndex(i));
-        }
-    }
 
     private void readInspectionData() {
         InputStream is = getResources().openRawResource(R.raw.inspectionreports_itr1);
@@ -143,30 +137,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return noQuotes;
     }
-    //will delete later
 
-    private void testOrder() {
-        for(int i = 0; i < restaurants.getSize();i++){
-            Log.d("MyActivity", "Restaurant name: "+ restaurants.getRestFromIndex(i).getName() );
-        }
-        Log.d("MyActivity", "------------------------------------------------------------------------" );
-        for(int i = 0; i < restaurants.getSize();i++){
-            Log.d("MyActivity", "-----------" + i + "----------------" );
-            for(int j = 0; j < restaurants.getRestFromIndex(i).getInspections().getSize(); j++){
-                Log.d("MyActivity", "Inspection Date: "+ restaurants.getRestFromIndex(i).getInspections().getInspection(j).getInspectDate() );
-
-            }
-        }
-
-    }
-
-    private void testDates() {
-        InspectionReport tested = restaurants.getRestFromIndex(2).getInspections().getInspection(0);
-        int date = tested.getInspectDate();
-        Log.d("MyActivity", "Inspect Date: " + date);
-        String intelligent = tested.getInspectDateString();
-        Log.d("MyActivity", "Inspect Date Intelligent: " + intelligent);
-        String full = tested.getFullDate();
-        Log.d("MyActivity", "Inspect Date Full: " + full);
-    }
 }
