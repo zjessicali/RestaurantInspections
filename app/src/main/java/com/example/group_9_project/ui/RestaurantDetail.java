@@ -25,7 +25,7 @@ import org.w3c.dom.Text;
 public class RestaurantDetail extends AppCompatActivity {
 
     //change is to manager.getInstance() when singleton support is added
-    private RestaurantManager manager = new RestaurantManager();
+    private RestaurantManager manager = RestaurantManager.getInstance();
     private int index;
 
 

@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         restaurants = restaurants.getInstance();
 
-        testRestaurantDetail(); //DELETE THIS
         readRestaurantData();
         readInspectionData();
 
