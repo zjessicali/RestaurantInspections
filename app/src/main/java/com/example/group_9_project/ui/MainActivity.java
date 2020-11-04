@@ -27,7 +27,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 public class MainActivity extends AppCompatActivity {
-    private RestaurantManager restaurants = RestaurantManager.getInstance();; //feel free to rename
+    private RestaurantManager restaurants = RestaurantManager.getInstance();
+    //feel free to rename
     int restaurant_num = 0, inspection_num = 0;
     TextView title;
     ListView RestaurantList;
@@ -57,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class MyListAdapter extends ArrayAdapter<Restaurant> {
-        public MyListAdapter(){
+        public MyListAdapter() {
             super(MainActivity.this, R.layout.listview_each_restaurant, restaurants.getListOfRestaurants());
         }
+
         @Override
         @NonNull
         public View getView(int pos, View convertView, @NonNull ViewGroup parent) {
@@ -99,46 +101,41 @@ public class MainActivity extends AppCompatActivity {
 
                 if (latestInspectionHazardRating == InspectionReport.HazardRating.HIGH) {
                     hazardLevelImage.setImageResource(R.drawable.high_risk);
-                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
-                            getResources().getString(R.string.restaurant_hazardLevelHigh_value));
+                    display = "Hazard Level: High";
                 } else if (latestInspectionHazardRating == InspectionReport.HazardRating.MODERATE) {
                     hazardLevelImage.setImageResource(R.drawable.medium_risk);
                     restaurantView.setBackground(getDrawable(R.drawable.mid_back));
-                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
-                            getResources().getString(R.string.restaurant_hazardLevelModerate_value));
+                    display = "Hazard Level: Moderate";
                 } else {
                     hazardLevelImage.setImageResource(R.drawable.low_risk);
                     restaurantView.setBackground(getDrawable(R.drawable.low_back));
-                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
-                            getResources().getString(R.string.restaurant_hazardLevelLow_value));
+                    display = "Hazard Level: Low";
                 }
-            }
-         else{
-                    hazardLevelImage.setImageResource(R.drawable.low_risk);
-                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
-                            getResources().getString(R.string.restaurant_hazardLevelNo_value));
+            } else {
+                hazardLevelImage.setImageResource(R.drawable.low_risk);
+                display = "Hazard Level: Unknown";
 
-                }
+            }
 
             leveltxt.setText(display);
 
             TextView latestInspectionTimeField =
                     restaurantView.findViewById(R.id.restaurant_label_latestInspection);
+            InspectionManager inspectionList = currentRestaurant.getInspections();
             if (inspections.getSize() != 0) {
-                String inspectionDate = currentRestaurant.getLatest().getFormattedDate();
-                display = String.format(
-                        getResources().getString(R.string.restaurant_inspectionPerformedOn),
-                        inspectionDate);
+                String inspectionDate = inspectionList.getInspection(inspectionList.getSize() - 1).getInspectDateString();
+                display = getResources().getString(R.string.restaurant_inspectionPerformedOn) + inspectionDate;
                 latestInspectionTimeField.setText(display);
             } else
-                display = String.format(
-                        getResources().getString(R.string.restaurant_inspectionPerformedOn),
-                        (getResources().getString(R.string.restaurant_noInspectionAvailable_value)));
+                display =
+                        getResources().getString(R.string.restaurant_inspectionPerformedOn) +
+                                (getResources().getString(R.string.restaurant_noInspectionAvailable_value));
             latestInspectionTimeField.setText(display);
 
             return restaurantView;
 
         }
+    }
 
 
     private void readInspectionData() {

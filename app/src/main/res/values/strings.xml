@@ -7,7 +7,6 @@
     <string name="restaurant_city">City</string>
     <string name="restaurant_hazardlevel">HazardLevel</string>
     <string name="restaurant_issuesfound">Issues Found</string>
-    <string name="restaurant_inspectionperformedon">Inspection Performed On</string>
     <string name="restaurant_address">Address</string>
     <string name="restaurant_name">Restaurant Name</string>
     <string name="rate_icon">rate icon</string>
@@ -15,4 +14,6 @@
     <string name="restaurant_hazardLevelModerate_value">Moderate</string>
     <string name="restaurant_hazardLevelLow_value">Low</string>
     <string name="restaurant_hazardLevelNo_value">Unknown</string>
+    <string name="restaurant_inspectionPerformedOn">Inspection Performed On</string>
+    <string name="restaurant_noInspectionAvailable_value">Unknown</string>
 </resources>

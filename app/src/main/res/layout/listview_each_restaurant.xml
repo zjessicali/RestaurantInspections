@@ -17,7 +17,7 @@
         android:contentDescription="@string/rest_icon"
         android:maxWidth="40dp"
         android:maxHeight="40dp"
-        app:srcCompat="@drawable/restaurant_Logo"
+        app:srcCompat="@drawable/restaurant_logo"
         tools:ignore="RtlCompat" />
 
     <TextView
@@ -109,7 +109,7 @@
         android:layout_marginStart="179dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/restaurant_inspectionperformedon"
+        android:text="@string/restaurant_inspectionPerformedOn"
         android:textSize="14sp"
         tools:ignore="RtlCompat" />
 
