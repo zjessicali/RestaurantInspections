@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">group_9_project</string>
+    <string name="restaurant_name">Restaurant Name:</string>
+    <string name="restaurant_address">Restaurant Address:</string>
+    <string name="gps_coordinates">GPS Coordinates</string>
+    <string name="inspections">Inspections</string>
 </resources>
