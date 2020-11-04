@@ -58,9 +58,7 @@ public class InspectionReport {
         return st;
     }
 
-    public int getNumCritical() {
-        return numCritical;
-    }
+    public int getNumCritical() { return numCritical; }
 
     public int getNumNonCritical() {
         return numNonCritical;

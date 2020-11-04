@@ -1,6 +1,8 @@
 package com.example.group_9_project.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 //Stores restaurants in an object
 public class RestaurantManager {
@@ -63,6 +65,7 @@ public class RestaurantManager {
             }
         }
     }
-
-
+    public List<Restaurant> getListOfRestaurants() {
+        return Collections.unmodifiableList(manager);
+    }
 }

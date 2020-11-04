@@ -1,12 +1,21 @@
 package com.example.group_9_project.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
@@ -18,19 +27,118 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 public class MainActivity extends AppCompatActivity {
-    private RestaurantManager restaurants;//feel free to rename
+    private RestaurantManager restaurants = RestaurantManager.getInstance();; //feel free to rename
+    int restaurant_num = 0, inspection_num = 0;
+    TextView title;
+    ListView RestaurantList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        restaurants = restaurants.getInstance();
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
+
+        title = findViewById(R.id.surrey_restaurant_list);
+        RestaurantList = findViewById(R.id.restaurant_list);
+        title.setText(getResources().getString(R.string.surrey_restaurant_list));
+
 
         readRestaurantData();
         readInspectionData();
+        populateListView();
 
     }
 
+    private void populateListView() {
+        ArrayAdapter<Restaurant> adapter = new MyListAdapter();
+        RestaurantList.setAdapter(adapter);
+    }
+
+    private class MyListAdapter extends ArrayAdapter<Restaurant> {
+        public MyListAdapter(){
+            super(MainActivity.this, R.layout.listview_each_restaurant, restaurants.getListOfRestaurants());
+        }
+        @Override
+        @NonNull
+        public View getView(int pos, View convertView, @NonNull ViewGroup parent) {
+
+            View restaurantView = convertView;
+
+            if (restaurantView == null) {
+                restaurantView = getLayoutInflater().inflate(R.layout.listview_each_restaurant, parent, false);
+            }
+            Restaurant currentRestaurant = restaurants.getRestFromIndex(pos);
+            TextView restaurantnameField = restaurantView.findViewById(R.id.restaurant_label_name);
+            restaurantnameField.setText(currentRestaurant.getName());
+            restaurantnameField.setSelected(true);
+            TextView restaurantCityField = restaurantView.findViewById(R.id.restaurant_city);
+            restaurantCityField.setText(currentRestaurant.getCity());
+
+            TextView restaurantAddressField = restaurantView.findViewById(R.id.restaurant_address);
+            restaurantAddressField.setText(currentRestaurant.getAddress());
+
+            InspectionManager inspections = currentRestaurant.getInspections();
+            InspectionReport inspectionsForCurrentRestaurant = inspections.getInspection(inspections.getSize() - 1);
+            int temp_inspection = 0;
+            if (inspectionsForCurrentRestaurant != null) {
+                temp_inspection = inspectionsForCurrentRestaurant.getNumCritical();
+            }
+            String display;
+
+            TextView problemsFoundForCurrentRestaurantField = restaurantView.findViewById(R.id.restaurant_problemsFound);
+            display = String.format("Issues Found", temp_inspection);
+            problemsFoundForCurrentRestaurantField.setText(display);
+
+            ImageView hazardLevelImage = restaurantView.findViewById(R.id.restaurant_image_hazardLevelValue);
+            TextView leveltxt = restaurantView.findViewById(R.id.restaurant_hazardLevel);
+            if (inspections.getSize() != 0) {
+
+                InspectionReport.HazardRating latestInspectionHazardRating = inspectionsForCurrentRestaurant.getHazard();
+
+                if (latestInspectionHazardRating == InspectionReport.HazardRating.HIGH) {
+                    hazardLevelImage.setImageResource(R.drawable.high_risk);
+                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
+                            getResources().getString(R.string.restaurant_hazardLevelHigh_value));
+                } else if (latestInspectionHazardRating == InspectionReport.HazardRating.MODERATE) {
+                    hazardLevelImage.setImageResource(R.drawable.medium_risk);
+                    restaurantView.setBackground(getDrawable(R.drawable.mid_back));
+                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
+                            getResources().getString(R.string.restaurant_hazardLevelModerate_value));
+                } else {
+                    hazardLevelImage.setImageResource(R.drawable.low_risk);
+                    restaurantView.setBackground(getDrawable(R.drawable.low_back));
+                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
+                            getResources().getString(R.string.restaurant_hazardLevelLow_value));
+                }
+            }
+         else{
+                    hazardLevelImage.setImageResource(R.drawable.low_risk);
+                    display = String.format(getResources().getString(R.string.restaurant_hazardlevel),
+                            getResources().getString(R.string.restaurant_hazardLevelNo_value));
+
+                }
+
+            leveltxt.setText(display);
+
+            TextView latestInspectionTimeField =
+                    restaurantView.findViewById(R.id.restaurant_label_latestInspection);
+            if (inspections.getSize() != 0) {
+                String inspectionDate = currentRestaurant.getLatest().getFormattedDate();
+                display = String.format(
+                        getResources().getString(R.string.restaurant_inspectionPerformedOn),
+                        inspectionDate);
+                latestInspectionTimeField.setText(display);
+            } else
+                display = String.format(
+                        getResources().getString(R.string.restaurant_inspectionPerformedOn),
+                        (getResources().getString(R.string.restaurant_noInspectionAvailable_value)));
+            latestInspectionTimeField.setText(display);
+
+            return restaurantView;
+
+        }
 
 
     private void readInspectionData() {
