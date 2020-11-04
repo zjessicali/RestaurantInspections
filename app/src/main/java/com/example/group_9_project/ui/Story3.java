@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,12 +24,9 @@ import com.example.group_9_project.model.ViolationManager;
 
 public class Story3 extends AppCompatActivity {
     private static InspectionReport report;
-
     ViolationManager manager = report.getManager();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story3);
@@ -44,6 +42,19 @@ public class Story3 extends AppCompatActivity {
         textView1.setText("" + report.getInspType());
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
+        if(report.getHazard().equals("LOW")) {
+            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
+            imageView.setImageResource(R.drawable.green);
+        }
+        else if(report.getHazard().equals("MODERATE")){
+            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
+            imageView.setImageResource(R.drawable.orange);
+        }
+        else{
+            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
+            imageView.setImageResource(R.drawable.red);
+
+        }
 
     }
 
@@ -82,7 +93,7 @@ public class Story3 extends AppCompatActivity {
             if (itemview == null) {
                 itemview = getLayoutInflater().inflate(R.layout.list_items, parent, false);
             }
-            Violation violation = manager.violationList.get(position);
+            Violation violation=manager.violationList.get(position) ;
             TextView textView = (TextView) findViewById(R.id.list_violation_header);
             textView.setText(violation.toString());
             return itemview;
