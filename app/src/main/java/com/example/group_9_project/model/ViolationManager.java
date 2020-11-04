@@ -1,18 +1,28 @@
 package com.example.group_9_project.model;
 
-import android.os.strictmode.Violation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ViolationManager implements Iterable<Violation>{
-    public List<Violation> violationList = new ArrayList<>();
+    private ArrayList<Violation> violationList;
 
+    public ViolationManager() {
+        this.violationList = new ArrayList<Violation>();
+    }
 
-    public void add( Violation violLumpString){
-        //need to divide string into substrings, then convert them to values, then add as viol
-        violationList.add(violLumpString);
+    public ArrayList<Violation> getViolLump() {
+        return violationList;
+    }
+
+    //get violation at index i
+    public Violation getViolation(int i){
+        return violationList.get(i);
+    }
+
+    public void addViolation(Violation v){
+        violationList.add(v);
     }
 
     @Override

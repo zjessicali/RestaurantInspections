@@ -62,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 6; i < tokens.length; i++){
                     lump += removeQuotes(tokens[i]) + ",";
                 }
-                Log.d("MyActivity", "lump looks like: " + lump);
+//                Log.d("MyActivity", "lump looks like: " + lump);
 
                 inspection.processLump(lump);
-                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
-                for(int i = 0; i < inspection.getViolLump().size(); i++){
-                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
-                }
+//                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
+//                for(int i = 0; i < inspection.getViolLump().size(); i++){
+//                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
+//                }
                 //Log.d("MyActivity", "Violation: " + inspection.getViolation(0));
 
                 //adds inspection into it's restaurants inspection manager
