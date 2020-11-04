@@ -59,17 +59,22 @@ public class MainActivity extends AppCompatActivity {
                 inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
                 inspection.setHazard(removeQuotes(tokens[5]));
 
-                if(tokens.length >=7 && tokens[6].length() > 0){
-                    for(int i = 6; i < 9; i++){
-                        inspection.addViolLump(removeQuotes(tokens[i]));
-                    }
+                String lump = "";
+                for(int i = 6; i < tokens.length; i++){
+                    lump += removeQuotes(tokens[i]) + ",";
                 }
+                Log.d("MyActivity", "lump looks like: " + lump);
 
-//                Log.d("MyActivity", "Tracking number: " + trackingNum);
-//                Log.d("MyActivity", "Restaurant: " + restaurants.getRestFromTracking(trackingNum));
+                inspection.processLump(lump);
+                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
+                for(int i = 0; i < inspection.getViolLump().size(); i++){
+                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
+                }
+                //Log.d("MyActivity", "Violation: " + inspection.getViolation(0));
+
+                //adds inspection into it's restaurants inspection manager
                 if(restaurants.getRestFromTracking(trackingNum) != null){
                     restaurants.getRestFromTracking(trackingNum).addInspection(inspection);
-                    //Log.d("MyActivity", "Just created: " + inspection);
                 }
             }
 
@@ -106,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                 r.setLongitude(Double.parseDouble(tokens[6]));
 
                 restaurants.addRestaurant(r);
-                //Log.d("MyActivity", "Just created: " + r);
             }
 
         }catch(IOException e){
@@ -127,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(s.endsWith("\"")){
             noQuotes = s.substring(0, s.length()-1);
+        }
+        else{
+            return s;
         }
         return noQuotes;
     }
