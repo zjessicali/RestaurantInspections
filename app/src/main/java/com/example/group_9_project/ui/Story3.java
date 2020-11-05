@@ -106,30 +106,30 @@ public class Story3 extends AppCompatActivity {
                 itemview = getLayoutInflater().inflate(R.layout.list_items, parent, false);
             }
             Violation violation=manager.getViolLump().get(position) ;
-            TextView textView = (TextView) findViewById(R.id.list_violation_header);
+            TextView textView = itemview.findViewById(R.id.list_violation_header);
             textView.setText(violation.toString());
             if(violation.getViolTypeString().equals("FOOD")){
-                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.food);
             }
             else if(violation.getViolTypeString().equals("EQUIPMENT")){
-                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.equipment);
             }
             else if(violation.getViolTypeString().equals("CONTAINER")){
-                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.utensils);
             }
             else if(violation.getViolTypeString().equals("LOCATION")){
-                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.location);
             }
             else if(violation.getViolTypeString().equals("REQUIREMENT")){
-                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.requirement);
             }
             else if(violation.getViolTypeString().equals("HYGIENE")){
-                ImageView imageView=(ImageView)findViewById(R.id.imageView_list);
+                ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.hygiene);
             }
             return itemview;
