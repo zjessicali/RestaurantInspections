@@ -6,7 +6,7 @@
     android:id="@+id/Screen3color"
     android:layout_height="match_parent"
     tools:context=".ui.InspectionDetail"
-    android:background="#d4bdb9"
+    android:background="#aeb2db"
     >
 
     <TextView
