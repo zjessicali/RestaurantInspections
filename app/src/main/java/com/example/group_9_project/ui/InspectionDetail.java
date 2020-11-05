@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,17 +26,21 @@ import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.model.Violation;
 import com.example.group_9_project.model.ViolationManager;
 
-public class Story3 extends AppCompatActivity {
+public class InspectionDetail extends AppCompatActivity {
     private static InspectionReport report;
-    private ViolationManager manager = report.getManager();
-    private RestaurantManager restaurants = RestaurantManager.getInstance();
+    private ViolationManager manager;
+    private RestaurantManager restaurants;
     private int restaurantIndex;
     private int inspectionIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_inspection_detail);
+
+        restaurants = RestaurantManager.getInstance();
+
+        manager = report.getManager();
         setContentView(R.layout.activity_story3);
         setarrayadapter();
         populateHeader();
@@ -86,14 +89,14 @@ public class Story3 extends AppCompatActivity {
     }
 
     private void setarrayadapter() {
-        ArrayAdapter<Violation> adapter = new MyListAdapter();
+        ArrayAdapter<Violation> adapter = new InspectionDetail.MyListAdapter();
         ListView list = (ListView) findViewById(R.id.ArrayList);
         list.setAdapter(adapter);
     }
 
     private class MyListAdapter extends ArrayAdapter<Violation> {
         public MyListAdapter() {
-            super(Story3.this, R.layout.list_items, manager.getViolLump());
+            super(InspectionDetail.this, R.layout.list_items, manager.getViolLump());
 
 
         }
@@ -139,7 +142,7 @@ public class Story3 extends AppCompatActivity {
     }
 
     public static Intent launchIntent(Context c, int restaurantIndex, int inspectionIndex) {
-        Intent intent = new Intent(c, Story3.class);
+        Intent intent = new Intent(c, InspectionDetail.class);
         intent.putExtra("restaurantIndex", restaurantIndex);
 
         RestaurantManager restaurants = RestaurantManager.getInstance();
@@ -152,18 +155,15 @@ public class Story3 extends AppCompatActivity {
         return intent;
     }
 
-private void extractData() {
+    private void extractData() {
         Intent intent = getIntent();
         restaurantIndex = intent.getIntExtra("restaurantIndex", 0);
 
-    RestaurantManager restaurants = RestaurantManager.getInstance();
-    Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
-    InspectionManager inspections = restaurant.getInspections();
+        RestaurantManager restaurants = RestaurantManager.getInstance();
+        Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
+        InspectionManager inspections = restaurant.getInspections();
 
-    if (inspections.getSize() != 0)
-        inspectionIndex = intent.getIntExtra("inspectionindex", 0);
-}
-
-
-
+        if (inspections.getSize() != 0)
+            inspectionIndex = intent.getIntExtra("inspectionindex", 0);
+    }
 }

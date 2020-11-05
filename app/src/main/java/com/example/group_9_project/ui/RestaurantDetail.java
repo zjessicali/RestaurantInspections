@@ -83,7 +83,7 @@ public class RestaurantDetail extends AppCompatActivity {
             text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = Story3.launchIntent(RestaurantDetail.this, index, inspectionIndex);
+                    Intent intent = InspectionDetail.launchIntent(RestaurantDetail.this, index, inspectionIndex);
                     startActivity(intent);
                 }
             });
