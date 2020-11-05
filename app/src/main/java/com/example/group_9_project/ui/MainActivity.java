@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionManager;
@@ -25,11 +27,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RestaurantManager restaurants = RestaurantManager.getInstance();
-    //feel free to rename
-    int restaurant_num = 0, inspection_num = 0;
+    private RestaurantManager restaurants;//feel free to rename
+    private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     TextView title;
     ListView RestaurantList;
 
@@ -37,19 +40,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        restaurants = new RestaurantManager();
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-
 
         title = findViewById(R.id.surrey_restaurant_list);
         RestaurantList = findViewById(R.id.restaurant_list);
         title.setText(getResources().getString(R.string.surrey_restaurant_list));
-
-
         readRestaurantData();
         readInspectionData();
+        populateResList();
         populateListView();
+        registerClickCallback();
 
+    }
+
+    private void registerClickCallback() {
+        ListView list = findViewById(R.id.restaurant_list);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
+                Restaurant clickedRes= ResList.get(position);
+                String message = "You clicked  on the restaurant " + clickedRes.getName() + " at the position " + position;
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void populateResList(){
+
+        ResList.add(new Restaurant("104 Sushi & Co","10422 168 St","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("Lee Yuen Seafood Restaurant","1812 152 St","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("Lee Yuen Seafood Restaurant","14755 104 St","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("Pattullo A & W","12808 King George Blvd","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("The Unfindable Bar","12345 67 Ave","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("Top In Town Pizza","14330 64 Ave","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("Top In Town Pizza","12788 76A Ave","Surrey", R.drawable.restaurant_logo));
+        ResList.add(new Restaurant("Zugba Flame Grilled Chicken","14351 104 Ave","Surrey", R.drawable.restaurant_logo));
     }
 
     private void populateListView() {
@@ -57,84 +84,34 @@ public class MainActivity extends AppCompatActivity {
         RestaurantList.setAdapter(adapter);
     }
 
-    private class MyListAdapter extends ArrayAdapter<Restaurant> {
-        public MyListAdapter() {
-            super(MainActivity.this, R.layout.listview_each_restaurant, restaurants.getListOfRestaurants());
+    private class MyListAdapter extends ArrayAdapter<Restaurant>{
+        public MyListAdapter(){
+            super(MainActivity.this, R.layout.listview_each_restaurant,ResList);
         }
-
         @Override
-        @NonNull
-        public View getView(int pos, View convertView, @NonNull ViewGroup parent) {
-
-            View restaurantView = convertView;
-
-            if (restaurantView == null) {
-                restaurantView = getLayoutInflater().inflate(R.layout.listview_each_restaurant, parent, false);
-            }
-            Restaurant currentRestaurant = restaurants.getRestFromIndex(pos);
-            TextView restaurantnameField = restaurantView.findViewById(R.id.restaurant_label_name);
-            restaurantnameField.setText(currentRestaurant.getName());
-            restaurantnameField.setSelected(true);
-            TextView restaurantCityField = restaurantView.findViewById(R.id.restaurant_city);
-            restaurantCityField.setText(currentRestaurant.getCity());
-
-            TextView restaurantAddressField = restaurantView.findViewById(R.id.restaurant_address);
-            restaurantAddressField.setText(currentRestaurant.getAddress());
-
-            InspectionManager inspections = currentRestaurant.getInspections();
-            InspectionReport inspectionsForCurrentRestaurant = inspections.getInspection(inspections.getSize() - 1);
-            int temp_inspection = 0;
-            if (inspectionsForCurrentRestaurant != null) {
-                temp_inspection = inspectionsForCurrentRestaurant.getNumCritical();
-            }
-            String display;
-
-            TextView problemsFoundForCurrentRestaurantField = restaurantView.findViewById(R.id.restaurant_problemsFound);
-            display = String.format("Issues Found", temp_inspection);
-            problemsFoundForCurrentRestaurantField.setText(display);
-
-            ImageView hazardLevelImage = restaurantView.findViewById(R.id.restaurant_image_hazardLevelValue);
-            TextView leveltxt = restaurantView.findViewById(R.id.restaurant_hazardLevel);
-            if (inspections.getSize() != 0) {
-
-                InspectionReport.HazardRating latestInspectionHazardRating = inspectionsForCurrentRestaurant.getHazard();
-
-                if (latestInspectionHazardRating == InspectionReport.HazardRating.HIGH) {
-                    hazardLevelImage.setImageResource(R.drawable.high_risk);
-                    display = "Hazard Level: High";
-                } else if (latestInspectionHazardRating == InspectionReport.HazardRating.MODERATE) {
-                    hazardLevelImage.setImageResource(R.drawable.medium_risk);
-                    restaurantView.setBackground(getDrawable(R.drawable.mid_back));
-                    display = "Hazard Level: Moderate";
-                } else {
-                    hazardLevelImage.setImageResource(R.drawable.low_risk);
-                    restaurantView.setBackground(getDrawable(R.drawable.low_back));
-                    display = "Hazard Level: Low";
-                }
-            } else {
-                hazardLevelImage.setImageResource(R.drawable.low_risk);
-                display = "Hazard Level: Unknown";
-
+        public  View getView(int position, View convertView, ViewGroup parent){
+            //Make sure we have a view to work with
+            View itemView = convertView;
+            if(itemView==null){
+                itemView = getLayoutInflater().inflate(R.layout.listview_each_restaurant,parent,false);
             }
 
-            leveltxt.setText(display);
+            Restaurant currentRestaurant = ResList.get(position);
+            ImageView imageView = itemView.findViewById(R.id.restaurant_image_icon);
+            imageView.setImageResource(currentRestaurant.getIconID());
 
-            TextView latestInspectionTimeField =
-                    restaurantView.findViewById(R.id.restaurant_label_latestInspection);
-            InspectionManager inspectionList = currentRestaurant.getInspections();
-            if (inspections.getSize() != 0) {
-                String inspectionDate = inspectionList.getInspection(inspectionList.getSize() - 1).getInspectDateString();
-                display = getResources().getString(R.string.restaurant_inspectionPerformedOn) + inspectionDate;
-                latestInspectionTimeField.setText(display);
-            } else
-                display =
-                        getResources().getString(R.string.restaurant_inspectionPerformedOn) +
-                                (getResources().getString(R.string.restaurant_noInspectionAvailable_value));
-            latestInspectionTimeField.setText(display);
+            TextView nameText = itemView.findViewById(R.id.restaurant_label_name);
+            nameText.setText(currentRestaurant.getName());
 
-            return restaurantView;
+            TextView addressText = itemView.findViewById(R.id.restaurant_address);
+            addressText.setText(currentRestaurant.getAddress());
 
+            TextView cityText = itemView.findViewById(R.id.restaurant_city);
+            cityText.setText(currentRestaurant.getCity());
+
+            return itemView;
         }
+
     }
 
 

@@ -11,6 +11,7 @@ Restaurant {
     private FacType type;
     private double latitude;
     private double longitude;
+    private int iconID;
     public InspectionManager inspections;
 
 
@@ -20,6 +21,16 @@ Restaurant {
         this.inspections = new InspectionManager();
     }
 
+    public Restaurant(String name, String address, String city, int iconID) {
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.iconID=iconID;
+    }
+
+    public int getIconID(){
+        return iconID;
+    }
     public String getName() {
         return name;
     }
@@ -86,6 +97,13 @@ Restaurant {
         if(s == "Restaurant"){
             this.type = FacType.RESTAURANT;
         }
+    }
+
+    public String getGPS(){
+        String lat_s = String.format("%.4f", latitude);
+        String lon_s = String.format("%.4f", longitude);
+        String GPS = "(" + lat_s + ", " + lon_s + ")";
+        return GPS;
     }
 
     //add an inspection report to the manager
