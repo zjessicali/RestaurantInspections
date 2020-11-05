@@ -27,20 +27,21 @@ import com.example.group_9_project.model.Violation;
 import com.example.group_9_project.model.ViolationManager;
 
 public class InspectionDetail extends AppCompatActivity {
-
-    private int restaurantIndex;
-    private int inspectionIndex;
     private static InspectionReport report;
     private ViolationManager manager;
-    private RestaurantManager restaurants = RestaurantManager.getInstance();
+    private RestaurantManager restaurants;
+    private int restaurantIndex;
+    private int inspectionIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_story3);
+        setContentView(R.layout.activity_inspection_detail);
 
-        extractData();
+        restaurants = RestaurantManager.getInstance();
+
+        manager = report.getManager();
+        setContentView(R.layout.activity_story3);
         setarrayadapter();
         populateHeader();
         regiterclick();
@@ -146,7 +147,9 @@ public class InspectionDetail extends AppCompatActivity {
         RestaurantManager restaurants = RestaurantManager.getInstance();
         Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
         InspectionManager inspections = restaurant.getInspections();
-        intent.putExtra("inspectionIndex", inspectionIndex);
+
+        if (inspections.getSize() != 0)
+            intent.putExtra("inspectionIndex", inspectionIndex);
 
         return intent;
     }
@@ -154,14 +157,12 @@ public class InspectionDetail extends AppCompatActivity {
     private void extractData() {
         Intent intent = getIntent();
         restaurantIndex = intent.getIntExtra("restaurantIndex", 0);
-        inspectionIndex = intent.getIntExtra("inspectionindex", 0);
 
         RestaurantManager restaurants = RestaurantManager.getInstance();
         Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
         InspectionManager inspections = restaurant.getInspections();
 
-        report = inspections.getInspection(inspectionIndex);
-        manager = report.getManager();
-
+        if (inspections.getSize() != 0)
+            inspectionIndex = intent.getIntExtra("inspectionindex", 0);
     }
 }
