@@ -53,22 +53,21 @@ public class InspectionDetail extends AppCompatActivity {
         textView1.setText("" + report.getInspType());
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
-        if(report.getHazard().equals("LOW")) {
-            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
-            imageView.setImageResource(R.drawable.green);
-            textView2.setTextColor(Color.GREEN);
-        }
-        else if(report.getHazard().equals("MODERATE")){
-            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
-            imageView.setImageResource(R.drawable.orange);
-            textView2.setTextColor(Color.YELLOW);
-        }
-        else{
-            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
-            imageView.setImageResource(R.drawable.red);
-            textView2.setTextColor(Color.RED);
-
-        }
+//        if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {
+//            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
+//            imageView.setImageResource(R.drawable.green);
+//            textView2.setTextColor(Color.GREEN);
+//        }
+//        else if(report.getHazard().equals(InspectionReport.HazardRating.MODERATE)){
+//            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
+//            imageView.setImageResource(R.drawable.orange);
+//            textView2.setTextColor(Color.YELLOW);
+//        }
+//        else{
+//            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
+//            imageView.setImageResource(R.drawable.red);
+//            textView2.setTextColor(Color.RED);
+//        }
 
     }
 
