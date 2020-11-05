@@ -1,17 +1,20 @@
 package com.example.group_9_project.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RestaurantManager restaurants;//feel free to rename
+    private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     TextView title;
     ListView RestaurantList;
@@ -40,13 +43,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        restaurants = new RestaurantManager();
         Toolbar toolbar = findViewById(R.id.main_toolbar);
+        toolbar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         setSupportActionBar(toolbar);
 
-        title = findViewById(R.id.surrey_restaurant_list);
-        RestaurantList = findViewById(R.id.restaurant_list);
-        title.setText(getResources().getString(R.string.surrey_restaurant_list));
         readRestaurantData();
         readInspectionData();
         populateResList();
@@ -60,40 +60,49 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                Restaurant clickedRes= ResList.get(position);
-                String message = "You clicked  on the restaurant " + clickedRes.getName() + " at the position " + position;
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+//                Restaurant clickedRes= ResList.get(position);
+//                Toast.makeText(MainActivity.this, clickedRes.getLatitude() + "", Toast.LENGTH_SHORT).show();
+                Intent intent = RestaurantDetail.launchIntent(MainActivity.this, position);
+                startActivity(intent);
             }
         });
     }
 
+
     private void populateResList(){
 
-        ResList.add(new Restaurant("104 Sushi & Co","10422 168 St","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("Lee Yuen Seafood Restaurant","1812 152 St","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("Lee Yuen Seafood Restaurant","14755 104 St","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("Pattullo A & W","12808 King George Blvd","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("The Unfindable Bar","12345 67 Ave","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("Top In Town Pizza","14330 64 Ave","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("Top In Town Pizza","12788 76A Ave","Surrey", R.drawable.restaurant_logo));
-        ResList.add(new Restaurant("Zugba Flame Grilled Chicken","14351 104 Ave","Surrey", R.drawable.restaurant_logo));
+//        if (restaurants.getSize() == 0) {
+//            restaurants.addRestaurant(new Restaurant("104 Sushi & Co", "10422 168 St", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("Lee Yuen Seafood Restaurant", "1812 152 St", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("Lee Yuen Seafood Restaurant", "14755 104 St", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("Pattullo A & W", "12808 King George Blvd", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("The Unfindable Bar", "12345 67 Ave", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("Top In Town Pizza", "14330 64 Ave", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("Top In Town Pizza", "12788 76A Ave", "Surrey", R.drawable.restaurant_logo));
+//            restaurants.addRestaurant(new Restaurant("Zugba Flame Grilled Chicken", "14351 104 Ave", "Surrey", R.drawable.restaurant_logo));
+//        }
     }
 
     private void populateListView() {
+        for (int i = 0; i < restaurants.getSize(); i++) {
+            ResList.add(restaurants.getRestFromIndex(i));
+        }
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
-        RestaurantList.setAdapter(adapter);
+        ListView list = findViewById(R.id.restaurant_list);
+        list.setAdapter(adapter);
+
     }
 
     private class MyListAdapter extends ArrayAdapter<Restaurant>{
         public MyListAdapter(){
-            super(MainActivity.this, R.layout.listview_each_restaurant,ResList);
+            super(MainActivity.this, R.layout.listview_each_restaurant, ResList);
         }
         @Override
         public  View getView(int position, View convertView, ViewGroup parent){
             //Make sure we have a view to work with
             View itemView = convertView;
             if(itemView==null){
-                itemView = getLayoutInflater().inflate(R.layout.listview_each_restaurant,parent,false);
+                itemView = getLayoutInflater().inflate(R.layout.listview_each_restaurant, parent, false);
             }
 
             Restaurant currentRestaurant = ResList.get(position);

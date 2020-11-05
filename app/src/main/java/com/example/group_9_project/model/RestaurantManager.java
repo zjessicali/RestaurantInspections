@@ -10,7 +10,7 @@ public class RestaurantManager {
     private static RestaurantManager instance;
 
     //constructor
-    public RestaurantManager() {
+    private RestaurantManager() {
         this.manager = new ArrayList<Restaurant>();
     }
     //singleton
