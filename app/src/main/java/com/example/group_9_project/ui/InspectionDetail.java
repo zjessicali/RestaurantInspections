@@ -28,7 +28,7 @@ import com.example.group_9_project.model.ViolationManager;
 
 public class InspectionDetail extends AppCompatActivity {
     private static InspectionReport report;
-    private ViolationManager manager;
+    private static ViolationManager manager;
     private RestaurantManager restaurants;
     private int restaurantIndex;
     private int inspectionIndex;
@@ -54,21 +54,27 @@ public class InspectionDetail extends AppCompatActivity {
         textView1.setText("" + report.getInspType());
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
-//        if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {
-//            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
-//            imageView.setImageResource(R.drawable.green);
-//            textView2.setTextColor(Color.GREEN);
-//        }
-//        else if(report.getHazard().equals(InspectionReport.HazardRating.MODERATE)){
-//            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
-//            imageView.setImageResource(R.drawable.orange);
-//            textView2.setTextColor(Color.YELLOW);
-//        }
-//        else{
-//            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
-//            imageView.setImageResource(R.drawable.red);
-//            textView2.setTextColor(Color.RED);
-//        }
+        TextView textView3=(TextView)findViewById(R.id.Critical);
+        if(report.getNumCritical()==0)
+            textView3.setText("Not- Critical");
+        else
+            textView3.setText("Critical");
+
+      if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {
+            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
+            imageView.setImageResource(R.drawable.red);
+            textView2.setTextColor(Color.RED);
+        }
+        else if(report.getHazard().equals(InspectionReport.HazardRating.MODERATE)){
+            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
+            imageView.setImageResource(R.drawable.orange);
+            textView2.setTextColor(Color.YELLOW);
+        }
+       else{
+           ImageView imageView=(ImageView)findViewById(R.id.imageView2);
+            imageView.setImageResource(R.drawable.green);
+            textView2.setTextColor(Color.GREEN);
+        }
 
     }
 
@@ -77,8 +83,9 @@ public class InspectionDetail extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MessageFragment.getposition(position,manager);
                 Violation clicked = manager.getViolLump().get(position);
-                MessageFragment.getposition(position);
+                MessageFragment.getposition(position,manager);
                 FragmentManager manager = getSupportFragmentManager();
                 MessageFragment dialog = new MessageFragment();
                 dialog.show(manager, "Message");
@@ -88,7 +95,7 @@ public class InspectionDetail extends AppCompatActivity {
     }
 
     private void setarrayadapter() {
-        ArrayAdapter<Violation> adapter = new InspectionDetail.MyListAdapter();
+        ArrayAdapter<Violation> adapter = new MyListAdapter();
         ListView list = (ListView) findViewById(R.id.ArrayList);
         list.setAdapter(adapter);
     }
@@ -109,30 +116,34 @@ public class InspectionDetail extends AppCompatActivity {
             }
             Violation violation=manager.getViolLump().get(position) ;
             TextView textView = itemview.findViewById(R.id.list_violation_header);
-            textView.setText(violation.toString());
-            if(violation.getViolTypeString().equals("FOOD")){
+            textView.setText(violation.getViolTypeString());
+            if(violation.getViolTypeString().equals("Food")){
                 ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.food);
             }
-            else if(violation.getViolTypeString().equals("EQUIPMENT")){
-                ImageView imageView=itemview.findViewById(R.id.imageView_list);
-                imageView.setImageResource(R.drawable.equipment);
+            else if(violation.getViolTypeString().equals("Equipment")){
+                ImageView imageView1=itemview.findViewById(R.id.imageView_list);
+                imageView1.setImageResource(R.drawable.equipment);
             }
-            else if(violation.getViolTypeString().equals("CONTAINER")){
-                ImageView imageView=itemview.findViewById(R.id.imageView_list);
-                imageView.setImageResource(R.drawable.utensils);
+            else if(violation.getViolTypeString().equals("Chemical")){
+                ImageView imageView1=itemview.findViewById(R.id.imageView_list);
+                imageView1.setImageResource(R.drawable.equipment);
             }
-            else if(violation.getViolTypeString().equals("LOCATION")){
-                ImageView imageView=itemview.findViewById(R.id.imageView_list);
-                imageView.setImageResource(R.drawable.location);
+            else if(violation.getViolTypeString().equals("Containers")){
+                ImageView imageView2=itemview.findViewById(R.id.imageView_list);
+                imageView2.setImageResource(R.drawable.utensils);
             }
-            else if(violation.getViolTypeString().equals("REQUIREMENT")){
-                ImageView imageView=itemview.findViewById(R.id.imageView_list);
-                imageView.setImageResource(R.drawable.requirement);
+            else if(violation.getViolTypeString().equals("Location")){
+                ImageView imageView3=itemview.findViewById(R.id.imageView_list);
+                imageView3.setImageResource(R.drawable.location);
             }
-            else if(violation.getViolTypeString().equals("HYGIENE")){
-                ImageView imageView=itemview.findViewById(R.id.imageView_list);
-                imageView.setImageResource(R.drawable.hygiene);
+            else if(violation.getViolTypeString().equals("Requirements")){
+                ImageView imageView4=itemview.findViewById(R.id.imageView_list);
+                imageView4.setImageResource(R.drawable.requirement);
+            }
+            else {
+                ImageView imageView5=itemview.findViewById(R.id.imageView_list);
+                imageView5.setImageResource(R.drawable.hygiene);
             }
             return itemview;
         }
@@ -147,7 +158,7 @@ public class InspectionDetail extends AppCompatActivity {
         RestaurantManager restaurants = RestaurantManager.getInstance();
         Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
         InspectionManager inspections = restaurant.getInspections();
-
+        report=inspections.getInspection(inspectionIndex);
         if (inspections.getSize() != 0)
             intent.putExtra("inspectionIndex", inspectionIndex);
 

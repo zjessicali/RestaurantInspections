@@ -3,6 +3,7 @@ package com.example.group_9_project.ui;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,19 +19,23 @@ import com.example.group_9_project.model.ViolationManager;
 
 public class MessageFragment extends AppCompatDialogFragment {
     private static int position;
-    Violation v;
-    ViolationManager manager=new ViolationManager();
+  private static  ViolationManager manager;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View v= LayoutInflater.from(getActivity()).inflate(R.layout.message,null);
-
+       View v= LayoutInflater.from(getActivity()).inflate(R.layout.message,null);
+        TextView textView=v.findViewById(R.id.dialog);
+        textView.setText(manager.getViolLump().get(position).toString());
+        if(manager.getViolLump().get(position).getCritical()=="Critical")
+            textView.setTextColor(Color.RED);
+        else
+            textView.setTextColor(Color.GREEN);
         DialogInterface.OnClickListener listener=new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                TextView textView=(TextView)getActivity().findViewById(R.id.dialog);
-                textView.setText(manager.getViolLump().get(position).toString());
+
+
             }
         };
         return new AlertDialog.Builder(getActivity())
@@ -41,7 +46,7 @@ public class MessageFragment extends AppCompatDialogFragment {
 
 
     }
-    public static void getposition(int position1){position=position1;}
-
-
+    public static void getposition(int position1,ViolationManager man){
+        manager=man;
+        position=position1;}
 }
