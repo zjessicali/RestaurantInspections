@@ -13,14 +13,14 @@
           x
         </activity>
 <!--        <activity android:name=".ui.Story3" />-->
-        <activity android:name=".ui.RestaurantDetail" />
+        <activity android:name=".ui.RestaurantDetail" ></activity>
+
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <meta-data

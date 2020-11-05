@@ -24,6 +24,9 @@ public class ViolationManager implements Iterable<Violation>{
     public void addViolation(Violation v){
         violationList.add(v);
     }
+    public int size(){
+        return violationList.size();
+    }
 
     @Override
     public Iterator<Violation> iterator() {

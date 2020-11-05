@@ -38,9 +38,7 @@ public class InspectionDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story3);
-
         restaurants = RestaurantManager.getInstance();
-
         manager = report.getManager();
         setContentView(R.layout.activity_story3);
         setarrayadapter();
@@ -56,10 +54,8 @@ public class InspectionDetail extends AppCompatActivity {
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
         TextView textView3=(TextView)findViewById(R.id.Critical);
-        if(report.getNumCritical()==0)
-            textView3.setText("Not- Critical");
-        else
-            textView3.setText("Critical");
+        textView3.setText("Critical errors "+report.getNumCritical()+"     Non-Critical Errors:"+(report.getManager().size()-report.getNumCritical()));
+
 
       if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView2);
@@ -118,6 +114,16 @@ public class InspectionDetail extends AppCompatActivity {
             Violation violation=manager.getViolLump().get(position) ;
             TextView textView = itemview.findViewById(R.id.list_violation_header);
             textView.setText(violation.getViolTypeString());
+            if(violation.getCritical().equals("Critical")) {
+                ImageView imageView = itemview.findViewById(R.id.imageView_critical);
+                imageView.setImageResource(R.drawable.critical);
+            }
+                else {
+                    ImageView imageView1=itemview.findViewById(R.id.imageView_critical);
+                    imageView1.setImageResource(R.drawable.not_critical);
+                }
+
+
             if(violation.getViolTypeString().equals("Food")){
                 ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.food);
