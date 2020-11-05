@@ -55,30 +55,32 @@ public class RestaurantDetail extends AppCompatActivity {
 
             switch(inspection.getHazard()) {
                 case LOW:
-                    hazard = "<font color = '#00FF00'>LOW</font>";
+                    hazard = "<font color = '#00FF00'>" + getResources().getString(R.string.low) + "</font>";
                     break;
 
                 case MODERATE:
-                    hazard = "<font color = '#FFFF00'>MEDIUM</font>";
+                    hazard = "<font color = '#FFFF00'>" + getResources().getString(R.string.moderate) + "</font>";
                     break;
 
                 case HIGH:
-                    hazard = "<font color = '#FF0000'>HIGH</font>";
+                    hazard = "<font color = '#FF0000'>"+ getResources().getString(R.string.high) +"</font>";
                     break;
             }
 
-            String report = inspection.getNumCritical() + " critical issues| "
-                    + inspection.getNumNonCritical() + " non-critical issues| "
-                    + inspection.getInspectDateString() + "| Hazard level:"
+            String report = inspection.getNumCritical() + getResources().getString(R.string.critical_issues)
+                    + inspection.getNumNonCritical() + getResources().getString(R.string.non_critical_issues)
+                    + inspection.getInspectDateString() + getResources().getString(R.string.hazard_level)
                     + hazard;
 
             text.setText(Html.fromHtml(report));
             text.setTextSize(20);
 
+            final int inspectionIndex = i;
             text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Set intent when Single Inspection is created
+                    Intent intent = Story3.launchIntent(RestaurantDetail.this, index, inspectionIndex);
+                    startActivity(intent);
                 }
             });
 

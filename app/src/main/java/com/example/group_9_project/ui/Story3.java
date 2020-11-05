@@ -20,13 +20,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
+import com.example.group_9_project.model.Restaurant;
+import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.model.Violation;
 import com.example.group_9_project.model.ViolationManager;
 
 public class Story3 extends AppCompatActivity {
     private static InspectionReport report;
-    ViolationManager manager = report.getManager();
+    private ViolationManager manager = report.getManager();
+    private RestaurantManager restaurants = RestaurantManager.getInstance();
+    private int restaurantIndex;
+    private int inspectionIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -131,11 +138,31 @@ public class Story3 extends AppCompatActivity {
 
     }
 
-    public static Intent LaunchIntent(Context c, InspectionReport repo) {
-        report = repo;
+    public static Intent launchIntent(Context c, int restaurantIndex, int inspectionIndex) {
         Intent intent = new Intent(c, Story3.class);
+        intent.putExtra("restaurantIndex", restaurantIndex);
+
+        RestaurantManager restaurants = RestaurantManager.getInstance();
+        Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
+        InspectionManager inspections = restaurant.getInspections();
+
+        if (inspections.getSize() != 0)
+            intent.putExtra("inspectionIndex", inspectionIndex);
+
         return intent;
     }
+
+private void extractData() {
+        Intent intent = getIntent();
+        restaurantIndex = intent.getIntExtra("restaurantIndex", 0);
+
+    RestaurantManager restaurants = RestaurantManager.getInstance();
+    Restaurant restaurant = restaurants.getRestFromIndex(restaurantIndex);
+    InspectionManager inspections = restaurant.getInspections();
+
+    if (inspections.getSize() != 0)
+        inspectionIndex = intent.getIntExtra("inspectionindex", 0);
+}
 
 
 
