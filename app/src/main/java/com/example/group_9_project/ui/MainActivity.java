@@ -25,6 +25,8 @@ import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,13 +45,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
-        toolbar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
-        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
         readRestaurantData();
         readInspectionData();
-        populateResList();
         populateListView();
         registerClickCallback();
 
@@ -60,28 +61,12 @@ public class MainActivity extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-//                Restaurant clickedRes= ResList.get(position);
-//                Toast.makeText(MainActivity.this, clickedRes.getLatitude() + "", Toast.LENGTH_SHORT).show();
                 Intent intent = RestaurantDetail.launchIntent(MainActivity.this, position);
                 startActivity(intent);
             }
         });
     }
 
-
-    private void populateResList(){
-
-//        if (restaurants.getSize() == 0) {
-//            restaurants.addRestaurant(new Restaurant("104 Sushi & Co", "10422 168 St", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("Lee Yuen Seafood Restaurant", "1812 152 St", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("Lee Yuen Seafood Restaurant", "14755 104 St", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("Pattullo A & W", "12808 King George Blvd", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("The Unfindable Bar", "12345 67 Ave", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("Top In Town Pizza", "14330 64 Ave", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("Top In Town Pizza", "12788 76A Ave", "Surrey", R.drawable.restaurant_logo));
-//            restaurants.addRestaurant(new Restaurant("Zugba Flame Grilled Chicken", "14351 104 Ave", "Surrey", R.drawable.restaurant_logo));
-//        }
-    }
 
     private void populateListView() {
         for (int i = 0; i < restaurants.getSize(); i++) {
