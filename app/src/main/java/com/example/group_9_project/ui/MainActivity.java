@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
@@ -103,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
             TextView cityText = itemView.findViewById(R.id.restaurant_city);
             cityText.setText(currentRestaurant.getCity());
 
+            TextView dateText = itemView.findViewById(R.id.restaurant_label_latestInspection);
+            InspectionManager inspections = currentRestaurant.getInspections();
+            if(inspections.getSize()!=0){
+                String date = "Inspection performed on: "+ inspections.getInspection(0).getInspectDateString();
+                dateText.setText( date);
+            }
+
             return itemView;
         }
 
@@ -138,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 6; i < tokens.length; i++){
                     lump += removeQuotes(tokens[i]) + ",";
                 }
-                Log.d("MyActivity", "lump looks like: " + lump);
+                //Log.d("MyActivity", "lump looks like: " + lump);
 
                 inspection.processLump(lump);
                 Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
