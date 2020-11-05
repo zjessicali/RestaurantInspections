@@ -3,6 +3,7 @@ package com.example.group_9_project.ui;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
@@ -68,12 +69,12 @@ public class InspectionDetail extends AppCompatActivity {
         else if(report.getHazard().equals(InspectionReport.HazardRating.MODERATE)){
             ImageView imageView=(ImageView)findViewById(R.id.imageView2);
             imageView.setImageResource(R.drawable.orange);
-            textView2.setTextColor(Color.YELLOW);
+            textView2.setTextColor( Color. rgb(255, 165, 0));
         }
        else{
            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
             imageView.setImageResource(R.drawable.green);
-            textView2.setTextColor(Color.GREEN);
+            textView2.setTextColor(Color.rgb(51,204,90));
         }
 
     }

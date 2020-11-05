@@ -27,10 +27,10 @@ public class MessageFragment extends AppCompatDialogFragment {
        View v= LayoutInflater.from(getActivity()).inflate(R.layout.message,null);
         TextView textView=v.findViewById(R.id.dialog);
         textView.setText(manager.getViolLump().get(position).toString());
-        if(manager.getViolLump().get(position).getCritical()=="Critical")
+        if(manager.getViolLump().get(position).getCritical().equals("Critical"))
             textView.setTextColor(Color.RED);
         else
-            textView.setTextColor(Color.GREEN);
+            textView.setTextColor(Color.rgb(51,204,90));
         DialogInterface.OnClickListener listener=new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
