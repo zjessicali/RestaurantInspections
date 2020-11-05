@@ -1,6 +1,8 @@
 package com.example.group_9_project.ui;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,12 +37,14 @@ public class RestaurantDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.restaurant_detail);
+
         populateInspectionsList();
         extractData();
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
-
     }
 
     private void populateInspectionsList() {
