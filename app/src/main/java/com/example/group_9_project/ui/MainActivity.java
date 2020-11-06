@@ -105,9 +105,14 @@ public class MainActivity extends AppCompatActivity {
             TextView dateText = itemView.findViewById(R.id.restaurant_label_latestInspection);
             InspectionManager inspections = currentRestaurant.getInspections();
             if(inspections.getSize()!=0){
-                String date = "Inspection performed on: "+ inspections.getInspection(0).getInspectDateString();
+                String date = "Last inspection: "+ inspections.getInspection(0).getInspectDateString();
                 dateText.setText( date);
             }
+
+            TextView issues = itemView.findViewById(R.id.restaurant_problemsFound);
+            int problems = inspections.getNumCritical() + inspections.getNumNonCritical();
+            String issuesText = "Issues: "+ problems;
+            issues.setText(issuesText);
 
             return itemView;
         }

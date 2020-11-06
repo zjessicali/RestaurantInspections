@@ -6,9 +6,14 @@ import java.util.ArrayList;
 public class
 InspectionManager {
     private ArrayList<InspectionReport> manager;
+    private int numCritical;
+    private int numNonCritical;
+
 
     public InspectionManager() {
         this.manager = new ArrayList<InspectionReport>();
+        numCritical = 0;
+        numNonCritical = 0;
     }
 
     //getters
@@ -18,11 +23,18 @@ InspectionManager {
         return manager.get(i);
     }
 
+    public int getNumCritical() {
+        return numCritical;
+    }
 
+    public int getNumNonCritical() {
+        return numNonCritical;
+    }
 
     public int getSize(){
         return manager.size();
     }
+
     //setters
 
     public void addInspection(InspectionReport report){
@@ -46,5 +58,11 @@ InspectionManager {
             }
         }
 
+        //add (non) criticals
+        numCritical += report.getNumCritical();
+        numNonCritical += report.getNumNonCritical();
+
     }
+
+
 }
