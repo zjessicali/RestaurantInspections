@@ -43,7 +43,6 @@ public class RestaurantDetail extends AppCompatActivity {
 
         extractData();
         populateInspectionsList();
-        populateInspectionsList();
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
