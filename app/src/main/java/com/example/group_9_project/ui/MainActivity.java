@@ -90,8 +90,26 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Restaurant currentRestaurant = ResList.get(position);
+            InspectionManager inspections = currentRestaurant.getInspections();
+
             ImageView imageView = itemView.findViewById(R.id.restaurant_image_icon);
-            imageView.setImageResource(currentRestaurant.getIconID());
+            imageView.setImageResource(R.drawable.restaurant_logo);
+
+            ImageView hazardImage = itemView.findViewById(R.id.restaurant_image_hazardLevelValue);
+            if(inspections.getSize() != 0){
+                switch(inspections.getInspection(0).getHazard()){
+                    case LOW:
+                        hazardImage.setImageResource(R.drawable.low_risk);
+                        break;
+                    case MODERATE:
+                        hazardImage.setImageResource(R.drawable.medium_risk);
+                        break;
+                    case HIGH:
+                        hazardImage.setImageResource(R.drawable.high_risk);
+                        break;
+                }
+            }
+
 
             TextView nameText = itemView.findViewById(R.id.restaurant_label_name);
             nameText.setText(currentRestaurant.getName());
@@ -103,16 +121,26 @@ public class MainActivity extends AppCompatActivity {
             cityText.setText(currentRestaurant.getCity());
 
             TextView dateText = itemView.findViewById(R.id.restaurant_label_latestInspection);
-            InspectionManager inspections = currentRestaurant.getInspections();
             if(inspections.getSize()!=0){
                 String date = "Last inspection: "+ inspections.getInspection(0).getInspectDateString();
                 dateText.setText( date);
             }
+            else{
+                String date = "Last inspection: never";
+                dateText.setText( date);
+            }
 
             TextView issues = itemView.findViewById(R.id.restaurant_problemsFound);
-            int problems = inspections.getNumCritical() + inspections.getNumNonCritical();
-            String issuesText = "Issues: "+ problems;
-            issues.setText(issuesText);
+            if(inspections.getSize()!=0){
+                int problems = inspections.getInspection(0).getNumCritical() + inspections.getInspection(0).getNumNonCritical();
+                String issuesText = "Issues: "+ problems;
+            }
+            else{
+                String issuesText = "Issues: "+ 0;
+                issues.setText(issuesText);
+            }
+
+
 
             return itemView;
         }

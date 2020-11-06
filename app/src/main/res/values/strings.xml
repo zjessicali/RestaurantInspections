@@ -14,7 +14,7 @@
     <string name="restaurant_hazardLevelModerate_value">Moderate</string>
     <string name="restaurant_hazardLevelLow_value">Low</string>
     <string name="restaurant_hazardLevelNo_value">Unknown</string>
-    <string name="restaurant_inspectionPerformedOn">"Inspection Performed On: "</string>
+    <string name="restaurant_inspectionPerformedOn">"Last Inspection: "</string>
     <string name="restaurant_noInspectionAvailable_value">Unknown</string>
     <string name="restaurant_info">Address: %s, %s\nGPS: %s</string>
 </resources>
