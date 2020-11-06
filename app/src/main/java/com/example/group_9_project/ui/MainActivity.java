@@ -131,16 +131,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
             TextView issues = itemView.findViewById(R.id.restaurant_problemsFound);
-            if(inspections.getSize()!=0){
+            if(inspections.getSize()!= 0){
                 int problems = inspections.getInspection(0).getNumCritical() + inspections.getInspection(0).getNumNonCritical();
                 String issuesText = "Issues: "+ problems;
+                issues.setText(issuesText);
             }
             else{
                 String issuesText = "Issues: "+ 0;
                 issues.setText(issuesText);
+                issues.setText(issuesText);
             }
-
-
 
             return itemView;
         }
