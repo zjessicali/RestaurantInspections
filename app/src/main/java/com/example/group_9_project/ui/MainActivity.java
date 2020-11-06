@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
-        startRestaurantDetail(); //DELETE this
+        //startRestaurantDetail(); //DELETE this
         readRestaurantData();
         readInspectionData();
         populateListView();
