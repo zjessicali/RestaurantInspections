@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
+        startRestaurantDetail(); //DELETE this
         readRestaurantData();
         readInspectionData();
         populateListView();
@@ -180,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("MyActivity", "lump looks like: " + lump);
 
                 inspection.processLump(lump);
-                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
-                for(int i = 0; i < inspection.getViolLump().size(); i++){
-                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
-                }
+//                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
+//                for(int i = 0; i < inspection.getViolLump().size(); i++){
+//                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
+//                }
                 //Log.d("MyActivity", "Violation: " + inspection.getViolation(0));
 
                 //adds inspection into it's restaurants inspection manager

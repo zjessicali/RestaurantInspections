@@ -4,7 +4,9 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.MainActivity"
+    android:background="#d4bdb9">
+
 
     <TextView
         android:id="@+id/surrey_restaurant_list"

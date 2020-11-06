@@ -24,11 +24,11 @@ public class InspectionReport {
     private int numCritical;
     private int numNonCritical;
     private HazardRating hazard;
-    private ArrayList<Violation> violLump;
+    private ViolationManager violLump;
 
     //constructor
     public InspectionReport() {
-        violLump = new ArrayList<Violation>();
+        violLump = new ViolationManager();
         int numCritical = 0;
         int numNonCritical = 0;
         int numTotal = 0;
@@ -68,9 +68,6 @@ public class InspectionReport {
         return hazard;
     }
 
-    public ArrayList<Violation> getViolLump() {
-        return violLump;
-    }
 
     //needs testing
     //returns "when something happened in intelligent format" as a string
@@ -160,9 +157,8 @@ public class InspectionReport {
                 '}';
     }
 
-    //get violation at index i
-    public Violation getViolation(int i){
-        return violLump.get(i);
+    public ViolationManager getManager(){
+        return violLump;
     }
 
 
@@ -239,7 +235,7 @@ public class InspectionReport {
             viol.addToViol(tmp);
             viol.setType(Integer.parseInt(viol.getViolation().get(0)));
             from = to+1;
-            violLump.add(viol);
+            violLump.addViolation(viol);
         }
         //from 'to' to end
         processViolation(from, lump.length(), lump);
@@ -260,6 +256,6 @@ public class InspectionReport {
         viol.addToViol(tmp);
         viol.setType(Integer.parseInt(viol.getViolation().get(0)));
         from = to+1;
-        violLump.add(viol);
+        violLump.addViolation(viol);
     }
 }
