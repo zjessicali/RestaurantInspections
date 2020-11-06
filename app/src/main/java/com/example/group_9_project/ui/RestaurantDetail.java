@@ -41,8 +41,8 @@ public class RestaurantDetail extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.restaurant_detail);
 
-        populateInspectionsList();
         extractData();
+        populateInspectionsList();
         populateInspectionsList();
         setupRestaurantName();
         setupRestaurantAddress();
