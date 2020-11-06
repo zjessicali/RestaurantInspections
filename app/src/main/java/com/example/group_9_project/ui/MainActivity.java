@@ -1,40 +1,151 @@
 package com.example.group_9_project.ui;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private RestaurantManager restaurants;//feel free to rename
+    private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
+    private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
+    TextView title;
+    ListView RestaurantList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        restaurants = restaurants.getInstance();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
         startRestaurantDetail(); //DELETE this
         readRestaurantData();
         readInspectionData();
+        populateListView();
+        registerClickCallback();
 
     }
 
-    private void startRestaurantDetail() {
-        Intent intent = RestaurantDetail.launchIntent(MainActivity.this, 0);
-        startActivity(intent);
+    private void registerClickCallback() {
+        ListView list = findViewById(R.id.restaurant_list);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
+                Intent intent = RestaurantDetail.launchIntent(MainActivity.this, position);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    private void populateListView() {
+        for (int i = 0; i < restaurants.getSize(); i++) {
+            ResList.add(restaurants.getRestFromIndex(i));
+        }
+        ArrayAdapter<Restaurant> adapter = new MyListAdapter();
+        ListView list = findViewById(R.id.restaurant_list);
+        list.setAdapter(adapter);
+
+    }
+
+    private class MyListAdapter extends ArrayAdapter<Restaurant>{
+        public MyListAdapter(){
+            super(MainActivity.this, R.layout.listview_each_restaurant, ResList);
+        }
+        @Override
+        public  View getView(int position, View convertView, ViewGroup parent){
+            //Make sure we have a view to work with
+            View itemView = convertView;
+            if(itemView==null){
+                itemView = getLayoutInflater().inflate(R.layout.listview_each_restaurant, parent, false);
+            }
+
+            Restaurant currentRestaurant = ResList.get(position);
+            InspectionManager inspections = currentRestaurant.getInspections();
+
+            ImageView imageView = itemView.findViewById(R.id.restaurant_image_icon);
+            imageView.setImageResource(R.drawable.restaurant_logo);
+
+            ImageView hazardImage = itemView.findViewById(R.id.restaurant_image_hazardLevelValue);
+            if(inspections.getSize() != 0){
+                switch(inspections.getInspection(0).getHazard()){
+                    case LOW:
+                        hazardImage.setImageResource(R.drawable.low_risk);
+                        break;
+                    case MODERATE:
+                        hazardImage.setImageResource(R.drawable.medium_risk);
+                        break;
+                    case HIGH:
+                        hazardImage.setImageResource(R.drawable.high_risk);
+                        break;
+                }
+            }
+
+
+            TextView nameText = itemView.findViewById(R.id.restaurant_label_name);
+            nameText.setText(currentRestaurant.getName());
+
+            TextView addressText = itemView.findViewById(R.id.restaurant_address);
+            addressText.setText(currentRestaurant.getAddress());
+
+            TextView cityText = itemView.findViewById(R.id.restaurant_city);
+            cityText.setText(currentRestaurant.getCity());
+
+            TextView dateText = itemView.findViewById(R.id.restaurant_label_latestInspection);
+            if(inspections.getSize()!=0){
+                String date = "Last inspection: "+ inspections.getInspection(0).getInspectDateString();
+                dateText.setText( date);
+            }
+            else{
+                String date = "Last inspection: never";
+                dateText.setText( date);
+            }
+
+            TextView issues = itemView.findViewById(R.id.restaurant_problemsFound);
+            if(inspections.getSize()!= 0){
+                int problems = inspections.getInspection(0).getNumCritical() + inspections.getInspection(0).getNumNonCritical();
+                String issuesText = "Issues: "+ problems;
+                issues.setText(issuesText);
+            }
+            else{
+                String issuesText = "Issues: "+ 0;
+                issues.setText(issuesText);
+                issues.setText(issuesText);
+            }
+
+            return itemView;
+        }
+
     }
 
 
@@ -67,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 6; i < tokens.length; i++){
                     lump += removeQuotes(tokens[i]) + ",";
                 }
-//                Log.d("MyActivity", "lump looks like: " + lump);
+                //Log.d("MyActivity", "lump looks like: " + lump);
 
                 inspection.processLump(lump);
 //                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());

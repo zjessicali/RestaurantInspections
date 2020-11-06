@@ -2,7 +2,7 @@ package com.example.group_9_project.model;
 
 import java.util.ArrayList;
 
-public class Violation {
+public class      Violation {
     enum ViolType{
         FOOD,
         CHEMICAL,

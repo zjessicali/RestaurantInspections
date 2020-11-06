@@ -3,11 +3,14 @@ package com.example.group_9_project.model;
 import java.util.ArrayList;
 
 //Stores inspection reports
-public class InspectionManager {
+public class
+InspectionManager {
     private ArrayList<InspectionReport> manager;
+
 
     public InspectionManager() {
         this.manager = new ArrayList<InspectionReport>();
+
     }
 
     //getters
@@ -44,5 +47,8 @@ public class InspectionManager {
             }
         }
 
+
     }
+
+
 }

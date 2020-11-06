@@ -1,20 +1,20 @@
 <resources>
     <string name="app_name">group_9_project</string>
-    <string name="restaurant_name">Restaurant Name:</string>
-    <string name="restaurant_address">Restaurant Address:</string>
     <string name="gps_coordinates">GPS Coordinates</string>
     <string name="inspections">Inspections</string>
-    <string name="title_activity_message_fragment">MessageFragment</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
-    <string name="critical_issues"> critical issues| </string>
-    <string name="non_critical_issues"> non-critical issues| </string>
-    <string name="hazard_level">| Hazard level:</string>
-    <string name="low">LOW</string>
-    <string name="moderate">MODERATE</string>
-    <string name="high">HIGH</string>
-    <string name="restaurant_detail">Restaurant Detail</string>
+    <string name="surrey_restaurant_list">Surrey Restaurant List</string>
+    <string name="rest_icon">rest icon</string>
+    <string name="restaurant_city">City</string>
+    <string name="restaurant_hazardlevel">HazardLevel</string>
+    <string name="restaurant_issuesfound">Issues Found</string>
+    <string name="restaurant_address">Address</string>
+    <string name="restaurant_name">Restaurant Name</string>
+    <string name="rate_icon">rate icon</string>
+    <string name="restaurant_hazardLevelHigh_value">High</string>
+    <string name="restaurant_hazardLevelModerate_value">Moderate</string>
+    <string name="restaurant_hazardLevelLow_value">Low</string>
+    <string name="restaurant_hazardLevelNo_value">Unknown</string>
+    <string name="restaurant_inspectionPerformedOn">"Last Inspection: "</string>
+    <string name="restaurant_noInspectionAvailable_value">Unknown</string>
+    <string name="restaurant_info">Address: %s, %s\nGPS: %s</string>
 </resources>

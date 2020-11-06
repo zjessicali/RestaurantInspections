@@ -27,7 +27,7 @@ import org.w3c.dom.Text;
 public class RestaurantDetail extends AppCompatActivity {
 
     //change is to manager.getInstance() when singleton support is added
-    private RestaurantManager manager = RestaurantManager.getInstance();
+    private RestaurantManager manager;
     private int index;
 
 
@@ -36,12 +36,14 @@ public class RestaurantDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_detail);
+        manager = RestaurantManager.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.restaurant_detail);
 
         populateInspectionsList();
         extractData();
+        populateInspectionsList();
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();

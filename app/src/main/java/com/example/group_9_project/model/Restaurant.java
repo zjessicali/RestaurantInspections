@@ -1,7 +1,8 @@
 package com.example.group_9_project.model;
 
 //Restaurant object with data about the restaurant as well as all the inspections
-public class Restaurant {
+public class
+Restaurant {
     private String trackingNum;
     private String name;
     private String address;
@@ -10,7 +11,8 @@ public class Restaurant {
     private FacType type;
     private double latitude;
     private double longitude;
-    private InspectionManager inspections;
+    private int iconID;
+    public InspectionManager inspections;
 
 
     public Restaurant(String tracking) {
@@ -19,6 +21,16 @@ public class Restaurant {
         this.inspections = new InspectionManager();
     }
 
+    public Restaurant(String name, String address, String city, int iconID) {
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.iconID=iconID;
+    }
+
+    public int getIconID(){
+        return iconID;
+    }
     public String getName() {
         return name;
     }
@@ -85,6 +97,13 @@ public class Restaurant {
         if(s == "Restaurant"){
             this.type = FacType.RESTAURANT;
         }
+    }
+
+    public String getGPS(){
+        String lat_s = String.format("%.4f", latitude);
+        String lon_s = String.format("%.4f", longitude);
+        String GPS = "(" + lat_s + ", " + lon_s + ")";
+        return GPS;
     }
 
     //add an inspection report to the manager
