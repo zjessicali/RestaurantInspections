@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.InspectionDetail">
-          x
+
         </activity>
 <!--        <activity android:name=".ui.Story3" />-->
         <activity android:name=".ui.RestaurantDetail" ></activity>

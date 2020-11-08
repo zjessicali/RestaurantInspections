@@ -1,5 +1,7 @@
 package com.example.group_9_project.ui;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,9 +11,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +31,14 @@ import com.example.group_9_project.model.RestaurantManager;
 
 import org.w3c.dom.Text;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class RestaurantDetail extends AppCompatActivity {
 
-    //change is to manager.getInstance() when singleton support is added
     private RestaurantManager manager;
+    private List<InspectionReport> inspections;
     private int index;
 
 
@@ -43,57 +54,85 @@ public class RestaurantDetail extends AppCompatActivity {
 
         extractData();
         populateInspectionsList();
+        registerClickCallback();
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
     }
 
     private void populateInspectionsList() {
-        InspectionManager inspections = manager.getRestFromIndex(index).getInspections();
-        LinearLayout scrollLayout = findViewById(R.id.scrollLayout);
+        inspections = new ArrayList<>();
+        InspectionManager inspectionManager = manager.getRestFromIndex(index).getInspections();
+        for(int i = 0; i < inspectionManager.getSize(); i++) {
+            inspections.add(inspectionManager.getInspection(i));
+        }
 
-        for (int i = 0; i < inspections.getSize(); i++) {
-            final InspectionReport inspection = inspections.getInspection(i);
+        ArrayAdapter<InspectionReport> adapter = new MyListAdapter();
+        ListView inspectionsList = findViewById(R.id.inspectionsList);
+        inspectionsList.setAdapter(adapter);
+    }
 
-            TextView text = new TextView(RestaurantDetail.this);
-            String hazard = "";
+    private void registerClickCallback() {
+        ListView inspectionsList = findViewById(R.id.inspectionsList);
+        inspectionsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = InspectionDetail.launchIntent(RestaurantDetail.this, index, position);
+                startActivity(intent);
+            }
+        });
+    }
 
-            switch(inspection.getHazard()) {
+    private class MyListAdapter extends ArrayAdapter<InspectionReport> {
+
+
+        public MyListAdapter() {
+            super(RestaurantDetail.this,
+                    R.layout.inspection_list_items,
+                    inspections);
+        }
+
+        @Override
+        public View getView(int position,View convertView,ViewGroup parent) {
+            View itemView = convertView;
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.inspection_list_items, parent, false);
+            }
+
+            InspectionReport currentInspection = inspections.get(position);
+            ImageView hazard = itemView.findViewById(R.id.hazardImageView);
+            TextView inspectionDateText = itemView.findViewById(R.id.inspectionDate);
+            TextView numCriticalText = itemView.findViewById(R.id.criticalText);
+            TextView numNonCriticalText = itemView.findViewById(R.id.nonCriticalText);
+
+            switch(currentInspection.getHazard()) {
                 case LOW:
-                    hazard = "<font color = '#00FF00'>" + getResources().getString(R.string.low) + "</font>";
+                    hazard.setImageResource(R.drawable.green);
+                    hazard.setContentDescription("Low Hazard");
                     break;
 
                 case MODERATE:
-                    hazard = "<font color = '#FFFF00'>" + getResources().getString(R.string.moderate) + "</font>";
+                    hazard.setImageResource(R.drawable.orange);
+                    hazard.setContentDescription("Moderate Hazard");
                     break;
 
                 case HIGH:
-                    hazard = "<font color = '#FF0000'>"+ getResources().getString(R.string.high) +"</font>";
+                    hazard.setImageResource(R.drawable.red);
+                    hazard.setContentDescription("High Hazard");
                     break;
             }
 
-            String report = inspection.getNumCritical() + getResources().getString(R.string.critical_issues)
-                    + inspection.getNumNonCritical() + getResources().getString(R.string.non_critical_issues)
-                    + inspection.getInspectDateString() + getResources().getString(R.string.hazard_level)
-                    + hazard;
+            String numCritical = String.format("%s%d", getResources().getString(R.string.num_critical), currentInspection.getNumCritical());
+            numCriticalText.setText(numCritical);
 
-            text.setText(Html.fromHtml(report));
-            text.setTextSize(20);
+            String numNonCritical = String.format("%s%d", getResources().getString(R.string.num__non_critical), currentInspection.getNumNonCritical());
+            numNonCriticalText.setText(numNonCritical);
 
-            final int inspectionIndex = i;
-            text.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = InspectionDetail.launchIntent(RestaurantDetail.this, index, inspectionIndex);
-                    startActivity(intent);
-                }
-            });
+            inspectionDateText.setText(currentInspection.getInspectDateString());
 
-            scrollLayout.addView(text);
+            return itemView;
         }
-        
     }
-
 
     public static Intent launchIntent(Context context, int index) {
         Intent intent = new Intent(context, RestaurantDetail.class);

@@ -2,6 +2,7 @@ package com.example.group_9_project.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
@@ -41,6 +42,10 @@ public class InspectionDetail extends AppCompatActivity {
         restaurants = RestaurantManager.getInstance();
         manager = report.getManager();
         setContentView(R.layout.activity_story3);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.inspection_detail);
+
         setarrayadapter();
         populateHeader();
         regiterclick();
