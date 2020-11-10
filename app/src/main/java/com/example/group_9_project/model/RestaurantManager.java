@@ -50,7 +50,6 @@ public class RestaurantManager {
             int i = 0;
             int i2 = 1;
             Restaurant curr = manager.get(i);
-            //i++;
             while( i2 < manager.size() && (curr.getName()).compareTo(r.getName()) <= 0 ){
                 curr = manager.get(i2);
                 i++;
