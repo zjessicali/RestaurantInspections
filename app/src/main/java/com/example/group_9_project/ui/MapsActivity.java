@@ -39,9 +39,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        //THIS IS THE DEFAULT CODE BY ANDROID STUDIO
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        // Center on device's current location
+
+
+        // Display pegs on all restaurant's location
+
+        // Allow user to move around and zoom
+
+        // Display most recent hazard level on restaurant pegs
+
+        // Cluster pegs intelligently
+
+        // Show user's current GPS location
+
+        // Interact with peg to show more information
+
+        // Toggle between map screen and restaurant screen
     }
 }
