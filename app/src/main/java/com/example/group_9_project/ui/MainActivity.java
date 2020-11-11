@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
+        Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(intent);
+
         readRestaurantData();
         readInspectionData();
         populateListView();
