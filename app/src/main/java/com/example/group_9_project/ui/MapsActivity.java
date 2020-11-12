@@ -15,12 +15,15 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.Restaurant;
+import com.example.group_9_project.model.RestaurantManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,6 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
 
     private Boolean mLocationPermissionGranted = false;
+    private RestaurantManager manager = RestaurantManager.getInstance();
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -44,30 +48,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         getLocationPermission();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
     }
+
     //Source: https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
     private void getLocationPermission() {
         Log.i(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION};
+                Manifest.permission.ACCESS_COARSE_LOCATION};
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionGranted = true;
-            }
-            else {
+                initMap();
+            } else {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-        }
-        else {
+        } else {
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -97,8 +97,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
     //Source: https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
-    private void initMap () {
+    private void initMap() {
         Log.i(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
@@ -107,12 +108,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Source: https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=5
     private void getDeviceLocation() {
-        Log.i(TAG, "getting device location");
+        Log.i(TAG, "getDeviceLocation: getting device location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
-            if(mLocationPermissionGranted) {
+            if (mLocationPermissionGranted) {
                 Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
@@ -121,24 +122,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.i(TAG, "onComplete: found location");
                             Location currentLocation = (Location) task.getResult();
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                         } else {
                             Log.i(TAG, "onComplete: current location is null");
                         }
                     }
                 });
             }
-        } catch ( SecurityException e) {
+        } catch (SecurityException e) {
             Log.i(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
 
     }
 
     //Source: https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=5
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng latLng) {
         Log.i(TAG, "moveCamera: moving the camera to lat: " + latLng.latitude + ", lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
     /**
@@ -153,25 +153,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT)
-        .show();
+                .show();
         Log.i(TAG, "onMapReady: map is ready");
         mMap = googleMap;
 
+        // Center on device's current
         if (mLocationPermissionGranted) {
             getDeviceLocation();
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setZoomGesturesEnabled(true);
         }
-
-        //THIS IS THE DEFAULT CODE BY ANDROID STUDIO
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        // Center on device's current
-
 
 
         // Display pegs on all restaurant's location
+        for (int i = 0; i < manager.getSize(); i++) {
+            Restaurant restaurant = manager.getRestFromIndex(i);
+            LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(restaurantLocation).title(restaurant.getName()));
+        }
+
 
         // Allow user to move around and zoom
 
