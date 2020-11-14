@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -58,6 +59,21 @@ public class RestaurantDetail extends AppCompatActivity {
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
+        bsckbutton();
+    }
+    private void bsckbutton() {
+        getSupportActionBar().setTitle("Violation Screen")
+        ;
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==android.R.id.home)
+            finish();
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void populateInspectionsList() {
