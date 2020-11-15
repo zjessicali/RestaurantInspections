@@ -7,14 +7,19 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationProvider;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.InspectionManager;
+import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -24,10 +29,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final String TAG = "MapsActivity";
@@ -39,6 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
 
+    private ArrayList<Marker> markers = new ArrayList<>();
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -175,19 +186,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (int i = 0; i < manager.getSize(); i++) {
             Restaurant restaurant = manager.getRestFromIndex(i);
             LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(restaurantLocation).title(restaurant.getName()));
-        }
+            final MarkerOptions marker = new MarkerOptions();
+            marker.position(restaurantLocation);
+            marker.title(restaurant.getName());
 
+            InspectionManager inspectionManager = restaurant.getInspections();
+
+            if (inspectionManager.getSize() != 0) {
+                String hazard = "";
+
+
+                int index = inspectionManager.getSize() - 1;
+                InspectionReport latestInspection = inspectionManager.getInspection(index);
+
+                switch (latestInspection.getHazard()) {
+                    case HIGH:
+                        hazard = "high";
+                        break;
+
+                    case MODERATE:
+                        hazard = "moderate";
+                        break;
+
+                    case LOW:
+                        hazard = "low";
+                        break;
+
+                    default:
+                        hazard = "unknown";
+                }
+
+
+                marker.snippet("Hazard: " + hazard);
+            } else { marker.snippet("Hazard: unknown");}
+
+            Marker newMarker = mMap.addMarker(marker);
+            markers.add(newMarker);
+        }
 
         // Allow user to move around and zoom
 
+
         // Display most recent hazard level on restaurant pegs
+
 
         // Cluster pegs intelligently
 
         // Show user's current GPS location
 
         // Interact with peg to show more information
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                for(int i = 0; i < markers.size(); i++) {
+                    if (marker.equals(markers.get(i))) {
+                            Toast.makeText(getApplicationContext(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                            return true;
+                    }
+                }
+                return false;
+            }
+        });
+
 
         // Toggle between map screen and restaurant screen
     }
