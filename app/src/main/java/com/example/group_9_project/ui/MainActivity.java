@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         //setRetainInstance(true);
         new FetchItemsTask().execute();
 
+
         needUpdate();
         //readRawRestaurantData();
         //readRawInspectionData();

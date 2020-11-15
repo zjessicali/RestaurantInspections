@@ -87,17 +87,41 @@ public class FetchData {
         String lastModified = resources.getString("last_modified");
         restaurants.setLastModified(lastModified);
 
+        String name = resources.getString("name");
+
         String csvURL = resources.getString("url");
-        readRestCSV(csvURL);
+        if(name.equals("Restaurants")){
+            readRestCSV(csvURL);
+        }
+        else{
+            //readInspCSV(csvURL);
+        }
+        Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
+
     }
 
+//    private void readInspCSV(String csvURL) {
+//        try{
+//            URL url = new URL(csvURL);
+//            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+//            InputStream in = connection.getInputStream();
+//
+//            BufferedReader reader = new BufferedReader(
+//                    new InputStreamReader(in, Charset.forName("UTF-8"))
+//            );
+//            restaurants.readInspectionData(reader);
+//
+//        } catch (IOException ioe) {
+//            Log.e(TAG, "Failed to fetch csv", ioe);
+//        }
+//    }
 
-    private void readRestCSV(String url)throws IOException{
+
+    private void readRestCSV(String csvURL)throws IOException{
         try{
-            //String jsonStringCSV = getUrlString(url);
 
-            URL url2 = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection)url2.openConnection();
+            URL url = new URL(csvURL);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             InputStream in = connection.getInputStream();
 
             BufferedReader reader = new BufferedReader(

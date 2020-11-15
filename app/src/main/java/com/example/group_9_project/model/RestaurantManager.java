@@ -107,9 +107,8 @@ public class RestaurantManager {
                 //Read data
                 Restaurant r = new Restaurant(removeQuotes(tokens[0]));
                 //if name has a comma
-                char addFirstCh = tokens[2].charAt(0);
                 int t = 1;
-                if(Character.isDigit(addFirstCh)){
+                if(tokens[4].equals("Restaurant")){//normal
                     r.setName(removeQuotes(tokens[1]));
                     t = 2;
                 }
@@ -118,12 +117,10 @@ public class RestaurantManager {
                     r.setName(name);
                     t = 3;
                 }
-                r.setAddress(removeQuotes(tokens[t]));
-                Log.d("MyActivity", "Should be 2 or 3: " + t + "     ID: "+ tokens[0]);
+                r.setAddress(removeQuotes(tokens[t++]));
                 r.setCity(removeQuotes(tokens[t++]));
                 r.setFacType(removeQuotes(tokens[t++]));
                 r.setLatitude(Double.parseDouble(tokens[t++]));
-                Log.d("MyActivity", "Should be 5 or 6: " + t + "     ID: "+ tokens[0]);
                 r.setLongitude(Double.parseDouble(tokens[t++]));
 
                 this.addRestaurant(r);
