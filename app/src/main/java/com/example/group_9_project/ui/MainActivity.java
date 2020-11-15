@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         LocalDateTime now = LocalDateTime.now();
         String last = prefs.getString(PREFS_LAST_UPDATE,"");
         if(last.equals("")){
-            putLastUpdateToSharedPref(now);
             return true;
         }
         LocalDateTime lastUpdated = LocalDateTime.parse(last);
