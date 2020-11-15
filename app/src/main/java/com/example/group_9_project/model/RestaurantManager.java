@@ -6,12 +6,14 @@ import java.util.List;
 
 //Stores restaurants in an object
 public class RestaurantManager {
-    ArrayList<Restaurant> manager;
+    private ArrayList<Restaurant> manager;
     private static RestaurantManager instance;
+    private String lastModified;
 
     //constructor
     private RestaurantManager() {
         this.manager = new ArrayList<Restaurant>();
+        lastModified = "";
     }
     //singleton
     public static RestaurantManager getInstance(){
@@ -40,7 +42,10 @@ public class RestaurantManager {
         return manager.size();
     }
 
-    //needs testing
+    public String getLastModified(){
+        return lastModified;
+    }
+
     //add restaurant r to the manager, maintain order
     public void addRestaurant(Restaurant r){
         if(manager.size() == 0){
@@ -68,6 +73,10 @@ public class RestaurantManager {
                 manager.add(i, r);
             }
         }
+    }
+
+    public void setLastModified(String s){
+        lastModified = s;
     }
     public List<Restaurant> getListOfRestaurants() {
         return Collections.unmodifiableList(manager);
