@@ -3,22 +3,25 @@ package com.example.group_9_project.network;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 public class FetchData {
 
     private static final String TAG = "FetchData Class";
+    RestaurantManager restaurants = RestaurantManager.getInstance();
     //several methods taken or based on code from
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch) - libgen.lc
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -64,10 +67,10 @@ public class FetchData {
             JSONObject jsonBodyRest = new JSONObject(jsonStringRest);
             String jsonStringInsp = getUrlString(inspectionPackageURL);
             JSONObject jsonBodyInsp = new JSONObject(jsonStringInsp);
-            RestaurantManager ma = RestaurantManager.getInstance();
-            parseItems(ma, jsonBodyRest);
-            Log.i(TAG, "Received JSON: " + jsonStringRest);
-            Log.i(TAG, "Received JSON: " + jsonStringInsp);
+
+            parseItems( jsonBodyRest);
+//            Log.i(TAG, "Received JSON: " + jsonStringRest);
+//            Log.i(TAG, "Received JSON: " + jsonStringInsp);
         }catch (JSONException je){
             Log.e(TAG, "Failed to parse JSON", je);
         } catch (IOException ioe) {
@@ -76,7 +79,7 @@ public class FetchData {
 
     }
 
-    private void parseItems(RestaurantManager restaurants,JSONObject jsonBody) throws IOException, JSONException{
+    private void parseItems(JSONObject jsonBody) throws IOException, JSONException{
         JSONObject resultJSONObj = jsonBody.getJSONObject("result");
         JSONArray resourcesJSONArr = resultJSONObj.getJSONArray("resources");
         JSONObject resources = resourcesJSONArr.getJSONObject(0);
@@ -85,15 +88,22 @@ public class FetchData {
         restaurants.setLastModified(lastModified);
 
         String csvURL = resources.getString("url");
-        getCSVFile(csvURL);
+        readRestCSV(csvURL);
     }
 
 
-    private void getCSVFile(String url)throws IOException{
+    private void readRestCSV(String url)throws IOException{
         try{
-            String jsonStringCSV = getUrlString(url);
-            //JSONObject jsonBodyCSV = new JSONObject(jsonStringCSV);
-            Log.i(TAG, "Testing CSV Reading: " + jsonStringCSV);
+            //String jsonStringCSV = getUrlString(url);
+
+            URL url2 = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection)url2.openConnection();
+            InputStream in = connection.getInputStream();
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(in, Charset.forName("UTF-8"))
+            );
+            restaurants.readRestaurantData(reader);
 
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch csv", ioe);
