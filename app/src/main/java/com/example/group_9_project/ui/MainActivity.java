@@ -34,17 +34,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 public class MainActivity extends AppCompatActivity {
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
+    private static final String PREFS_RESTAURANTS = "RestaurantManagerPrefs";
     //private static final String TAG = "FetchingData";
     TextView title;
     ListView RestaurantList;
@@ -59,19 +64,59 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         //setRetainInstance(true);
         new FetchItemsTask().execute();
-
+        //Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
+        populateRestaurants();
 
         needUpdate();
-        //readRawRestaurantData();
-        //readRawInspectionData();
         populateListView();
         registerClickCallback();
 
     }
 
+    private void populateRestaurants() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        Gson lensGson = new Gson();
+        String lensJson = prefs.getString(PREFS_RESTAURANTS,null );
+        Type type = new TypeToken<List<Restaurant>>() {}.getType();
+        List<Restaurant> storedRestaurants = lensGson.fromJson(lensJson, type);
+
+        //if nothing in SharedPref, read raw
+        if(storedRestaurants == null){
+            readRawRestaurantData();
+            readRawInspectionData();
+        }
+        //else populate the manager with SharedPref restaurants
+        else{
+            for(int i = 0; i < storedRestaurants.size(); i++){
+                restaurants.addRestaurant(storedRestaurants.get(i));
+            }
+        }
+
+        String last = prefs.getString(PREFS_LAST_UPDATE,"");
+        restaurants.setLastModified(last);
+    }
+
+    private void storeRestaurantsToPref(){
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        List<Restaurant> storedRestaurants = new ArrayList<>();
+
+        for(int i = 0; i < restaurants.getSize();i++){
+            storedRestaurants.add(restaurants.getRestFromIndex(i));
+        }
+
+        String json = gson.toJson(storedRestaurants);
+        editor.putString(PREFS_RESTAURANTS, json);
+        editor.apply();
+        putLastUpdateToSharedPref(restaurants.getLastModified());
+    }
+
     //check if there is new data before u run this
     private boolean needUpdate() {
-        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         //int defaultAmount = this.getResources().getInteger(R.integer.default_gems);
         //check if updated within 20 hours
         LocalDateTime now = LocalDateTime.now();
@@ -86,10 +131,14 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void putLastUpdateToSharedPref(LocalDateTime newLastUpdateString){
+    private String DateTimeToString(LocalDateTime dateTime){
         String lastUpdate = "";
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        lastUpdate = newLastUpdateString.format(formatter);
+        lastUpdate = dateTime.format(formatter);
+        return lastUpdate;
+    }
+
+    private void putLastUpdateToSharedPref(String lastUpdate){
         SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREFS_LAST_UPDATE, lastUpdate);
@@ -213,6 +262,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             new FetchData().fetchItems();
+            restaurants = RestaurantManager.getInstance();
+            Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
             return null;
         }
     }

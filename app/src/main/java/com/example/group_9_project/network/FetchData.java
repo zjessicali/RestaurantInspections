@@ -51,7 +51,7 @@ public class FetchData {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public void fetchItems() {
+    public RestaurantManager fetchItems() {
         try {
             String restaurantPackageURL = Uri.parse("https://data.surrey.ca/api/3/action/")
                     .buildUpon()
@@ -77,6 +77,8 @@ public class FetchData {
             Log.e(TAG, "Failed to fetch items", ioe);
         }
 
+        Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
+        return restaurants;
     }
 
     private void parseItems(JSONObject jsonBody) throws IOException, JSONException{
@@ -133,4 +135,6 @@ public class FetchData {
             Log.e(TAG, "Failed to fetch csv", ioe);
         }
     }
+
+
 }

@@ -108,20 +108,29 @@ public class RestaurantManager {
                 Restaurant r = new Restaurant(removeQuotes(tokens[0]));
                 //if name has a comma
                 int t = 1;
-                if(tokens[4].equals("Restaurant")){//normal
+                if( tokens.length == 7){//normal
                     r.setName(removeQuotes(tokens[1]));
                     t = 2;
+                    r.setAddress(removeQuotes(tokens[2]));
+                    r.setCity(removeQuotes(tokens[3]));
+                    r.setFacType(removeQuotes(tokens[4]));
+                    r.setLatitude(Double.parseDouble(tokens[5]));
+                    Log.d("MyActivity", "ID: " + tokens[0]);
+                    Log.d("MyActivity", "Length should be 7: " + tokens.length);
+                    r.setLongitude(Double.parseDouble(tokens[6]));
                 }
                 else{
                     String name = removeQuotes(tokens[1]) + ", " + removeQuotes(tokens[2]);
                     r.setName(name);
                     t = 3;
+                    r.setAddress(removeQuotes(tokens[3]));
+                    r.setCity(removeQuotes(tokens[4]));
+                    r.setFacType(removeQuotes(tokens[5]));
+                    r.setLatitude(Double.parseDouble(tokens[6]));
+                    Log.d("MyActivity", "ID: " + tokens[0]);
+                    Log.d("MyActivity", "Length should be 8: " + tokens.length);
+                    r.setLongitude(Double.parseDouble(tokens[7]));
                 }
-                r.setAddress(removeQuotes(tokens[t++]));
-                r.setCity(removeQuotes(tokens[t++]));
-                r.setFacType(removeQuotes(tokens[t++]));
-                r.setLatitude(Double.parseDouble(tokens[t++]));
-                r.setLongitude(Double.parseDouble(tokens[t++]));
 
                 this.addRestaurant(r);
             }
