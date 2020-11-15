@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,13 +69,24 @@ public class MainActivity extends AppCompatActivity {
         LocalDateTime now = LocalDateTime.now();
         String last = prefs.getString(PREFS_LAST_UPDATE,"");
         if(last.equals("")){
+            putLastUpdateToSharedPref(now);
+            return true;
+        }
+        LocalDateTime lastUpdated = LocalDateTime.parse(last);
+        if(lastUpdated.isBefore(now.minusHours(20))){
             return true;
         }
         return false;
     }
 
-    private void putLastUpdateToSharedPref(){
-
+    private void putLastUpdateToSharedPref(LocalDateTime newLastUpdateString){
+        String lastUpdate = "";
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        lastUpdate = newLastUpdateString.format(formatter);
+        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREFS_LAST_UPDATE, lastUpdate);
+        editor.apply();
     }
 
     private void registerClickCallback() {
