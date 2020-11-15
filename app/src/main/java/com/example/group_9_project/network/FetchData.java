@@ -1,5 +1,8 @@
 package com.example.group_9_project.network;
 
+import android.net.Uri;
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class FetchData {
-    //[Big Nerd Ranch Guides] Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch) - libgen.lc
+
+    private static final String TAG = "FetchData Class";
+
+    //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch) - libgen.lc
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -34,4 +40,25 @@ public class FetchData {
     public String getUrlString(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
     }
+
+//    public void fetchItems() {
+//        try {
+//            String restaurantPackageURL = Uri.parse("https://data.surrey.ca/api/3/action/")
+//                    .buildUpon()
+//                    .appendPath("package_show")
+//                    .appendQueryParameter("id", "restaurants")
+//                    .build().toString();
+//            String inspectionPackageURL =  Uri.parse("https://data.surrey.ca/api/3/action/")
+//                    .buildUpon()
+//                    .appendPath("package_show")
+//                    .appendQueryParameter("id", "fraser-health-restaurant-inspection-reports")
+//                    .build().toString();
+//            String jsonStringRest = getUrlString(restaurantPackageURL);
+//            String jsonStringInsp = getUrlString(inspectionPackageURL);
+//            Log.i(TAG, "Received JSON: " + jsonStringRest);
+//            Log.i(TAG, "Received JSON: " + jsonStringInsp);
+//        } catch (IOException ioe) {
+//            Log.e(TAG, "Failed to fetch items", ioe);
+//        }
+//    }
 }

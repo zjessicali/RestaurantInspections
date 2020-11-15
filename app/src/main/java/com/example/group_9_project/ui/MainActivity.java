@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
+import com.example.group_9_project.network.FetchData;
 
 import org.w3c.dom.Text;
 
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
+    private static final String TAG = "FetchingData";
     TextView title;
     ListView RestaurantList;
 
@@ -54,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
+        //setRetainInstance(true);
+        new FetchItemsTask().execute();
 
         needUpdate();
         readRestaurantData();
@@ -285,6 +290,21 @@ public class MainActivity extends AppCompatActivity {
             return s;
         }
         return noQuotes;
+    }
+
+    //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
+    private class FetchItemsTask extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                String result = new FetchData()
+                        .getUrlString("https://www.bignerdranch.com");
+                Log.i(TAG, "Fetched contents of URL: " + result);
+            } catch (IOException ioe) {
+                Log.e(TAG, "Failed to fetch URL: ", ioe);
+            }
+            return null;
+        }
     }
 
 }
