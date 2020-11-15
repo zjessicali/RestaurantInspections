@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -32,12 +33,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
+    private static final String PREFS_NAME = "AppPrefs";
+    private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     TextView title;
     ListView RestaurantList;
 
@@ -48,10 +52,28 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
+        needUpdate();
         readRestaurantData();
         readInspectionData();
         populateListView();
         registerClickCallback();
+
+    }
+
+    //check if there is new data before u run this
+    private boolean needUpdate() {
+        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        //int defaultAmount = this.getResources().getInteger(R.integer.default_gems);
+        //check if updated within 20 hours
+        LocalDateTime now = LocalDateTime.now();
+        String last = prefs.getString(PREFS_LAST_UPDATE,"");
+        if(last.equals("")){
+            return true;
+        }
+        return false;
+    }
+
+    private void putLastUpdateToSharedPref(){
 
     }
 
