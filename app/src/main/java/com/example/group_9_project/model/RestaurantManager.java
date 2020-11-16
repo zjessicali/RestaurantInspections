@@ -201,9 +201,6 @@ public class RestaurantManager {
                 inspection.setHazard(removeQuotes(tokens[tokens.length - 1]));
                 //check if there is a hazard first
                 int lumpend = tokens.length -1;
-                Log.d("ReadInspection", "id: "+ trackingNum);
-                Log.d("ReadInspection", "last token: "+tokens[lumpend]);
-                //Log.d("ReadInspection", "second last token: "+tokens[lumpend-1]);
 
                 if(inspection.getHazard() == null){
                     inspection.setHazard(InspectionReport.HazardRating.LOW);
@@ -215,7 +212,6 @@ public class RestaurantManager {
                     for(int i = 5; i < lumpend; i++){
                         lump += removeQuotes(tokens[i]) + ",";
                     }
-                    Log.d("ReadInspection", "inside loop");
                     inspection.processLump(lump);
                 }
 

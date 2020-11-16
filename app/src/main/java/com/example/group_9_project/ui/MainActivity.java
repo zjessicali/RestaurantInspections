@@ -61,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         //setRetainInstance(true);
-        new FetchItemsTask().execute();
+        //new FetchItemsTask().execute();
         populateRestaurants();
         //Log.d("MyActivity test", "Restaurant 2: " + restaurants.getRestFromIndex(1));
         //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
-        //askUpdate();
+        askUpdate();
 //        if(needUpdate()){
 //            //ask if they want to update
 //        }
