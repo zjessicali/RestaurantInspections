@@ -77,7 +77,6 @@ public class FetchData {
             Log.e(TAG, "Failed to fetch items", ioe);
         }
 
-        Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
         return restaurants;
     }
 
@@ -96,9 +95,8 @@ public class FetchData {
             readRestCSV(csvURL);
         }
         else{
-            //readInspCSV(csvURL);
+            readInspCSV(csvURL);
         }
-        Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
 
     }
 

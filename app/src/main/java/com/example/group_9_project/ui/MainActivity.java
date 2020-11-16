@@ -50,11 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private static final String PREFS_RESTAURANTS = "RestaurantManagerPrefs";
-    //private static final String TAG = "FetchingData";
     TextView title;
     ListView RestaurantList;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +61,20 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         //setRetainInstance(true);
         new FetchItemsTask().execute();
-        //Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
         populateRestaurants();
+        //Log.d("MyActivity test", "Restaurant 2: " + restaurants.getRestFromIndex(1));
+        //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
-        needUpdate();
+        if(needUpdate()){
+            //ask if they want to update
+            askUpdate();
+        }
         populateListView();
         registerClickCallback();
+
+    }
+
+    private void askUpdate() {
 
     }
 
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     //check if there is new data before u run this
     private boolean needUpdate() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        //int defaultAmount = this.getResources().getInteger(R.integer.default_gems);
+
         //check if updated within 20 hours
         LocalDateTime now = LocalDateTime.now();
         String last = prefs.getString(PREFS_LAST_UPDATE,"");
@@ -258,14 +263,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
-    private class FetchItemsTask extends AsyncTask<Void,Void,Void> {
+    private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
         @Override
-        protected Void doInBackground(Void... params) {
-            new FetchData().fetchItems();
-            restaurants = RestaurantManager.getInstance();
-            Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(1));
-            return null;
+        protected RestaurantManager doInBackground(Void... params) {
+
+            //restaurants = RestaurantManager.getInstance();
+            //Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(3));
+            return new FetchData().fetchItems();
         }
+    }
+
+    @Override
+    protected void onPostExecute(RestaurantManager manager) {
+        restaurants = manager;
     }
 
 }

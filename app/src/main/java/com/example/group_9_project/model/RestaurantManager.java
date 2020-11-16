@@ -115,8 +115,6 @@ public class RestaurantManager {
                     r.setCity(removeQuotes(tokens[3]));
                     r.setFacType(removeQuotes(tokens[4]));
                     r.setLatitude(Double.parseDouble(tokens[5]));
-                    Log.d("MyActivity", "ID: " + tokens[0]);
-                    Log.d("MyActivity", "Length should be 7: " + tokens.length);
                     r.setLongitude(Double.parseDouble(tokens[6]));
                 }
                 else{
@@ -127,8 +125,6 @@ public class RestaurantManager {
                     r.setCity(removeQuotes(tokens[4]));
                     r.setFacType(removeQuotes(tokens[5]));
                     r.setLatitude(Double.parseDouble(tokens[6]));
-                    Log.d("MyActivity", "ID: " + tokens[0]);
-                    Log.d("MyActivity", "Length should be 8: " + tokens.length);
                     r.setLongitude(Double.parseDouble(tokens[7]));
                 }
 
