@@ -102,21 +102,21 @@ public class FetchData {
 
     }
 
-//    private void readInspCSV(String csvURL) {
-//        try{
-//            URL url = new URL(csvURL);
-//            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-//            InputStream in = connection.getInputStream();
-//
-//            BufferedReader reader = new BufferedReader(
-//                    new InputStreamReader(in, Charset.forName("UTF-8"))
-//            );
-//            restaurants.readInspectionData(reader);
-//
-//        } catch (IOException ioe) {
-//            Log.e(TAG, "Failed to fetch csv", ioe);
-//        }
-//    }
+    private void readInspCSV(String csvURL) {
+        try{
+            URL url = new URL(csvURL);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            InputStream in = connection.getInputStream();
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(in, Charset.forName("UTF-8"))
+            );
+            restaurants.readUpdatedInspectionData(reader);
+
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch csv", ioe);
+        }
+    }
 
 
     private void readRestCSV(String csvURL)throws IOException{

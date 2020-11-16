@@ -143,8 +143,6 @@ public class RestaurantManager {
     }
 
     public void readInspectionData(BufferedReader reader) {
-
-
         String line = "";
         try{
             //headers
@@ -155,7 +153,6 @@ public class RestaurantManager {
                 String[] tokens = line.split(",");
 
                 //Read data
-
                 InspectionReport inspection = new InspectionReport();
                 String trackingNum = removeQuotes(tokens[0]);
                 inspection.setInspectDate(Integer.parseInt(tokens[1]));
@@ -166,6 +163,45 @@ public class RestaurantManager {
 
                 String lump = "";
                 for(int i = 6; i < tokens.length; i++){
+                    lump += removeQuotes(tokens[i]) + ",";
+                }
+
+                inspection.processLump(lump);
+
+                //adds inspection into it's restaurants inspection manager
+                if(this.getRestFromTracking(trackingNum) != null){
+                    this.getRestFromTracking(trackingNum).addInspection(inspection);
+                }
+            }
+
+        }catch(IOException e){
+            Log.wtf("MyActivity", "Error reading data file on line " + line, e);
+            e.printStackTrace();
+        }
+
+    }
+
+    public void readUpdatedInspectionData(BufferedReader reader) {
+        String line = "";
+        try{
+            //headers
+            reader.readLine();
+
+            while( (line = reader.readLine()) != null){
+                //Split by ","
+                String[] tokens = line.split(",");
+
+                //Read data
+                InspectionReport inspection = new InspectionReport();
+                String trackingNum = removeQuotes(tokens[0]);
+                inspection.setInspectDate(Integer.parseInt(tokens[1]));
+                inspection.setInspType(removeQuotes(tokens[2]));
+                inspection.setNumCritical(Integer.parseInt(tokens[3]));
+                inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
+                inspection.setHazard(removeQuotes(tokens[tokens.length - 1]));
+
+                String lump = "";
+                for(int i = 5; i < tokens.length -1; i++){
                     lump += removeQuotes(tokens[i]) + ",";
                 }
 
