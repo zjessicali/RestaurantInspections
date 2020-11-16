@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,17 +66,25 @@ public class MainActivity extends AppCompatActivity {
         //Log.d("MyActivity test", "Restaurant 2: " + restaurants.getRestFromIndex(1));
         //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
-        if(needUpdate()){
-            //ask if they want to update
-            askUpdate();
-        }
+        //askUpdate();
+//        if(needUpdate()){
+//            //ask if they want to update
+//        }
         populateListView();
         registerClickCallback();
 
     }
 
-    private void askUpdate() {
+    private void setupUpdate() {
 
+    }
+
+    private void askUpdate() {
+        FragmentManager manager = getSupportFragmentManager();
+        MessageFragment dialog = new MessageFragment();
+        dialog.show(manager,"UpdateDialog");
+
+        Log.i("MyActivity", "Showed dialog");
     }
 
     private void populateRestaurants() {
