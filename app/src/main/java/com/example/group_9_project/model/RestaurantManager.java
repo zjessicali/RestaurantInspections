@@ -187,6 +187,10 @@ public class RestaurantManager {
                 //Split by ","
                 String[] tokens = line.split(",");
 
+                if(tokens.length == 0){
+                    break;
+                }
+
                 //Read data
                 InspectionReport inspection = new InspectionReport();
                 String trackingNum = removeQuotes(tokens[0]);
@@ -195,13 +199,25 @@ public class RestaurantManager {
                 inspection.setNumCritical(Integer.parseInt(tokens[3]));
                 inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
                 inspection.setHazard(removeQuotes(tokens[tokens.length - 1]));
+                //check if there is a hazard first
+                int lumpend = tokens.length -1;
+                Log.d("ReadInspection", "id: "+ trackingNum);
+                Log.d("ReadInspection", "last token: "+tokens[lumpend]);
+                //Log.d("ReadInspection", "second last token: "+tokens[lumpend-1]);
 
-                String lump = "";
-                for(int i = 5; i < tokens.length -1; i++){
-                    lump += removeQuotes(tokens[i]) + ",";
+                if(inspection.getHazard() == null){
+                    inspection.setHazard(InspectionReport.HazardRating.LOW);
+                    lumpend = tokens.length;
                 }
 
-                inspection.processLump(lump);
+                if(!(tokens[lumpend-1].equals(""))){//if there are violations
+                    String lump = "";
+                    for(int i = 5; i < lumpend; i++){
+                        lump += removeQuotes(tokens[i]) + ",";
+                    }
+                    Log.d("ReadInspection", "inside loop");
+                    inspection.processLump(lump);
+                }
 
                 //adds inspection into it's restaurants inspection manager
                 if(this.getRestFromTracking(trackingNum) != null){
