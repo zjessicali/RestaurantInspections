@@ -69,8 +69,7 @@ public class FetchData {
             JSONObject jsonBodyInsp = new JSONObject(jsonStringInsp);
 
             parseItems( jsonBodyRest);
-//            Log.i(TAG, "Received JSON: " + jsonStringRest);
-//            Log.i(TAG, "Received JSON: " + jsonStringInsp);
+            parseItems(jsonBodyInsp);
         }catch (JSONException je){
             Log.e(TAG, "Failed to parse JSON", je);
         } catch (IOException ioe) {

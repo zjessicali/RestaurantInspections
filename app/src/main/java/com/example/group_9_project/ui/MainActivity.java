@@ -271,11 +271,11 @@ public class MainActivity extends AppCompatActivity {
             //Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(3));
             return new FetchData().fetchItems();
         }
-    }
+        @Override
+        protected void onPostExecute(RestaurantManager manager) {
+            restaurants = manager;
+        }
 
-    @Override
-    protected void onPostExecute(RestaurantManager manager) {
-        restaurants = manager;
     }
 
 }
