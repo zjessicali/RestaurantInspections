@@ -262,8 +262,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String hazard = "";
 
 
-                int index = inspectionManager.getSize() - 1;
-                InspectionReport latestInspection = inspectionManager.getInspection(index);
+                InspectionReport latestInspection = inspectionManager.getInspection(0);
 
                 switch (latestInspection.getHazard()) {
                     case HIGH:
@@ -288,6 +287,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Marker newMarker = mMap.addMarker(marker);
             newMarker.setTag(i);
+
+
+            if (inspectionManager.getSize() != 0) {
+                InspectionReport latestInspection = inspectionManager.getInspection(0);
+
+                switch (latestInspection.getHazard()) {
+                    case HIGH:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        break;
+
+                    case MODERATE:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        break;
+
+                    case LOW:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        break;
+                }
+            }
+            else {
+                newMarker.setIcon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));}
 
             markers.add(newMarker);
         }
