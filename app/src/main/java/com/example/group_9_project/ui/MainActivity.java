@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
             readRawRestaurantData();
             readRawInspectionData();
             //first time running -> last update more than 20 hours -> ask if they want to update
-            //askUpdate();
             populateListView();
+            //askUpdate();
         }
         else{//check if need update
             new FetchLastModified().execute();
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
             updateData.setNeedUpdate(needUpdate());
             if(updateData.getNeedUpdate()){
                 //check if want update
-                askUpdate();
+                //askUpdate();
             }
         }
     }
