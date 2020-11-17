@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             readRawInspectionData();
             //first time running -> last update more than 20 hours -> ask if they want to update
             populateListView();
-            //askUpdate();
+            askUpdate();
         }
         else{//check if need update
             new FetchLastModified().execute();
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     //wip
     private void askUpdate() {
         FragmentManager manager = getSupportFragmentManager();
-        MessageFragment dialog = new MessageFragment();
+        AskUpdateFragment dialog = new AskUpdateFragment();
         dialog.show(manager,"UpdateDialog");
 
         Log.i("MyActivity", "Showed dialog");
