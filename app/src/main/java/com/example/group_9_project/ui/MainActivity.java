@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,16 +56,30 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
 
-        if (isServicesOK()) {
-            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-            startActivity(intent);
-        }
-
+        createMapIntent();
+        setUpMapViewButton();
         readRestaurantData();
         readInspectionData();
         populateListView();
         registerClickCallback();
 
+    }
+
+    private void createMapIntent() {
+        if (isServicesOK()) {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void setUpMapViewButton() {
+        Button button = findViewById(R.id.mapViewBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMapIntent();
+            }
+        });
     }
 
     //Permissions for google map

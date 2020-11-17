@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -229,6 +230,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        // Allow user to move around and zoom
+
+        // Cluster pegs intelligently
+
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT)
                 .show();
         Log.i(TAG, "onMapReady: map is ready");
@@ -316,17 +322,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markers.add(newMarker);
         }
 
-        // Allow user to move around and zoom
-
-
-        // Display most recent hazard level on restaurant pegs
-
-
-        // Cluster pegs intelligently
-
-        // Show user's current GPS location
-
-
         // Interact with peg to show more information
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -343,5 +338,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Toggle between map screen and restaurant screen
+        Button button = findViewById(R.id.listViewBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
