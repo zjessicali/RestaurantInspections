@@ -3,7 +3,6 @@ package com.example.group_9_project.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 //stores violations
 public class ViolationManager implements Iterable<Violation>{

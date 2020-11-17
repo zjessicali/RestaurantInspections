@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String DateTimeToString(LocalDateTime dateTime){
-        String lastUpdate = "";
+        String lastUpdate;
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         lastUpdate = dateTime.format(formatter);
         return lastUpdate;
