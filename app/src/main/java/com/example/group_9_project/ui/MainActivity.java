@@ -21,6 +21,7 @@ import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
+import com.example.group_9_project.model.UpdateData;
 import com.example.group_9_project.network.FetchData;
 
 import java.io.BufferedReader;
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
-    private static final String PREFS_RESTAURANTS = "RestaurantManagerPrefs";
+    //private static final String PREFS_RESTAURANTS = "RestaurantManagerPrefs";
+    private UpdateData updateData = UpdateData.getInstance();
     TextView title;
     ListView RestaurantList;
 
@@ -75,29 +77,29 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MyActivity", "Showed dialog");
     }
 
-    private void populateRestaurants() {
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-
-        Gson lensGson = new Gson();
-        String lensJson = prefs.getString(PREFS_RESTAURANTS,null );
-        Type type = new TypeToken<List<Restaurant>>() {}.getType();
-        List<Restaurant> storedRestaurants = lensGson.fromJson(lensJson, type);
-
-        //if nothing in SharedPref, read raw
-        if(storedRestaurants == null){
-            readRawRestaurantData();
-            readRawInspectionData();
-        }
-        //else populate the manager with SharedPref restaurants
-        else{
-            for(int i = 0; i < storedRestaurants.size(); i++){
-                restaurants.addRestaurant(storedRestaurants.get(i));
-            }
-        }
-
-        String last = prefs.getString(PREFS_LAST_UPDATE,"");
-        restaurants.setLastModified(last);
-    }
+//    private void populateRestaurants() {
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//
+//        Gson lensGson = new Gson();
+//        String lensJson = prefs.getString(PREFS_RESTAURANTS,null );
+//        Type type = new TypeToken<List<Restaurant>>() {}.getType();
+//        List<Restaurant> storedRestaurants = lensGson.fromJson(lensJson, type);
+//
+//        //if nothing in SharedPref, read raw
+//        if(storedRestaurants == null){
+//            readRawRestaurantData();
+//            readRawInspectionData();
+//        }
+//        //else populate the manager with SharedPref restaurants
+//        else{
+//            for(int i = 0; i < storedRestaurants.size(); i++){
+//                restaurants.addRestaurant(storedRestaurants.get(i));
+//            }
+//        }
+//
+//        String last = prefs.getString(PREFS_LAST_UPDATE,"");
+//        restaurants.setLastModified(last);
+//    }
 
 //    private void storeRestaurantsToPref(){
 //        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -257,15 +259,14 @@ public class MainActivity extends AppCompatActivity {
         restaurants.readRestaurantData(reader);
     }
 
-    private class FetchLastModified extends AsyncTask<Void,Void,String> {
+    private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
         @Override
-        protected String doInBackground(Void... params) {
-
+        protected UpdateData doInBackground(Void... params) {
             return new FetchData().fetchUpdateItems();
         }
         @Override
-        protected void onPostExecute(String lastModified) {
-
+        protected void onPostExecute(UpdateData needUpdate) {
+            //ask if want update
         }
     }
 
@@ -277,12 +278,11 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(RestaurantManager manager) {
-            Log.d("MyActivity test", "Restaurant Size in onpost: " + restaurants.getSize());
-            //do u wanna update frag
             restaurants = manager;
-            Log.d("MyActivity test", "Restaurant Size in onpost after =: " + restaurants.getSize());
             populateListView();
             //do smth about needUpdate
+            //show loading screen
+
         }
     }
 

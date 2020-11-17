@@ -20,6 +20,7 @@ public class RestaurantManager {
     private static RestaurantManager instance;
     private String lastModified;
     private String lastUpdated;
+    private boolean needUpdate;
 
     //constructor
     private RestaurantManager() {
@@ -62,6 +63,12 @@ public class RestaurantManager {
         return lastUpdated;
     }
 
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    //setters
+
     //add restaurant r to the manager, maintain order
     public void addRestaurant(Restaurant r){
         if(manager.size() == 0){
@@ -97,6 +104,10 @@ public class RestaurantManager {
 
     public void setLastUpdated(String lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
     }
 
     public List<Restaurant> getListOfRestaurants() {
