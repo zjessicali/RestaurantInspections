@@ -1,38 +1,29 @@
 package com.example.group_9_project.ui;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionManager;
-import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.network.FetchData;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -61,16 +52,17 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         //setRetainInstance(true);
-        //new FetchItemsTask().execute();
-        populateRestaurants();
-        //Log.d("MyActivity test", "Restaurant 2: " + restaurants.getRestFromIndex(1));
+        new FetchItemsTask().execute();
+        //populateRestaurants();
+        //Log.d("MyActivity test", "Restaurant 2: " + restaurants.getRestFromIndex(3));
+        Log.d("MyActivity test", "OnCreate Call Restaurant size: " + restaurants.getSize());
         //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
-        askUpdate();
+        //askUpdate();
 //        if(needUpdate()){
 //            //ask if they want to update
 //        }
-        populateListView();
+        //populateListView();
         registerClickCallback();
 
     }
@@ -275,16 +267,18 @@ public class MainActivity extends AppCompatActivity {
     private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
         @Override
         protected RestaurantManager doInBackground(Void... params) {
-
-            //restaurants = RestaurantManager.getInstance();
-            //Log.d("FetchData parseItems", "Restaurant 2: " + restaurants.getRestFromIndex(3));
             return new FetchData().fetchItems();
         }
         @Override
         protected void onPostExecute(RestaurantManager manager) {
+            Log.d("MyActivity test", "Restaurant Size in onpost: " + restaurants.getSize());
+            //do u wanna update frag
             restaurants = manager;
+            Log.d("MyActivity test", "Restaurant Size in onpost after =: " + restaurants.getSize());
+            populateListView();
         }
 
     }
+
 
 }

@@ -65,11 +65,13 @@ public class FetchData {
                     .build().toString();
             String jsonStringRest = getUrlString(restaurantPackageURL);
             JSONObject jsonBodyRest = new JSONObject(jsonStringRest);
+
             String jsonStringInsp = getUrlString(inspectionPackageURL);
             JSONObject jsonBodyInsp = new JSONObject(jsonStringInsp);
 
             parseItems( jsonBodyRest);
             parseItems(jsonBodyInsp);
+            Log.d("FetchData", "fetch data just ran");
         }catch (JSONException je){
             Log.e(TAG, "Failed to parse JSON", je);
         } catch (IOException ioe) {
@@ -77,6 +79,11 @@ public class FetchData {
         }
 
         return restaurants;
+    }
+
+    public String fetchServerLastModified(){
+
+        return restaurants.getLastModified();
     }
 
     private void parseItems(JSONObject jsonBody) throws IOException, JSONException{
@@ -118,7 +125,6 @@ public class FetchData {
 
     private void readRestCSV(String csvURL)throws IOException{
         try{
-
             URL url = new URL(csvURL);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             InputStream in = connection.getInputStream();
@@ -127,6 +133,7 @@ public class FetchData {
                     new InputStreamReader(in, Charset.forName("UTF-8"))
             );
             restaurants.readRestaurantData(reader);
+            Log.d("FetchData", "readCSV");
 
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch csv", ioe);
