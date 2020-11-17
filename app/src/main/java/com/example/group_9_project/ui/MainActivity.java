@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     //private static final String PREFS_RESTAURANTS = "RestaurantManagerPrefs";
     private UpdateData updateData = UpdateData.getInstance();
-    TextView title;
-    ListView RestaurantList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +56,11 @@ public class MainActivity extends AppCompatActivity {
         setUpManager();
 
 
-        new FetchItemsTask().execute();
+        //new FetchItemsTask().execute();
         //populateRestaurants();
         //Log.d("MyActivity test", "OnCreate Call Restaurant size: " + restaurants.getSize());
         //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
-        //askUpdate();
-//        if(needUpdate()){
-//            //ask if they want to update
-//        }
-        //populateListView();
         registerClickCallback();
 
     }
@@ -77,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             readRawInspectionData();
             //first time running -> last update more than 20 hours -> ask if they want to update
             //askUpdate();
+            populateListView();
         }
         else{//check if need update
             new FetchLastModified().execute();
@@ -298,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
             updateData.setNeedUpdate(needUpdate());
             if(updateData.getNeedUpdate()){
                 //check if want update
-                //askUpdate();
+                askUpdate();
             }
         }
     }

@@ -150,13 +150,13 @@ public class RestaurantManager {
                 }
 
                 this.addRestaurant(r);
-                Log.d("FetchData", getRestFromTracking(removeQuotes(tokens[0])).toString() );
             }
 
         }catch(IOException e){
             Log.wtf("MyActivity", "Error reading data file on line " + line, e);
             e.printStackTrace();
         }
+        Log.d("MyActivity","end of readRestaurantData");
 
     }
 
