@@ -35,6 +35,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+//displays details about a restaurant
 public class RestaurantDetail extends AppCompatActivity {
 
     private RestaurantManager manager;

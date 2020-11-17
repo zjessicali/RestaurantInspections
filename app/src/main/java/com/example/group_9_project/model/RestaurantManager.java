@@ -19,11 +19,14 @@ public class RestaurantManager {
     private ArrayList<Restaurant> manager;
     private static RestaurantManager instance;
     private String lastModified;
+    private String lastUpdated;
+    private boolean needUpdate;
 
     //constructor
     private RestaurantManager() {
         this.manager = new ArrayList<Restaurant>();
         lastModified = "";
+        lastUpdated = "";
     }
     //singleton
     public static RestaurantManager getInstance(){
@@ -55,6 +58,16 @@ public class RestaurantManager {
     public String getLastModified(){
         return lastModified;
     }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    //setters
 
     //add restaurant r to the manager, maintain order
     public void addRestaurant(Restaurant r){
@@ -88,6 +101,15 @@ public class RestaurantManager {
     public void setLastModified(String s){
         lastModified = s;
     }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
+    }
+
     public List<Restaurant> getListOfRestaurants() {
         return Collections.unmodifiableList(manager);
     }
@@ -95,7 +117,6 @@ public class RestaurantManager {
 
     //based on Brian Fraser's video
     public void readRestaurantData(BufferedReader reader) {
-
         String line = "";
         try{
             //headers
@@ -135,6 +156,7 @@ public class RestaurantManager {
             Log.wtf("MyActivity", "Error reading data file on line " + line, e);
             e.printStackTrace();
         }
+        Log.d("MyActivity","end of readRestaurantData");
 
     }
 
@@ -187,25 +209,38 @@ public class RestaurantManager {
                 //Split by ","
                 String[] tokens = line.split(",");
 
-                //Read data
-                InspectionReport inspection = new InspectionReport();
-                String trackingNum = removeQuotes(tokens[0]);
-                inspection.setInspectDate(Integer.parseInt(tokens[1]));
-                inspection.setInspType(removeQuotes(tokens[2]));
-                inspection.setNumCritical(Integer.parseInt(tokens[3]));
-                inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
-                inspection.setHazard(removeQuotes(tokens[tokens.length - 1]));
-
-                String lump = "";
-                for(int i = 5; i < tokens.length -1; i++){
-                    lump += removeQuotes(tokens[i]) + ",";
+                if(tokens.length == 0){
+                    //move on
                 }
+                else{
+                    //Read data
+                    InspectionReport inspection = new InspectionReport();
+                    String trackingNum = removeQuotes(tokens[0]);
+                    inspection.setInspectDate(Integer.parseInt(tokens[1]));
+                    inspection.setInspType(removeQuotes(tokens[2]));
+                    inspection.setNumCritical(Integer.parseInt(tokens[3]));
+                    inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
+                    inspection.setHazard(removeQuotes(tokens[tokens.length - 1]));
+                    //check if there is a hazard first
+                    int lumpend = tokens.length -1;
 
-                inspection.processLump(lump);
+                    if(inspection.getHazard() == null){
+                        inspection.setHazard(InspectionReport.HazardRating.LOW);
+                        lumpend = tokens.length;
+                    }
 
-                //adds inspection into it's restaurants inspection manager
-                if(this.getRestFromTracking(trackingNum) != null){
-                    this.getRestFromTracking(trackingNum).addInspection(inspection);
+                    if(!(tokens[lumpend-1].equals(""))){//if there are violations
+                        String lump = "";
+                        for(int i = 5; i < lumpend; i++){
+                            lump += removeQuotes(tokens[i]) + ",";
+                        }
+                        inspection.processLump(lump);
+                    }
+
+                    //adds inspection into it's restaurants inspection manager
+                    if(this.getRestFromTracking(trackingNum) != null){
+                        this.getRestFromTracking(trackingNum).addInspection(inspection);
+                    }
                 }
             }
 

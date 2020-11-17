@@ -17,6 +17,7 @@ import com.example.group_9_project.R;
 import com.example.group_9_project.model.Violation;
 import com.example.group_9_project.model.ViolationManager;
 
+//displays violations
 public class MessageFragment extends AppCompatDialogFragment {
     private static int position;
   private static  ViolationManager manager;
