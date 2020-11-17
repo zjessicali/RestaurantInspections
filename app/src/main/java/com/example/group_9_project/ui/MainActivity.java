@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
             populateListView();
             //do smth about needUpdate
             //show loading screen
-
+            //implment cancel
         }
     }
 
