@@ -1,14 +1,14 @@
 package com.example.group_9_project.ui;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,29 +16,34 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionManager;
-import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.w3c.dom.Text;
+import com.example.group_9_project.model.UpdateData;
+import com.example.group_9_project.network.FetchData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -46,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
-    TextView title;
-    ListView RestaurantList;
+    private static final String PREFS_NAME = "AppPrefs";
+    private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
+    private UpdateData updateData = UpdateData.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +62,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
+        //setRetainInstance(true);
+        setUpManager();
+
 
         createMapIntent();
         setUpMapViewButton();
         readRestaurantData();
         readInspectionData();
         populateListView();
+        //new FetchItemsTask().execute();
+        //populateRestaurants();
+
         registerClickCallback();
 
     }
@@ -106,6 +119,117 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+
+    private void setUpManager() {
+        if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
+            readRawRestaurantData();
+            readRawInspectionData();
+            //first time running -> last update more than 20 hours -> ask if they want to update
+            populateListView();
+            askUpdate();
+        }
+        else{//check if need update
+            new FetchLastModified().execute();
+        }
+    }
+
+    //wip
+    private void askUpdate() {
+        FragmentManager manager = getSupportFragmentManager();
+        AskUpdateFragment dialog = new AskUpdateFragment();
+        dialog.show(manager,"UpdateDialog");
+
+        Log.i("MyActivity", "Showed dialog");
+    }
+
+    //need to fix
+//    private void populateRestaurants() {
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//
+//        Gson lensGson = new Gson();
+//        String lensJson = prefs.getString(PREFS_RESTAURANTS,null );
+//        Type type = new TypeToken<List<Restaurant>>() {}.getType();
+//        List<Restaurant> storedRestaurants = lensGson.fromJson(lensJson, type);
+//
+//        //if nothing in SharedPref, read raw
+//        if(storedRestaurants == null){
+//            readRawRestaurantData();
+//            readRawInspectionData();
+//        }
+//        //else populate the manager with SharedPref restaurants
+//        else{
+//            for(int i = 0; i < storedRestaurants.size(); i++){
+//                restaurants.addRestaurant(storedRestaurants.get(i));
+//            }
+//        }
+//
+//        String last = prefs.getString(PREFS_LAST_UPDATE,"");
+//        restaurants.setLastModified(last);
+//    }
+
+    //discard later
+//    private void storeRestaurantsToPref(){
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = prefs.edit();
+//
+//        Gson gson = new Gson();
+//        List<Restaurant> storedRestaurants = new ArrayList<>();
+//
+//        for(int i = 0; i < restaurants.getSize();i++){
+//            storedRestaurants.add(restaurants.getRestFromIndex(i));
+//        }
+//
+//        String json = gson.toJson(storedRestaurants);
+//        editor.putString(PREFS_RESTAURANTS, json);
+//        editor.apply();
+//        putLastUpdateToSharedPref(restaurants.getLastModified());
+//    }
+
+    //check if it's been 20 hours since you last updated
+    private boolean needUpdate() {
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//
+//        Gson lensGson = new Gson();
+//        String lensJson = prefs.getString(PREFS_LAST_UPDATE,null );
+//        Type type = new TypeToken<List<UpdateData>>() {}.getType();
+//        List<UpdateData> storedData = lensGson.fromJson(lensJson, type);
+//
+
+        //check if updated within 20 hours
+        LocalDateTime now = LocalDateTime.now();
+        //String last = prefs.getString(PREFS_LAST_UPDATE,"");
+        String last = updateData.getLastUpdated();
+        if(last.equals("")){
+            return true;
+        }
+        LocalDateTime lastUpdated = LocalDateTime.parse(last);
+        if(lastUpdated.isBefore(now.minusHours(20))){
+            return true;
+        }
+        return false;
+    }
+
+    private String DateTimeToString(LocalDateTime dateTime){
+        String lastUpdate;
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        lastUpdate = dateTime.format(formatter);
+        return lastUpdate;
+    }
+
+    //fix later
+    private void putLastUpdateToSharedPref(String lastUpdate){
+        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        List<UpdateData> storedData = new ArrayList<>();
+
+        storedData.add(updateData);
+
+        String json = gson.toJson(storedData);
+        editor.putString(PREFS_LAST_UPDATE, json);
+        editor.apply();
+    }
 
     private void registerClickCallback() {
         ListView list = findViewById(R.id.restaurant_list);
@@ -199,109 +323,54 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private void readInspectionData() {
+    private void readRawInspectionData(){
         InputStream is = getResources().openRawResource(R.raw.inspectionreports_itr1);
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is, Charset.forName("UTF-8"))
         );
-
-        String line = "";
-        try{
-            //headers
-            reader.readLine();
-
-            while( (line = reader.readLine()) != null){
-                //Split by ","
-                String[] tokens = line.split(",");
-
-                //Read data
-
-                InspectionReport inspection = new InspectionReport();
-                String trackingNum = removeQuotes(tokens[0]);
-                inspection.setInspectDate(Integer.parseInt(tokens[1]));
-                inspection.setInspType(removeQuotes(tokens[2]));
-                inspection.setNumCritical(Integer.parseInt(tokens[3]));
-                inspection.setNumNonCritical((Integer.parseInt(tokens[4])));
-                inspection.setHazard(removeQuotes(tokens[5]));
-
-                String lump = "";
-                for(int i = 6; i < tokens.length; i++){
-                    lump += removeQuotes(tokens[i]) + ",";
-                }
-                //Log.d("MyActivity", "lump looks like: " + lump);
-
-                inspection.processLump(lump);
-//                Log.d("MyActivity", "violLump size: " + inspection.getViolLump().size());
-//                for(int i = 0; i < inspection.getViolLump().size(); i++){
-//                    Log.d("MyActivity", "Violation: " + inspection.getViolation(i));
-//                }
-                //Log.d("MyActivity", "Violation: " + inspection.getViolation(0));
-
-                //adds inspection into it's restaurants inspection manager
-                if(restaurants.getRestFromTracking(trackingNum) != null){
-                    restaurants.getRestFromTracking(trackingNum).addInspection(inspection);
-                }
-            }
-
-        }catch(IOException e){
-            Log.wtf("MyActivity", "Error reading data file on line " + line, e);
-            e.printStackTrace();
-        }
-
+        restaurants.readInspectionData(reader);
     }
 
-    //based on Brian Fraser's video
-
-    private void readRestaurantData() {
+    private void readRawRestaurantData(){
         InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
         BufferedReader reader = new BufferedReader(
-            new InputStreamReader(is, Charset.forName("UTF-8"))
+                new InputStreamReader(is, Charset.forName("UTF-8"))
         );
+        restaurants.readRestaurantData(reader);
+    }
 
-        String line = "";
-        try{
-            //headers
-            reader.readLine();
-            while( (line = reader.readLine()) != null){
-                //Split by ","
-                String[] tokens = line.split(",");
-
-                //Read data
-                Restaurant r = new Restaurant(removeQuotes(tokens[0]));
-                r.setName(removeQuotes(tokens[1]));
-                r.setAddress(removeQuotes(tokens[2]));
-                r.setCity(removeQuotes(tokens[3]));
-                r.setFacType(removeQuotes(tokens[4]));
-                r.setLatitude(Double.parseDouble(tokens[5]));
-                r.setLongitude(Double.parseDouble(tokens[6]));
-
-                restaurants.addRestaurant(r);
+    private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
+        @Override
+        protected UpdateData doInBackground(Void... params) {
+            return new FetchData().fetchUpdateItems();
+        }
+        @Override
+        protected void onPostExecute(UpdateData needUpdate) {
+            updateData = needUpdate;
+            //check if need update
+            updateData.setNeedUpdate(needUpdate());
+            if(updateData.getNeedUpdate()){
+                //check if want update
+                //askUpdate();
             }
-
-        }catch(IOException e){
-            Log.wtf("MyActivity", "Error reading data file on line " + line, e);
-            e.printStackTrace();
         }
-
     }
-    //Used https://stackoverflow.com/questions/2608665/how-can-i-trim-beginning-and-ending-double-quotes-from-a-string/34406001#:~:text=To%20remove%20one%20or%20more,%2B%24%22%2C%20%22%22)%3B
-    private String removeQuotes(String s){
-        //check if its "" first
-        String noQuotes = "";
-        if(s.startsWith("\"") && s.endsWith("\"")){
-            noQuotes = s.substring(1, s.length()-1);
+
+    //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
+    private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
+        @Override
+        protected RestaurantManager doInBackground(Void... params) {
+            return new FetchData().fetchItems();
         }
-        else if(s.startsWith("\"")){
-            noQuotes = s.substring(1, s.length());
+        @Override
+        protected void onPostExecute(RestaurantManager manager) {
+            restaurants = manager;
+            populateListView();
+            //do smth about needUpdate
+            //show loading screen
+            //implment cancel
         }
-        else if(s.endsWith("\"")){
-            noQuotes = s.substring(0, s.length()-1);
-        }
-        else{
-            return s;
-        }
-        return noQuotes;
     }
+
 
 }

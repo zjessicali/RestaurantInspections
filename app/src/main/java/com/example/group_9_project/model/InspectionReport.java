@@ -29,9 +29,10 @@ public class InspectionReport {
     //constructor
     public InspectionReport() {
         violLump = new ViolationManager();
-        int numCritical = 0;
-        int numNonCritical = 0;
-        int numTotal = 0;
+        numCritical = 0;
+        numNonCritical = 0;
+        //int numTotal = 0;
+        hazard = null;
     }
 
     //getters
