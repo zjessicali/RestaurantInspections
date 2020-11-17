@@ -54,9 +54,12 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         //setRetainInstance(true);
+        setUpManager();
+
+
         new FetchItemsTask().execute();
         //populateRestaurants();
-        Log.d("MyActivity test", "OnCreate Call Restaurant size: " + restaurants.getSize());
+        //Log.d("MyActivity test", "OnCreate Call Restaurant size: " + restaurants.getSize());
         //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
         //askUpdate();
@@ -66,6 +69,18 @@ public class MainActivity extends AppCompatActivity {
         //populateListView();
         registerClickCallback();
 
+    }
+
+    private void setUpManager() {
+        if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
+            readRawRestaurantData();
+            readRawInspectionData();
+            //first time running -> last update more than 20 hours -> ask if they want to update
+            //askUpdate();
+        }
+        else{//check if need update
+            new FetchLastModified().execute();
+        }
     }
 
 
@@ -118,13 +133,20 @@ public class MainActivity extends AppCompatActivity {
 //        putLastUpdateToSharedPref(restaurants.getLastModified());
 //    }
 
-    //check if there is new data before u run this
+    //check if it's been 20 hours since you last updated
     private boolean needUpdate() {
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//
+//        Gson lensGson = new Gson();
+//        String lensJson = prefs.getString(PREFS_LAST_UPDATE,null );
+//        Type type = new TypeToken<List<UpdateData>>() {}.getType();
+//        List<UpdateData> storedData = lensGson.fromJson(lensJson, type);
+//
 
         //check if updated within 20 hours
         LocalDateTime now = LocalDateTime.now();
-        String last = prefs.getString(PREFS_LAST_UPDATE,"");
+        //String last = prefs.getString(PREFS_LAST_UPDATE,"");
+        String last = updateData.getLastUpdated();
         if(last.equals("")){
             return true;
         }
@@ -145,7 +167,14 @@ public class MainActivity extends AppCompatActivity {
     private void putLastUpdateToSharedPref(String lastUpdate){
         SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREFS_LAST_UPDATE, lastUpdate);
+
+        Gson gson = new Gson();
+        List<UpdateData> storedData = new ArrayList<>();
+
+        storedData.add(updateData);
+
+        String json = gson.toJson(storedData);
+        editor.putString(PREFS_LAST_UPDATE, json);
         editor.apply();
     }
 
@@ -249,8 +278,6 @@ public class MainActivity extends AppCompatActivity {
         restaurants.readInspectionData(reader);
     }
 
-
-
     private void readRawRestaurantData(){
         InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
         BufferedReader reader = new BufferedReader(
@@ -266,7 +293,13 @@ public class MainActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(UpdateData needUpdate) {
-            //ask if want update
+            updateData = needUpdate;
+            //check if need update
+            updateData.setNeedUpdate(needUpdate());
+            if(updateData.getNeedUpdate()){
+                //check if want update
+                //askUpdate();
+            }
         }
     }
 

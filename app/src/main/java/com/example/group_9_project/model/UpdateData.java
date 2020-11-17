@@ -9,7 +9,7 @@ public class UpdateData {
     private UpdateData() {
         this.lastModified = "";
         this.lastUpdated = "";
-        this.needUpdate = false;
+        this.needUpdate = null;
     }
 
     public static UpdateData getInstance(){
