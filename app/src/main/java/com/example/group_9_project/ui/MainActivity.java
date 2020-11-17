@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         //setRetainInstance(true);
         new FetchItemsTask().execute();
         //populateRestaurants();
-        //Log.d("MyActivity test", "Restaurant 2: " + restaurants.getRestFromIndex(3));
         Log.d("MyActivity test", "OnCreate Call Restaurant size: " + restaurants.getSize());
         //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
@@ -67,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupUpdate() {
-
-    }
 
     private void askUpdate() {
         FragmentManager manager = getSupportFragmentManager();
@@ -103,22 +99,22 @@ public class MainActivity extends AppCompatActivity {
         restaurants.setLastModified(last);
     }
 
-    private void storeRestaurantsToPref(){
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        List<Restaurant> storedRestaurants = new ArrayList<>();
-
-        for(int i = 0; i < restaurants.getSize();i++){
-            storedRestaurants.add(restaurants.getRestFromIndex(i));
-        }
-
-        String json = gson.toJson(storedRestaurants);
-        editor.putString(PREFS_RESTAURANTS, json);
-        editor.apply();
-        putLastUpdateToSharedPref(restaurants.getLastModified());
-    }
+//    private void storeRestaurantsToPref(){
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = prefs.edit();
+//
+//        Gson gson = new Gson();
+//        List<Restaurant> storedRestaurants = new ArrayList<>();
+//
+//        for(int i = 0; i < restaurants.getSize();i++){
+//            storedRestaurants.add(restaurants.getRestFromIndex(i));
+//        }
+//
+//        String json = gson.toJson(storedRestaurants);
+//        editor.putString(PREFS_RESTAURANTS, json);
+//        editor.apply();
+//        putLastUpdateToSharedPref(restaurants.getLastModified());
+//    }
 
     //check if there is new data before u run this
     private boolean needUpdate() {
@@ -261,7 +257,17 @@ public class MainActivity extends AppCompatActivity {
         restaurants.readRestaurantData(reader);
     }
 
+    private class FetchLastModified extends AsyncTask<Void,Void,String> {
+        @Override
+        protected String doInBackground(Void... params) {
 
+            return new FetchData().fetchUpdateItems();
+        }
+        @Override
+        protected void onPostExecute(String lastModified) {
+
+        }
+    }
 
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
     private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
@@ -276,8 +282,8 @@ public class MainActivity extends AppCompatActivity {
             restaurants = manager;
             Log.d("MyActivity test", "Restaurant Size in onpost after =: " + restaurants.getSize());
             populateListView();
+            //do smth about needUpdate
         }
-
     }
 
 

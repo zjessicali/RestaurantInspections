@@ -71,7 +71,6 @@ public class FetchData {
 
             parseItems( jsonBodyRest);
             parseItems(jsonBodyInsp);
-            Log.d("FetchData", "fetch data just ran");
         }catch (JSONException je){
             Log.e(TAG, "Failed to parse JSON", je);
         } catch (IOException ioe) {
@@ -81,18 +80,53 @@ public class FetchData {
         return restaurants;
     }
 
-    public String fetchServerLastModified(){
+    public String fetchUpdateItems(){
+        try {
+            String restaurantPackageURL = Uri.parse("https://data.surrey.ca/api/3/action/")
+                    .buildUpon()
+                    .appendPath("package_show")
+                    .appendQueryParameter("id", "restaurants")
+                    .build().toString();
+            String inspectionPackageURL =  Uri.parse("https://data.surrey.ca/api/3/action/")
+                    .buildUpon()
+                    .appendPath("package_show")
+                    .appendQueryParameter("id", "fraser-health-restaurant-inspection-reports")
+                    .build().toString();
+            String jsonStringRest = getUrlString(restaurantPackageURL);
+            JSONObject jsonBodyRest = new JSONObject(jsonStringRest);
+
+            String jsonStringInsp = getUrlString(inspectionPackageURL);
+            JSONObject jsonBodyInsp = new JSONObject(jsonStringInsp);
+
+            parseForUpdate(jsonBodyRest,jsonBodyInsp);
+            parseItems( jsonBodyRest);
+            parseItems(jsonBodyInsp);
+        }catch (JSONException je){
+            Log.e(TAG, "Failed to parse JSON", je);
+        } catch (IOException ioe) {
+            Log.e(TAG, "Failed to fetch items", ioe);
+        }
 
         return restaurants.getLastModified();
+    }
+
+    private void parseForUpdate(JSONObject jsonBodyRest, JSONObject jsonBodyInsp)throws IOException, JSONException {
+        //check rest
+        JSONObject resourcesRest = jsonBodyRest.getJSONObject("result").getJSONArray("resources").getJSONObject(0);
+        String last_modified = resourcesRest.getString("last_modified");
+        //check if server's last modified and restaurant manager's last modified
+
+        //check insp
+        JSONObject resourcesInsp = jsonBodyInsp.getJSONObject("result").getJSONArray("resources").getJSONObject(0);
+
+
+
     }
 
     private void parseItems(JSONObject jsonBody) throws IOException, JSONException{
         JSONObject resultJSONObj = jsonBody.getJSONObject("result");
         JSONArray resourcesJSONArr = resultJSONObj.getJSONArray("resources");
         JSONObject resources = resourcesJSONArr.getJSONObject(0);
-
-        String lastModified = resources.getString("last_modified");
-        restaurants.setLastModified(lastModified);
 
         String name = resources.getString("name");
 
@@ -103,7 +137,6 @@ public class FetchData {
         else{
             readInspCSV(csvURL);
         }
-
     }
 
     private void readInspCSV(String csvURL) {
