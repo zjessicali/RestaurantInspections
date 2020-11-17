@@ -1,11 +1,15 @@
 package com.example.group_9_project.ui;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +19,9 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.group_9_project.R;
@@ -52,6 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<Marker> markers = new ArrayList<>();
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +161,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
+    private void showPopUp(int index) {
+        Restaurant restaurant = manager.getRestFromIndex(index);
+
+        AlertDialog.Builder dialogBuider;
+        AlertDialog dialog;
+
+        dialogBuider = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.maps_dialog, null);
+
+        TextView nameText = contactPopupView.findViewById(R.id.restaurantNameText);
+        TextView addressText = contactPopupView.findViewById(R.id.addressText);
+        TextView hazardText = contactPopupView.findViewById(R.id.hazardText);
+
+        nameText.setText(getResources().getString(R.string.restaurantName) + restaurant.getName());
+        addressText.setText(getResources().getString(R.string.restaurantAddress) + restaurant.getAddress());
+
+        InspectionManager inspectionManager = restaurant.getInspections();
+        String hazard = "";
+
+        if (inspectionManager.getSize() > 0) {
+            InspectionReport inspectionReport = inspectionManager.getInspection(0);
+
+            switch (inspectionReport.getHazard()) {
+                case LOW:
+                    hazard = "low";
+                    break;
+
+                case MODERATE:
+                    hazard = "moderate";
+                    break;
+
+                case HIGH:
+                    hazard = "high";
+                    break;
+            }
+
+        } else {hazard = "unknown";}
+
+        hazardText.setText(getResources().getString(R.string.restaurantHazard) + hazard);
+
+
+        dialogBuider.setView(contactPopupView);
+        dialog = dialogBuider.create();
+        dialog.show();
+
+        final int finalIndex = index;
+        ConstraintLayout popup = contactPopupView.findViewById(R.id.dialogConstraintLayout);
+        popup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = RestaurantDetail.launchIntent(MapsActivity.this, finalIndex);
+                startActivity(intent);
+            }
+        });
+
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -221,6 +287,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else { marker.snippet("Hazard: unknown");}
 
             Marker newMarker = mMap.addMarker(marker);
+            newMarker.setTag(i);
+
             markers.add(newMarker);
         }
 
@@ -234,14 +302,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Show user's current GPS location
 
+
         // Interact with peg to show more information
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 for(int i = 0; i < markers.size(); i++) {
                     if (marker.equals(markers.get(i))) {
-                            Toast.makeText(getApplicationContext(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
-                            return true;
+                            int index = (int) marker.getTag();
+                            showPopUp(index);
                     }
                 }
                 return false;
