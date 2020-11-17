@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionManager;
@@ -63,13 +64,13 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         //setRetainInstance(true);
-        setUpManager();
+        //setUpManager();
 
 
         createMapIntent();
         setUpMapViewButton();
-        readRestaurantData();
-        readInspectionData();
+        readRawRestaurantData();
+        readRawInspectionData();
         populateListView();
         //new FetchItemsTask().execute();
         //populateRestaurants();
