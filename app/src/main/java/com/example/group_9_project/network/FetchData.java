@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+//this class deals with network related things and downloads the data
 public class FetchData {
 
     private static final String TAG = "FetchData Class";

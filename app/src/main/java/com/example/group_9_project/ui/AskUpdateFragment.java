@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.group_9_project.R;
 
+//ask user to update
 public class AskUpdateFragment extends AppCompatDialogFragment {
     @NonNull
     @Override

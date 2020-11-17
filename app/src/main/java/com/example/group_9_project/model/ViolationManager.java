@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//stores violations
 public class ViolationManager implements Iterable<Violation>{
     private ArrayList<Violation> violationList;
 

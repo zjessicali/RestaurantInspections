@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
-    //private static final String PREFS_RESTAURANTS = "RestaurantManagerPrefs";
     private UpdateData updateData = UpdateData.getInstance();
 
 
@@ -58,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         //new FetchItemsTask().execute();
         //populateRestaurants();
-        //Log.d("MyActivity test", "OnCreate Call Restaurant size: " + restaurants.getSize());
-        //Log.d("MyActivity test", "last modified: " + restaurants.getLastModified());
 
         registerClickCallback();
 
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //wip
     private void askUpdate() {
         FragmentManager manager = getSupportFragmentManager();
         MessageFragment dialog = new MessageFragment();
@@ -87,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MyActivity", "Showed dialog");
     }
 
+    //need to fix
 //    private void populateRestaurants() {
 //        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 //
@@ -111,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 //        restaurants.setLastModified(last);
 //    }
 
+    //discard later
 //    private void storeRestaurantsToPref(){
 //        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 //        SharedPreferences.Editor editor = prefs.edit();
@@ -159,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         return lastUpdate;
     }
 
+    //fix later
     private void putLastUpdateToSharedPref(String lastUpdate){
         SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
