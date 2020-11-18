@@ -303,7 +303,9 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
         @Override
         protected void onPreExecute(){
+            //https://www.tutorialspoint.com/how-to-cancel-an-executing-asynctask-in-android
             //open loading screen
+
 
         }
         @Override
