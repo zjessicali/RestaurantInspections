@@ -84,8 +84,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean isOpened;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -438,6 +436,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(storedData != null) {
             updateData = storedData.get(0);
         }
+    }
+
+    //fix later
+    private void putLastUpdateToSharedPref(String lastUpdate){
+        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        List<UpdateData> storedData = new ArrayList<>();
+
+        storedData.add(updateData);
+
+        String json = gson.toJson(storedData);
+        editor.putString(PREFS_LAST_UPDATE, json);
+        editor.apply();
     }
 
     private void readRawInspectionData(){

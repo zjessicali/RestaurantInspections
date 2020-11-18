@@ -68,10 +68,6 @@ public class MainActivity extends AppCompatActivity  {
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
-    //private FetchItemsTask asyncTask = null;
-    //public static final String TAG = "MyTag";
-    AlertDialog alert_pleaseWait;
-    RequestQueue RQueue;
 
     private boolean mapIsOpened = false;
     private static MainActivity instance;
@@ -83,19 +79,13 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
-        //setUpManager();
-        instance = this;
-        //readRawRestaurantData();
-        //readRawInspectionData();
 
+        instance = this;
 
         createMapIntent(mapIsOpened);
         setUpMapViewButton();
-        //new FetchItemsTask().execute();
-        //populateRestaurants();
 
         registerClickCallback();
-
     }
 
     public static MainActivity getInstance() {
@@ -144,81 +134,6 @@ public class MainActivity extends AppCompatActivity  {
         return false;
     }
 
-
-    private void setUpManager() {
-        getLastUpdatedFromSharedPref();
-        if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
-            readRawRestaurantData();
-            readRawInspectionData();
-
-            populateListView();
-            //first time running means last update more than 20 hours -> ask if they want to update
-            askUpdate();
-        }
-        else{//check if need update
-            populateListView();
-            //new FetchLastModified().execute();
-        }
-    }
-
-    private void askUpdate() {
-        FragmentManager manager = getSupportFragmentManager();
-        AskUpdateFragment dialog = new AskUpdateFragment();
-        dialog.show(manager,"UpdateDialog");
-
-        Log.i("MyActivity", "Showed dialog");
-    }
-
-
-
-    //maybe discard
-//    private void populateRestaurants() {
-//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-//
-//        Gson lensGson = new Gson();
-//        String lensJson = prefs.getString(PREFS_RESTAURANTS,null );
-//        Type type = new TypeToken<List<Restaurant>>() {}.getType();
-//        List<Restaurant> storedRestaurants = lensGson.fromJson(lensJson, type);
-//
-//        //if nothing in SharedPref, read raw
-//        if(storedRestaurants == null){
-//            readRawRestaurantData();
-//            readRawInspectionData();
-//        }
-//        //else populate the manager with SharedPref restaurants
-//        else{
-//            for(int i = 0; i < storedRestaurants.size(); i++){
-//                restaurants.addRestaurant(storedRestaurants.get(i));
-//            }
-//        }
-//
-//        String last = prefs.getString(PREFS_LAST_UPDATE,"");
-//        restaurants.setLastModified(last);
-//    }
-
-    //check if it's been 20 hours since you last updated
-    private boolean needUpdate() {
-        //check if updated within 20 hours
-        LocalDateTime now = LocalDateTime.now();
-        //String last = prefs.getString(PREFS_LAST_UPDATE,"");
-        String last = updateData.getLastUpdated();
-        if(last.equals("")){
-            return true;
-        }
-        LocalDateTime lastUpdated = LocalDateTime.parse(last);
-        if(lastUpdated.isBefore(now.minusHours(20))){
-            return true;
-        }
-        return false;
-    }
-
-    private String DateTimeToString(LocalDateTime dateTime){
-        String lastUpdate;
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        lastUpdate = dateTime.format(formatter);
-        return lastUpdate;
-    }
-
     private void getLastUpdatedFromSharedPref(){
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
@@ -230,21 +145,6 @@ public class MainActivity extends AppCompatActivity  {
         if(storedData != null) {
             updateData = storedData.get(0);
         }
-    }
-
-    //fix later
-    private void putLastUpdateToSharedPref(String lastUpdate){
-        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        List<UpdateData> storedData = new ArrayList<>();
-
-        storedData.add(updateData);
-
-        String json = gson.toJson(storedData);
-        editor.putString(PREFS_LAST_UPDATE, json);
-        editor.apply();
     }
 
     private void registerClickCallback() {
@@ -361,99 +261,5 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
-    private void readRawInspectionData(){
-        InputStream is = getResources().openRawResource(R.raw.inspectionreports_itr1);
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(is, Charset.forName("UTF-8"))
-        );
-        restaurants.readInspectionData(reader);
-    }
-
-    private void readRawRestaurantData(){
-        InputStream is = getResources().openRawResource(R.raw.restaurants_itr1);
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(is, Charset.forName("UTF-8"))
-        );
-        restaurants.readRestaurantData(reader);
-    }
-
-//    @Override
-//    public void startUpdate() {
-//        asyncTask = new FetchItemsTask();
-//        asyncTask.execute();
-//    }
-
-//    @Override
-//    public void updateNextTime() {
-//        updateData.setNeedUpdate(true);
-//    }
-//
-//    private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
-//        @Override
-//        protected UpdateData doInBackground(Void... params) {
-//            return new FetchData().fetchUpdateItems();
-//        }
-//        @Override
-//        protected void onPostExecute(UpdateData needUpdate) {
-//            updateData = needUpdate;
-//            //check if need update
-//            updateData.setNeedUpdate(needUpdate());
-//            if(updateData.getNeedUpdate()){
-//                //check if want update
-//                askUpdate();
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onCancelClicked() {
-//        //super.onStop();
-//        asyncTask.cancel(true);
-//        if (RQueue != null) {
-//            RQueue.cancelAll(TAG);
-//        }
-//    }
-    //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
-//    private class FetchItemsTask extends AsyncTask<Void,Void,Boolean> {
-//        @Override
-//        protected void onPreExecute(){
-//            //https://www.tutorialspoint.com/how-to-cancel-an-executing-asynctask-in-android
-//            //open loading screen
-//            super.onPreExecute();
-//            openPleaseWaitDialog();
-//
-//        }
-//        @Override
-//        protected Boolean doInBackground(Void... params) {
-//            if (!isCancelled()) {
-//                new FetchData().fetchItems();
-//                return true;
-//            } else {
-//                return false;
-//            }
-//            //return new FetchData().fetchItems();
-//        }
-//        @Override
-//        protected void onPostExecute(Boolean done) {
-//            dialog.dismiss();
-//            //restaurants = manager;
-//            populateListView();
-//            updateData.setNeedUpdate(false);
-//            LocalDateTime now = LocalDateTime.now();
-//            updateData.setLastUpdated(DateTimeToString(now));//double check this
-//            //implment cancel
-//        }
-//
-//    }
-    private LoadingFragment dialog = new LoadingFragment();
-
-    private void openPleaseWaitDialog() {
-        FragmentManager manager = getSupportFragmentManager();
-        //LoadingFragment dialog = new LoadingFragment();
-        dialog.show(manager,"UpdateDialog");
-
-        Log.i("MyActivity", "Showed loading dialog");
-
-    }
 
 }
