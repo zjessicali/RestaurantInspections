@@ -393,9 +393,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("MapsActivity", "it should ask update");
             askUpdate();
         }
-        else{//check if need update
+        else if(updateData.getNeedUpdate()){//check if need update
             //populateListView();
-            new FetchLastModified().execute();
+            askUpdate();
+        }
+        else{
+            //do nothing if don't need update
+            MainActivity.getInstance().populateListView();
         }
     }
 
@@ -464,6 +468,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void updateNextTime() {
         updateData.setNeedUpdate(true);
+        MainActivity.getInstance().populateListView();
     }
 
     private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
@@ -520,7 +525,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             updateData.setLastUpdated(DateTimeToString(now));//double check this
             //implment cancel
         }
-
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+            MainActivity.getInstance().populateListView();
+            updateData.setNeedUpdate(true);
+        }
     }
     private LoadingFragment loadingDialog = new LoadingFragment();
 

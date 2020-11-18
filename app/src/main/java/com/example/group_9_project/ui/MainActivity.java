@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity  {
         //readRawRestaurantData();
         //readRawInspectionData();
 
+
         createMapIntent(mapIsOpened);
         setUpMapViewButton();
         //new FetchItemsTask().execute();
