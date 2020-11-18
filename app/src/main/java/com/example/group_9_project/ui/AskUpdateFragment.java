@@ -34,7 +34,7 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 //make a log, you clicked dialog button
                 Log.d("MyActivity","You clicked ok ... update....");
-
+                listener.startUpdate();
             }
         };
 
@@ -56,11 +56,16 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
                 .create();
     }
 
+    //https://codinginflow.com/tutorials/android/custom-dialog-interface
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        listener = (AskUpdateListener) context;
+        try {
+            listener = (AskUpdateListener) context;
+        } catch (Exception e) {
+            throw new ClassCastException(context.toString() +
+                    "must implement AskUpdateListener");
+        }
     }
 
     public interface AskUpdateListener{

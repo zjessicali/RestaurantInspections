@@ -37,7 +37,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AskUpdateFragment.AskUpdateListener{
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
@@ -289,7 +289,11 @@ public class MainActivity extends AppCompatActivity {
         restaurants.readRestaurantData(reader);
     }
 
-
+    @Override
+    public void startUpdate() {
+        updateData.setWantUpdate(true);
+        new FetchItemsTask().execute();
+    }
 
     private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
         @Override
