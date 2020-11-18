@@ -144,8 +144,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Location currentLocation = (Location) task.getResult();
                             if(currentLocation == null){
                                 Log.d("MapsActivity", "currLocation null");
+                            }else {
+                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                             }
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                         } else {
                             Log.i(TAG, "onComplete: current location is null");
                         }
