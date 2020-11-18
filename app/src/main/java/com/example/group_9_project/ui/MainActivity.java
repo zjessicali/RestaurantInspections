@@ -59,7 +59,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-public class MainActivity extends AppCompatActivity implements AskUpdateFragment.AskUpdateListener, LoadingFragment.LoadingFragmentListener {
+public class MainActivity extends AppCompatActivity  {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
@@ -68,10 +68,13 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
-    private FetchItemsTask asyncTask = null;
+    //private FetchItemsTask asyncTask = null;
     //public static final String TAG = "MyTag";
     AlertDialog alert_pleaseWait;
     RequestQueue RQueue;
+
+    private boolean mapIsOpened = false;
+    private static MainActivity instance;
 
     //NOTE TO JESSICA: DONT FORGET TO SETSHAREDPREF
     @Override
@@ -80,14 +83,13 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
-        setUpManager();
+        //setUpManager();
+        instance = this;
+        //readRawRestaurantData();
+        //readRawInspectionData();
 
-
-        createMapIntent();
+        createMapIntent(mapIsOpened);
         setUpMapViewButton();
-        readRawRestaurantData();
-        readRawInspectionData();
-        populateListView();
         //new FetchItemsTask().execute();
         //populateRestaurants();
 
@@ -95,10 +97,15 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 
     }
 
-    private void createMapIntent() {
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
+    private void createMapIntent(boolean isOpened) {
         if (isServicesOK()) {
-            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            Intent intent = MapsActivity.launchIntent(this, isOpened);
             startActivity(intent);
+            mapIsOpened = true;
         }
     }
 
@@ -107,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createMapIntent();
+                createMapIntent(mapIsOpened);
             }
         });
     }
@@ -149,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         }
         else{//check if need update
             populateListView();
-            new FetchLastModified().execute();
+            //new FetchLastModified().execute();
         }
     }
 
@@ -251,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     }
 
 
-    private void populateListView() {
+    public void populateListView() {
         Log.d("MyActivity", "populate List size: "+ResList.size());
         //clear what was before first
         int resListSize = ResList.size();
@@ -369,74 +376,74 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         restaurants.readRestaurantData(reader);
     }
 
-    @Override
-    public void startUpdate() {
-        asyncTask = new FetchItemsTask();
-        asyncTask.execute();
-    }
+//    @Override
+//    public void startUpdate() {
+//        asyncTask = new FetchItemsTask();
+//        asyncTask.execute();
+//    }
 
-    @Override
-    public void updateNextTime() {
-        updateData.setNeedUpdate(true);
-    }
+//    @Override
+//    public void updateNextTime() {
+//        updateData.setNeedUpdate(true);
+//    }
+//
+//    private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
+//        @Override
+//        protected UpdateData doInBackground(Void... params) {
+//            return new FetchData().fetchUpdateItems();
+//        }
+//        @Override
+//        protected void onPostExecute(UpdateData needUpdate) {
+//            updateData = needUpdate;
+//            //check if need update
+//            updateData.setNeedUpdate(needUpdate());
+//            if(updateData.getNeedUpdate()){
+//                //check if want update
+//                askUpdate();
+//            }
+//        }
+//    }
 
-    private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
-        @Override
-        protected UpdateData doInBackground(Void... params) {
-            return new FetchData().fetchUpdateItems();
-        }
-        @Override
-        protected void onPostExecute(UpdateData needUpdate) {
-            updateData = needUpdate;
-            //check if need update
-            updateData.setNeedUpdate(needUpdate());
-            if(updateData.getNeedUpdate()){
-                //check if want update
-                askUpdate();
-            }
-        }
-    }
-
-    @Override
-    public void onCancelClicked() {
-        //super.onStop();
-        asyncTask.cancel(true);
-        if (RQueue != null) {
-            RQueue.cancelAll(TAG);
-        }
-    }
+//    @Override
+//    public void onCancelClicked() {
+//        //super.onStop();
+//        asyncTask.cancel(true);
+//        if (RQueue != null) {
+//            RQueue.cancelAll(TAG);
+//        }
+//    }
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
-    private class FetchItemsTask extends AsyncTask<Void,Void,Boolean> {
-        @Override
-        protected void onPreExecute(){
-            //https://www.tutorialspoint.com/how-to-cancel-an-executing-asynctask-in-android
-            //open loading screen
-            super.onPreExecute();
-            openPleaseWaitDialog();
-
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if (!isCancelled()) {
-                new FetchData().fetchItems();
-                return true;
-            } else {
-                return false;
-            }
-            //return new FetchData().fetchItems();
-        }
-        @Override
-        protected void onPostExecute(Boolean done) {
-            dialog.dismiss();
-            //restaurants = manager;
-            populateListView();
-            updateData.setNeedUpdate(false);
-            LocalDateTime now = LocalDateTime.now();
-            updateData.setLastUpdated(DateTimeToString(now));//double check this
-            //implment cancel
-        }
-
-    }
+//    private class FetchItemsTask extends AsyncTask<Void,Void,Boolean> {
+//        @Override
+//        protected void onPreExecute(){
+//            //https://www.tutorialspoint.com/how-to-cancel-an-executing-asynctask-in-android
+//            //open loading screen
+//            super.onPreExecute();
+//            openPleaseWaitDialog();
+//
+//        }
+//        @Override
+//        protected Boolean doInBackground(Void... params) {
+//            if (!isCancelled()) {
+//                new FetchData().fetchItems();
+//                return true;
+//            } else {
+//                return false;
+//            }
+//            //return new FetchData().fetchItems();
+//        }
+//        @Override
+//        protected void onPostExecute(Boolean done) {
+//            dialog.dismiss();
+//            //restaurants = manager;
+//            populateListView();
+//            updateData.setNeedUpdate(false);
+//            LocalDateTime now = LocalDateTime.now();
+//            updateData.setLastUpdated(DateTimeToString(now));//double check this
+//            //implment cancel
+//        }
+//
+//    }
     private LoadingFragment dialog = new LoadingFragment();
 
     private void openPleaseWaitDialog() {
