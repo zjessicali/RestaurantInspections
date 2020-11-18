@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +33,10 @@ import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
+import org.w3c.dom.Text;
 import com.example.group_9_project.model.UpdateData;
 import com.example.group_9_project.network.FetchData;
 
@@ -42,6 +48,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +60,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity implements AskUpdateFragment.AskUpdateListener, LoadingFragment.LoadingFragmentListener {
+    private static final String TAG = "MainActivity";
+    private static final int ERROR_DIALOG_REQUEST = 9001;
+
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
@@ -72,9 +82,60 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
         setUpManager();
 
+
+        createMapIntent();
+        setUpMapViewButton();
+        readRawRestaurantData();
+        readRawInspectionData();
+        populateListView();
+        //new FetchItemsTask().execute();
+        //populateRestaurants();
+
         registerClickCallback();
 
     }
+
+    private void createMapIntent() {
+        if (isServicesOK()) {
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void setUpMapViewButton() {
+        Button button = findViewById(R.id.mapViewBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createMapIntent();
+            }
+        });
+    }
+
+    //Permissions for google map
+    //Source: https://www.youtube.com/watch?v=M0bYvXlhgSI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=3
+    public boolean isServicesOK() {
+        Log.i(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+
+        if (available == ConnectionResult.SUCCESS) {
+            Log.i(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if( GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.i(TAG, "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }
+        else {
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+        return false;
+    }
+
 
     private void setUpManager() {
         getLastUpdatedFromSharedPref();
