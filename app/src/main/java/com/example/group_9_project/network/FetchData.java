@@ -146,6 +146,7 @@ public class FetchData {
 
         String csvURL = resources.getString("url");
         if(name.equals("Restaurants")){
+            restaurants.clearRestaurants();
             readRestCSV(csvURL);
         }
         else{

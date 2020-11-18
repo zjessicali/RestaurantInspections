@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
             readRawRestaurantData();
             readRawInspectionData();
+
             populateListView();
             //first time running means last update more than 20 hours -> ask if they want to update
             askUpdate();
@@ -176,6 +177,13 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 
 
     private void populateListView() {
+        Log.d("MyActivity", "populate List size: "+ResList.size());
+        //clear what was before first
+        int resListSize = ResList.size();
+        for(int i = 0; i < resListSize; i++){
+            ResList.remove(0);
+            Log.d("MyActivity", "ResList index: " + i);
+        }
         for (int i = 0; i < restaurants.getSize(); i++) {
             ResList.add(restaurants.getRestFromIndex(i));
         }

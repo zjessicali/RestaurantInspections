@@ -28,4 +28,5 @@
     <string name="num_critical">"Critical: "</string>
     <string name="num__non_critical">"Non Critical: "</string>
     <string name="inspection_detail">Inspection Detail</string>
+    <string name="updateText">There is a new update available, would you like to update?</string>
 </resources>

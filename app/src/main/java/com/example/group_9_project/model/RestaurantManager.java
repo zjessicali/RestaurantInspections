@@ -79,6 +79,14 @@ public class RestaurantManager {
         return Collections.unmodifiableList(manager);
     }
 
+    public void clearRestaurants(){
+        for(int i = 0; i < manager.size(); i++){
+            manager.remove(0);
+        }
+    }
+
+
+
 
     //based on Brian Fraser's video
     public void readRestaurantData(BufferedReader reader) {
