@@ -29,6 +29,7 @@ import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.w3c.dom.Text;
 
@@ -167,6 +168,14 @@ public class RestaurantDetail extends AppCompatActivity {
         String gpsCoordinate = manager.getRestFromIndex(index).getLatitude() + ", "
                 + manager.getRestFromIndex(index).getLongitude();
         coordinateText.setText(gpsCoordinate);
+        coordinateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=MapsActivity.makeIntent(RestaurantDetail.this,new LatLng(manager.getRestFromIndex(index).getLatitude(),manager.getRestFromIndex(index).getLongitude()));
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void setupRestaurantAddress() {

@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         if (isServicesOK()) {
             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
