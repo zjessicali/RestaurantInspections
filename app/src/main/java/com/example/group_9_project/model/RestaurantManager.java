@@ -12,6 +12,7 @@ import java.util.List;
 public class RestaurantManager {
     private ArrayList<Restaurant> manager;
     private static RestaurantManager instance;
+    private static RestaurantManager incompleteInstance;
 
     //constructor
     private RestaurantManager() {
@@ -23,6 +24,14 @@ public class RestaurantManager {
             instance = new RestaurantManager();
         }
         return instance;
+    }
+
+    //call for downloading
+    public static RestaurantManager getSecInstant(){
+        if(incompleteInstance == null){
+            incompleteInstance = new RestaurantManager();
+        }
+        return incompleteInstance;
     }
 
     //access Restaurant at index i
@@ -85,6 +94,16 @@ public class RestaurantManager {
         }
     }
 
+    public static void completeDownload(){
+        Log.d("MapsActivity","Transfering data");
+        instance.clearRestaurants();
+        //instance becomes incompleteInstance
+        for(int i = 0; i < incompleteInstance.getSize();i++){
+            instance.addRestaurant(incompleteInstance.getRestFromIndex(i));
+        }
+        incompleteInstance.clearRestaurants();
+        incompleteInstance = null;
+    }
 
 
 

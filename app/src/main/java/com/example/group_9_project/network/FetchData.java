@@ -3,6 +3,7 @@ package com.example.group_9_project.network;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.model.UpdateData;
 
@@ -26,6 +27,7 @@ public class FetchData {
 
     private static final String TAG = "FetchData Class";
     RestaurantManager restaurants = RestaurantManager.getInstance();
+    RestaurantManager Rdownloading = RestaurantManager.getSecInstant();
     UpdateData updateData = UpdateData.getInstance();
     //several methods taken or based on code from
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch) - libgen.lc
@@ -82,7 +84,7 @@ public class FetchData {
             Log.e(TAG, "Failed to fetch items", ioe);
         }
 
-        return restaurants;
+        return Rdownloading;
     }
 
     public UpdateData fetchUpdateItems(){
@@ -146,7 +148,7 @@ public class FetchData {
 
         String csvURL = resources.getString("url");
         if(name.equals("Restaurants")){
-            restaurants.clearRestaurants();
+            Rdownloading.clearRestaurants();
             readRestCSV(csvURL);
         }
         else{
@@ -163,7 +165,7 @@ public class FetchData {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(in, Charset.forName("UTF-8"))
             );
-            restaurants.readUpdatedInspectionData(reader);
+            Rdownloading.readUpdatedInspectionData(reader);
 
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch csv", ioe);
@@ -180,7 +182,7 @@ public class FetchData {
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(in, Charset.forName("UTF-8"))
             );
-            restaurants.readRestaurantData(reader);
+            Rdownloading.readRestaurantData(reader);
             Log.d("FetchData", "readCSV");
 
         } catch (IOException ioe) {

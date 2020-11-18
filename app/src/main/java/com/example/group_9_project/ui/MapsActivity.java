@@ -492,6 +492,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onCancelClicked() {
         //super.onStop();
         asyncTask.cancel(true);
+        Log.d(TAG,"cancel clicked");
 
     }
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
@@ -517,7 +518,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(Boolean done) {
             loadingDialog.dismiss();
-            //restaurants = manager;
+            RestaurantManager.completeDownload();
             MainActivity.getInstance().populateListView();
             //populate map??
             updateData.setNeedUpdate(false);
@@ -528,6 +529,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
+            asyncTask.cancel(true);
+            Log.d(TAG,"cancel called");
             MainActivity.getInstance().populateListView();
             updateData.setNeedUpdate(true);
         }
