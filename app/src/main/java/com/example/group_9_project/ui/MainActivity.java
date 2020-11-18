@@ -52,7 +52,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-public class MainActivity extends AppCompatActivity implements AskUpdateFragment.AskUpdateListener{
+public class MainActivity extends AppCompatActivity implements AskUpdateFragment.AskUpdateListener, LoadingFragment.LoadingFragmentListener {
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
@@ -70,11 +70,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         setContentView(R.layout.activity_main);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.surrey_restaurant_list));
-        //setRetainInstance(true);
         setUpManager();
-
-
-        //populateRestaurants();
 
         registerClickCallback();
 
@@ -346,60 +342,77 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         protected void onPreExecute(){
             //https://www.tutorialspoint.com/how-to-cancel-an-executing-asynctask-in-android
             //open loading screen
+            super.onPreExecute();
             openPleaseWaitDialog();
 
         }
         @Override
         protected RestaurantManager doInBackground(Void... params) {
+            while(!isCancelled()){
+                if(isCancelled()){
+                    break;
+                }
+            }
             return new FetchData().fetchItems();
         }
         @Override
         protected void onPostExecute(RestaurantManager manager) {
+            dialog.dismiss();
             restaurants = manager;
             populateListView();
             updateData.setNeedUpdate(false);
             LocalDateTime now = LocalDateTime.now();
             updateData.setLastUpdated(DateTimeToString(now));//double check this
-            //show loading screen
             //implment cancel
         }
     }
 
-
+    private LoadingFragment dialog = new LoadingFragment();
     private void openPleaseWaitDialog() {
-        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setInterpolator(new LinearInterpolator());
-        rotate.setRepeatCount(Animation.INFINITE);
-        rotate.setDuration(1200);
-        ImageView image = new ImageView(this);
-        Bitmap bmp;
-        int width = 100;
-        int height = 100;
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
-        bmp = Bitmap.createScaledBitmap(bmp,width,height,true);
-        image.setImageBitmap(bmp);
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-        alertDialog.setTitle("Please wait...");
-        image.startAnimation(rotate);
-        alertDialog.setView(image);
+        FragmentManager manager = getSupportFragmentManager();
+        //LoadingFragment dialog = new LoadingFragment();
+        dialog.show(manager,"UpdateDialog");
 
-        alertDialog.setNegativeButton("Cancel download", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                onCancelClicked();
-            }
-        });
-        alert_pleaseWait = alertDialog.create();
-        alert_pleaseWait.show();
+        Log.i("MyActivity", "Showed loading dialog");
+
+//        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//        rotate.setInterpolator(new LinearInterpolator());
+//        rotate.setRepeatCount(Animation.INFINITE);
+//        rotate.setDuration(1200);
+//        ImageView image = new ImageView(this);
+//        Bitmap bmp;
+//        int width = 100;
+//        int height = 100;
+//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
+//        bmp = Bitmap.createScaledBitmap(bmp,width,height,true);
+//        image.setImageBitmap(bmp);
+//        alertDialog = new AlertDialog.Builder(MainActivity.this);
+//        alertDialog.setTitle("Please wait...");
+//        image.startAnimation(rotate);
+//        alertDialog.setView(image);
+//        alertDialog.setCancelable(true);
+//
+//
+//        alertDialog.setNegativeButton("Cancel download", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                asyncTask.cancel(true);
+//                onCancelClicked();
+//            }
+//        });
+//        alert_pleaseWait = alertDialog.create();
+//        alert_pleaseWait.show();
 
    //     new FetchItemsTask.execute();
     }
 
-    public void onCancelClicked() {
-        super.onStop();
-        if (RQueue != null) {
-            RQueue.cancelAll(TAG);
+        @Override
+        public void onCancelClicked() {
+            //super.onStop();
+            asyncTask.cancel(true);
+            if (RQueue != null) {
+                RQueue.cancelAll(TAG);
+            }
         }
-    }
 
 }
