@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private FetchItemsTask asyncTask = null;
-    public static final String TAG = "MyTag";
+    //public static final String TAG = "MyTag";
     AlertDialog alert_pleaseWait;
     RequestQueue RQueue;
 
