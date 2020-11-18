@@ -302,6 +302,11 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
     private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
         @Override
+        protected void onPreExecute(){
+            //open loading screen
+
+        }
+        @Override
         protected RestaurantManager doInBackground(Void... params) {
             return new FetchData().fetchItems();
         }
