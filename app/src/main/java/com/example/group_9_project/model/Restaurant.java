@@ -12,6 +12,7 @@ Restaurant {
     private double latitude;
     private double longitude;
     private int iconID;
+    private String res_id;
     public InspectionManager inspections;
 
 
@@ -31,6 +32,7 @@ Restaurant {
     public int getIconID(){
         return iconID;
     }
+    public String getRes_id() { return res_id; }
     public String getName() {
         return name;
     }
@@ -61,6 +63,7 @@ Restaurant {
         return longitude;
     }
 
+
     public FacType getType() {
         return type;
     }
@@ -75,6 +78,19 @@ Restaurant {
 
     public void setName(String name) {
         this.name = name;
+        IconsLib icon_lib = IconsLib.getInstance();
+        String[] res_ids = icon_lib.getLibrary();
+        String modifiedName = name.replaceAll("'|-|,|\\s", "")
+                .replace("&", "and");
+
+        for (String r: res_ids){
+            if (modifiedName.contains(r)){
+                res_id = r.toLowerCase().replaceAll("[0-9]","");
+                return;
+            }
+        }
+
+        res_id = "generic";
     }
 
     public void setAddress(String address) {

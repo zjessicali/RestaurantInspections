@@ -1,30 +1,41 @@
 package com.example.group_9_project.ui;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaCodec;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.group_9_project.R;
 import com.example.group_9_project.model.InspectionManager;
+import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.model.UpdateData;
 import com.example.group_9_project.network.FetchData;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -36,6 +47,10 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity implements AskUpdateFragment.AskUpdateListener{
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
@@ -44,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private FetchItemsTask asyncTask = null;
+    public static final String TAG = "MyTag";
+    AlertDialog alert_pleaseWait;
+    RequestQueue RQueue;
 
     //NOTE TO JESSICA: DONT FORGET TO SETSHAREDPREF
     @Override
@@ -209,7 +227,22 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
             InspectionManager inspections = currentRestaurant.getInspections();
 
             ImageView imageView = itemView.findViewById(R.id.restaurant_image_icon);
-            imageView.setImageResource(R.drawable.restaurant_logo);
+          //  **************************
+            ImageView restaurantLogo = itemView.findViewById(R.id.restaurant_image_icon);
+            String resourceId = currentRestaurant.getRes_id();
+
+            int resId = MainActivity.this.getResources().getIdentifier(
+                    resourceId,
+                    "drawable",
+                    MainActivity.this.getPackageName()
+            );
+            if (resId == 0) {
+                restaurantLogo.setImageResource(R.drawable.restaurant_logo);
+            } else {
+                restaurantLogo.setImageResource(resId);
+            }
+
+            //    imageView.setImageResource(R.drawable.restaurant_logo);
 
             ImageView hazardImage = itemView.findViewById(R.id.restaurant_image_hazardLevelValue);
             if(inspections.getSize() != 0){
@@ -332,5 +365,41 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         }
     }
 
+
+    private void openPleaseWaitDialog() {
+        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setInterpolator(new LinearInterpolator());
+        rotate.setRepeatCount(Animation.INFINITE);
+        rotate.setDuration(1200);
+        ImageView image = new ImageView(this);
+        Bitmap bmp;
+        int width = 100;
+        int height = 100;
+        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
+        bmp = Bitmap.createScaledBitmap(bmp,width,height,true);
+        image.setImageBitmap(bmp);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        alertDialog.setTitle("Please wait...");
+        image.startAnimation(rotate);
+        alertDialog.setView(image);
+
+        alertDialog.setNegativeButton("Cancel download", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                onCancelClicked();
+            }
+        });
+        alert_pleaseWait = alertDialog.create();
+        alert_pleaseWait.show();
+
+   //     new FetchItemsTask.execute();
+    }
+
+    public void onCancelClicked() {
+        super.onStop();
+        if (RQueue != null) {
+            RQueue.cancelAll(TAG);
+        }
+    }
 
 }
