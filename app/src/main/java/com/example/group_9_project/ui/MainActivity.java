@@ -336,8 +336,16 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         }
     }
 
+    @Override
+    public void onCancelClicked() {
+        //super.onStop();
+        asyncTask.cancel(true);
+        if (RQueue != null) {
+            RQueue.cancelAll(TAG);
+        }
+    }
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch)
-    private class FetchItemsTask extends AsyncTask<Void,Void,RestaurantManager> {
+    private class FetchItemsTask extends AsyncTask<Void,Void,Boolean> {
         @Override
         protected void onPreExecute(){
             //https://www.tutorialspoint.com/how-to-cancel-an-executing-asynctask-in-android
@@ -347,22 +355,29 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 
         }
         @Override
-        protected RestaurantManager doInBackground(Void... params) {
-            return new FetchData().fetchItems();
+        protected Boolean doInBackground(Void... params) {
+            if (!isCancelled()) {
+                new FetchData().fetchItems();
+                return true;
+            } else {
+                return false;
+            }
+            //return new FetchData().fetchItems();
         }
         @Override
-        protected void onPostExecute(RestaurantManager manager) {
+        protected void onPostExecute(Boolean done) {
             dialog.dismiss();
-            restaurants = manager;
+            //restaurants = manager;
             populateListView();
             updateData.setNeedUpdate(false);
             LocalDateTime now = LocalDateTime.now();
             updateData.setLastUpdated(DateTimeToString(now));//double check this
             //implment cancel
         }
-    }
 
+    }
     private LoadingFragment dialog = new LoadingFragment();
+
     private void openPleaseWaitDialog() {
         FragmentManager manager = getSupportFragmentManager();
         //LoadingFragment dialog = new LoadingFragment();
@@ -371,14 +386,5 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         Log.i("MyActivity", "Showed loading dialog");
 
     }
-
-        @Override
-        public void onCancelClicked() {
-            super.onStop();
-            asyncTask.cancel(true);
-            if (RQueue != null) {
-                RQueue.cancelAll(TAG);
-            }
-        }
 
 }
