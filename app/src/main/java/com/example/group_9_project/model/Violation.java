@@ -2,7 +2,8 @@ package com.example.group_9_project.model;
 
 import java.util.ArrayList;
 
-public class      Violation {
+//Violation object, stores one violation and some info
+public class Violation {
     enum ViolType{
         FOOD,
         CHEMICAL,

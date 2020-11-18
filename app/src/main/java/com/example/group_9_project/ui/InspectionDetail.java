@@ -29,6 +29,8 @@ import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.model.Violation;
 import com.example.group_9_project.model.ViolationManager;
 
+
+//displays details about an inspection
 public class InspectionDetail extends AppCompatActivity {
     private static InspectionReport report;
     private static ViolationManager manager;
