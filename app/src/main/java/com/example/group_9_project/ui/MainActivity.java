@@ -348,7 +348,6 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         }
         @Override
         protected RestaurantManager doInBackground(Void... params) {
-
             return new FetchData().fetchItems();
         }
         @Override
@@ -371,41 +370,12 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 
         Log.i("MyActivity", "Showed loading dialog");
 
-//        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//        rotate.setInterpolator(new LinearInterpolator());
-//        rotate.setRepeatCount(Animation.INFINITE);
-//        rotate.setDuration(1200);
-//        ImageView image = new ImageView(this);
-//        Bitmap bmp;
-//        int width = 100;
-//        int height = 100;
-//        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.loading);
-//        bmp = Bitmap.createScaledBitmap(bmp,width,height,true);
-//        image.setImageBitmap(bmp);
-//        alertDialog = new AlertDialog.Builder(MainActivity.this);
-//        alertDialog.setTitle("Please wait...");
-//        image.startAnimation(rotate);
-//        alertDialog.setView(image);
-//        alertDialog.setCancelable(true);
-//
-//
-//        alertDialog.setNegativeButton("Cancel download", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                asyncTask.cancel(true);
-//                onCancelClicked();
-//            }
-//        });
-//        alert_pleaseWait = alertDialog.create();
-//        alert_pleaseWait.show();
-
-   //     new FetchItemsTask.execute();
     }
 
         @Override
         public void onCancelClicked() {
-            //super.onStop();
-            asyncTask.cancel(false);
+            super.onStop();
+            asyncTask.cancel(true);
             if (RQueue != null) {
                 RQueue.cancelAll(TAG);
             }
