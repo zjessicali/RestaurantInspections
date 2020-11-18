@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     private UpdateData updateData = UpdateData.getInstance();
     private FetchItemsTask asyncTask = null;
 
-
+    //NOTE TO JESSICA: DONT FORGET TO SETSHAREDPREF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
