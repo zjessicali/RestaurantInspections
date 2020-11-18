@@ -289,6 +289,8 @@ public class MainActivity extends AppCompatActivity {
         restaurants.readRestaurantData(reader);
     }
 
+
+
     private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
         @Override
         protected UpdateData doInBackground(Void... params) {

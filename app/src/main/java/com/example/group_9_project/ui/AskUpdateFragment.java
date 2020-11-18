@@ -2,6 +2,7 @@ package com.example.group_9_project.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,9 @@ import com.example.group_9_project.model.UpdateData;
 //ask user to update
 public class AskUpdateFragment extends AppCompatDialogFragment {
 
-    UpdateData updateData = UpdateData.getInstance();
+    private UpdateData updateData = UpdateData.getInstance();
+    private AskUpdateListener listener;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 //make a log, you clicked dialog button
                 Log.d("MyActivity","You clicked ok ... update....");
-                updateData.setWantUpdate(true);
+
             }
         };
 
@@ -40,7 +43,7 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 //make a log, you clicked dialog button
                 Log.d("MyActivity","You clicked no, do not update... change needUpdate....");
-                updateData.setWantUpdate(false);
+
             }
         };
 
@@ -51,5 +54,16 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
                 .setPositiveButton(android.R.string.ok, okListener)
                 .setNegativeButton(android.R.string.no, noListener)
                 .create();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        listener = (AskUpdateListener) context;
+    }
+
+    public interface AskUpdateListener{
+        void startUpdate();
     }
 }
