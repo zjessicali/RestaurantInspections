@@ -2,14 +2,8 @@ package com.example.group_9_project.model;
 
 import android.util.Log;
 
-import com.example.group_9_project.R;
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.Buffer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,15 +12,10 @@ import java.util.List;
 public class RestaurantManager {
     private ArrayList<Restaurant> manager;
     private static RestaurantManager instance;
-    private String lastModified;
-    private String lastUpdated;
-    private boolean needUpdate;
 
     //constructor
     private RestaurantManager() {
         this.manager = new ArrayList<Restaurant>();
-        lastModified = "";
-        lastUpdated = "";
     }
     //singleton
     public static RestaurantManager getInstance(){
@@ -53,18 +42,6 @@ public class RestaurantManager {
 
     public int getSize(){
         return manager.size();
-    }
-
-    public String getLastModified(){
-        return lastModified;
-    }
-
-    public String getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public boolean isNeedUpdate() {
-        return needUpdate;
     }
 
     //setters
@@ -96,18 +73,6 @@ public class RestaurantManager {
                 manager.add(i, r);
             }
         }
-    }
-
-    public void setLastModified(String s){
-        lastModified = s;
-    }
-
-    public void setLastUpdated(String lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public void setNeedUpdate(boolean needUpdate) {
-        this.needUpdate = needUpdate;
     }
 
     public List<Restaurant> getListOfRestaurants() {

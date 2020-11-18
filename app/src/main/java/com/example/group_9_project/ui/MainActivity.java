@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
+    private FetchItemsTask asyncTask = null;
 
 
     @Override
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         setUpManager();
 
 
-        //new FetchItemsTask().execute();
         //populateRestaurants();
 
         registerClickCallback();
@@ -63,25 +63,20 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
     }
 
     private void setUpManager() {
+        getLastUpdatedFromSharedPref();
         if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
             readRawRestaurantData();
             readRawInspectionData();
             populateListView();
             //first time running means last update more than 20 hours -> ask if they want to update
             askUpdate();
-            if(updateData.isWantUpdate()){
-                Log.d("MyActivity", "yes, want update");
-            }
-            else{
-                Log.d("MyActivity", "did not work");
-            }
         }
         else{//check if need update
+            populateListView();
             new FetchLastModified().execute();
         }
     }
 
-    //wip
     private void askUpdate() {
         FragmentManager manager = getSupportFragmentManager();
         AskUpdateFragment dialog = new AskUpdateFragment();
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 
 
 
-    //need to fix
+    //maybe discard
 //    private void populateRestaurants() {
 //        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 //
@@ -117,34 +112,8 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 //        restaurants.setLastModified(last);
 //    }
 
-    //discard later
-//    private void storeRestaurantsToPref(){
-//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-//        SharedPreferences.Editor editor = prefs.edit();
-//
-//        Gson gson = new Gson();
-//        List<Restaurant> storedRestaurants = new ArrayList<>();
-//
-//        for(int i = 0; i < restaurants.getSize();i++){
-//            storedRestaurants.add(restaurants.getRestFromIndex(i));
-//        }
-//
-//        String json = gson.toJson(storedRestaurants);
-//        editor.putString(PREFS_RESTAURANTS, json);
-//        editor.apply();
-//        putLastUpdateToSharedPref(restaurants.getLastModified());
-//    }
-
     //check if it's been 20 hours since you last updated
     private boolean needUpdate() {
-//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-//
-//        Gson lensGson = new Gson();
-//        String lensJson = prefs.getString(PREFS_LAST_UPDATE,null );
-//        Type type = new TypeToken<List<UpdateData>>() {}.getType();
-//        List<UpdateData> storedData = lensGson.fromJson(lensJson, type);
-//
-
         //check if updated within 20 hours
         LocalDateTime now = LocalDateTime.now();
         //String last = prefs.getString(PREFS_LAST_UPDATE,"");
@@ -164,6 +133,19 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         lastUpdate = dateTime.format(formatter);
         return lastUpdate;
+    }
+
+    private void getLastUpdatedFromSharedPref(){
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+        Gson lensGson = new Gson();
+        String lensJson = prefs.getString(PREFS_LAST_UPDATE,null );
+        Type type = new TypeToken<List<UpdateData>>() {}.getType();
+        List<UpdateData> storedData = lensGson.fromJson(lensJson, type);
+
+        if(storedData != null) {
+            updateData = storedData.get(0);
+        }
     }
 
     //fix later
@@ -291,8 +273,13 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
 
     @Override
     public void startUpdate() {
-        updateData.setWantUpdate(true);
-        new FetchItemsTask().execute();
+        asyncTask = new FetchItemsTask();
+        asyncTask.execute();
+    }
+
+    @Override
+    public void updateNextTime() {
+        updateData.setNeedUpdate(true);
     }
 
     private class FetchLastModified extends AsyncTask<Void,Void, UpdateData> {
@@ -307,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
             updateData.setNeedUpdate(needUpdate());
             if(updateData.getNeedUpdate()){
                 //check if want update
-                //askUpdate();
+                askUpdate();
             }
         }
     }
@@ -322,7 +309,9 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         protected void onPostExecute(RestaurantManager manager) {
             restaurants = manager;
             populateListView();
-            //do smth about needUpdate
+            updateData.setNeedUpdate(false);
+            LocalDateTime now = LocalDateTime.now();
+            updateData.setLastUpdated(DateTimeToString(now));//double check this
             //show loading screen
             //implment cancel
         }

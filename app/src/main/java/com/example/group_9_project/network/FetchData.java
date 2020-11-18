@@ -120,7 +120,7 @@ public class FetchData {
         String last_modified = resourcesRest.getString("last_modified");
         //check if server's last modified is after restaurant manager's last modified
         LocalDateTime server = LocalDateTime.parse(last_modified);
-        LocalDateTime dataModified = LocalDateTime.parse(updateData.getLastModified());
+        LocalDateTime dataModified = LocalDateTime.parse(updateData.getLastUpdated());
         if(server.isAfter(dataModified)){
             updateData.setNeedUpdate(true);
         }

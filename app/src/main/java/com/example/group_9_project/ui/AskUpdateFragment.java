@@ -43,6 +43,7 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 //make a log, you clicked dialog button
                 Log.d("MyActivity","You clicked no, do not update... change needUpdate....");
+                listener.updateNextTime();
 
             }
         };
@@ -70,5 +71,6 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
 
     public interface AskUpdateListener{
         void startUpdate();
+        void updateNextTime();
     }
 }
