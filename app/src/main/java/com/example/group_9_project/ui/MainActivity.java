@@ -66,9 +66,15 @@ public class MainActivity extends AppCompatActivity {
         if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
             readRawRestaurantData();
             readRawInspectionData();
-            //first time running -> last update more than 20 hours -> ask if they want to update
             populateListView();
+            //first time running means last update more than 20 hours -> ask if they want to update
             askUpdate();
+            if(updateData.isWantUpdate()){
+                Log.d("MyActivity", "yes, want update");
+            }
+            else{
+                Log.d("MyActivity", "did not work");
+            }
         }
         else{//check if need update
             new FetchLastModified().execute();
@@ -83,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i("MyActivity", "Showed dialog");
     }
+
+
 
     //need to fix
 //    private void populateRestaurants() {

@@ -156,7 +156,6 @@ public class RestaurantManager {
             Log.wtf("MyActivity", "Error reading data file on line " + line, e);
             e.printStackTrace();
         }
-        Log.d("MyActivity","end of readRestaurantData");
 
     }
 
