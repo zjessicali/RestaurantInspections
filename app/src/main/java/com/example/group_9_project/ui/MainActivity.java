@@ -348,11 +348,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         }
         @Override
         protected RestaurantManager doInBackground(Void... params) {
-            while(!isCancelled()){
-                if(isCancelled()){
-                    break;
-                }
-            }
+
             return new FetchData().fetchItems();
         }
         @Override
@@ -409,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements AskUpdateFragment
         @Override
         public void onCancelClicked() {
             //super.onStop();
-            asyncTask.cancel(true);
+            asyncTask.cancel(false);
             if (RQueue != null) {
                 RQueue.cancelAll(TAG);
             }
