@@ -76,11 +76,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<Marker> markers = new ArrayList<>();
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private static LatLng temp=null;
 
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private FetchItemsTask asyncTask = null;
+    public static Intent makeIntent(Context context, LatLng latLng) {
+        temp=latLng;
+        return new Intent(context,MapsActivity.class);
+    }
 
     private boolean isOpened;
 
@@ -269,6 +274,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Center on device's current
         if (mLocationPermissionGranted) {
+            if(temp==null)
             getDeviceLocation();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -372,6 +378,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 finish();
             }
         });
+        display();
+    }
+
+    private void display() {
+        if(temp!=null){
+            moveCamera(temp);
+        }
     }
 
     public static Intent launchIntent(Context context, boolean isOpened){

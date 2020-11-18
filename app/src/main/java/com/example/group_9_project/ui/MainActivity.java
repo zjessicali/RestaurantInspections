@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity  {
             Intent intent = MapsActivity.launchIntent(this, isOpened);
             startActivity(intent);
             mapIsOpened = true;
+            finish();//check
         }
     }
 
