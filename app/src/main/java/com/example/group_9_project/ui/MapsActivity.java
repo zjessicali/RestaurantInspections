@@ -166,6 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void showPopUp(int index) {
+        //MainActivity.setupManager();
         Restaurant restaurant = manager.getRestFromIndex(index);
 
         AlertDialog.Builder dialogBuider;
