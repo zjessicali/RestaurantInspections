@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity  {
             Intent intent = MapsActivity.launchIntent(this, isOpened);
             startActivity(intent);
             mapIsOpened = true;
-            finish();//check
+            //finish();  //<- this makes the app close, not sure why it's there
         }
     }
 
