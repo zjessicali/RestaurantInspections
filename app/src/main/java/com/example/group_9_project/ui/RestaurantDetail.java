@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,6 +29,7 @@ import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.w3c.dom.Text;
 
@@ -59,6 +61,21 @@ public class RestaurantDetail extends AppCompatActivity {
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
+        bsckbutton();
+    }
+    private void bsckbutton() {
+        getSupportActionBar().setTitle("Violation Screen")
+        ;
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==android.R.id.home)
+            finish();
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void populateInspectionsList() {
@@ -151,6 +168,14 @@ public class RestaurantDetail extends AppCompatActivity {
         String gpsCoordinate = manager.getRestFromIndex(index).getLatitude() + ", "
                 + manager.getRestFromIndex(index).getLongitude();
         coordinateText.setText(gpsCoordinate);
+        coordinateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=MapsActivity.makeIntent(RestaurantDetail.this,new LatLng(manager.getRestFromIndex(index).getLatitude(),manager.getRestFromIndex(index).getLongitude()));
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void setupRestaurantAddress() {

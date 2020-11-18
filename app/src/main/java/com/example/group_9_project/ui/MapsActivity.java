@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -60,7 +61,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<Marker> markers = new ArrayList<>();
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private static LatLng temp=null;
 
+    public static Intent makeIntent(Context context, LatLng latLng) {
+        temp=latLng;
+        return new Intent(context,MapsActivity.class);
+    }
 
 
     @Override
@@ -245,6 +251,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Center on device's current
         if (mLocationPermissionGranted) {
+            if(temp==null)
             getDeviceLocation();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -348,5 +355,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 finish();
             }
         });
+        display();
+    }
+
+    private void display() {
+        if(temp!=null){
+            moveCamera(temp);
+        }
     }
 }
