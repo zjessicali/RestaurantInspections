@@ -69,6 +69,18 @@ public class InspectionReport {
         return hazard;
     }
 
+    public String getHazardStr(){
+        switch(hazard){
+            case LOW:
+                return "Low";
+            case MODERATE:
+                return "Moderate";
+            case HIGH:
+                return "High";
+        }
+        return "";
+    }
+
 
     //needs testing
     //returns "when something happened in intelligent format" as a string

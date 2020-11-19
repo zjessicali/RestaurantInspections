@@ -1,12 +1,19 @@
 package com.example.group_9_project.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 //Stores restaurants in an object
 public class RestaurantManager {
@@ -259,4 +266,7 @@ public class RestaurantManager {
         }
         return noQuotes;
     }
+
+
+
 }

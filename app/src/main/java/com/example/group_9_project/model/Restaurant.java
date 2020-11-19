@@ -68,6 +68,13 @@ Restaurant {
         return type;
     }
 
+    public String getFacTypeString(){
+        if(type == FacType.RESTAURANT){
+            return "Restaurant";
+        }
+        return "";
+    }
+
     //returns the inspection manager
     public InspectionManager getInspections() {
         return inspections;

@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity  {
         createMapIntent(mapIsOpened);
         setUpMapViewButton();
 
+        Log.d(TAG, "Restaurant manager size:"+restaurants.getSize());
+
         registerClickCallback();
     }
 

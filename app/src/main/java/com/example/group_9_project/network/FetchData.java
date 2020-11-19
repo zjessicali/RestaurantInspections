@@ -1,11 +1,16 @@
 package com.example.group_9_project.network;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.example.group_9_project.model.UpdateData;
+import com.example.group_9_project.ui.MainActivity;
+import com.example.group_9_project.ui.MapsActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,14 +18,23 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static android.content.Context.MODE_PRIVATE;
 
 //this class deals with network related things and downloads the data
 public class FetchData {
@@ -29,6 +43,7 @@ public class FetchData {
     RestaurantManager restaurants = RestaurantManager.getInstance();
     RestaurantManager Rdownloading = RestaurantManager.getSecInstant();
     UpdateData updateData = UpdateData.getInstance();
+
     //several methods taken or based on code from
     //Bill Phillips, Chris Stewart, Kristin Marsicano - Android Programming_ The Big Nerd Ranch Guide (2017, Big Nerd Ranch) - libgen.lc
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -156,37 +171,88 @@ public class FetchData {
         }
     }
 
+    private BufferedReader inspReader;
     private void readInspCSV(String csvURL) {
         try{
             URL url = new URL(csvURL);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             InputStream in = connection.getInputStream();
 
-            BufferedReader reader = new BufferedReader(
+            inspReader = new BufferedReader(
                     new InputStreamReader(in, Charset.forName("UTF-8"))
             );
-            Rdownloading.readUpdatedInspectionData(reader);
-
+            Rdownloading.readUpdatedInspectionData(inspReader);
+            String csv = getUrlString(csvURL);
+            saveInspData(csv, MainActivity.getInstance());
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch csv", ioe);
         }
     }
 
-
+    private BufferedReader restReader;
     private void readRestCSV(String csvURL)throws IOException{
         try{
             URL url = new URL(csvURL);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             InputStream in = connection.getInputStream();
 
-            BufferedReader reader = new BufferedReader(
+            restReader = new BufferedReader(
                     new InputStreamReader(in, Charset.forName("UTF-8"))
             );
-            Rdownloading.readRestaurantData(reader);
+            Rdownloading.readRestaurantData(restReader);
+            String csv = getUrlString(csvURL);
+            saveResData(csv, MainActivity.getInstance());
             Log.d("FetchData", "readCSV");
 
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch csv", ioe);
+        }
+
+    }
+
+    public void saveResData(String csvURL, Context context){
+        try {
+            FileOutputStream outRest = context.openFileOutput("RestaurantData.csv", MODE_PRIVATE);
+            outRest.write(csvURL.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            Log.e("FetchData", "Failed to save restaurant csv", e);
+        }
+
+    }
+
+    public void saveInspData(String csvURL, Context context){
+        try {
+            FileOutputStream outInsp = context.openFileOutput("InspectionData.csv", MODE_PRIVATE);
+            outInsp.write(csvURL.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            Log.e("FetchData", "Failed to save inspection csv", e);
+        }
+    }
+
+
+    public void readLastRestCSV(Context context){
+        FileInputStream fis;
+        try {
+            fis = context.openFileInput("RestaurantData.csv");
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(fis, StandardCharsets.UTF_8)
+            );
+            restaurants.readRestaurantData(reader);
+
+        } catch (FileNotFoundException e) {
+            Log.e("FetchData", "Restaurant files not found.");
+        }
+    }
+
+    public void readLastInspCSV(Context context){
+        try {
+            FileInputStream fis = context.openFileInput("InspectionData.csv");
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(fis, StandardCharsets.UTF_8)
+            );
+            restaurants.readUpdatedInspectionData(reader);
+        } catch (FileNotFoundException e) {
+            Log.e("FetchData", "Inspection files not found.");
         }
     }
 

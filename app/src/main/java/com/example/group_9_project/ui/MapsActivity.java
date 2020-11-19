@@ -54,6 +54,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -95,6 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         isOpened = getIntent().getBooleanExtra("isOpened",false);
         if(!isOpened){
+            Log.d(TAG,"First time opening maps.-----------------");
             setUpManager();
         }
         getLocationPermission();
@@ -404,12 +406,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("MapsActivity", "it should ask update");
             askUpdate();
         }
-        else if(updateData.getNeedUpdate()){//check if need update
+        else if(updateData.getNeedUpdate()){//if need update
             //populateListView();
             askUpdate();
         }
         else{
-            //do nothing if don't need update
+            //if don't need, read previously saved files
+            new FetchData().readLastRestCSV(this);
+            new FetchData().readLastInspCSV(this);
+            Log.d(TAG,"Inside set manager, manager size: "+manager.getSize());
             MainActivity.getInstance().populateListView();
         }
     }
@@ -423,6 +428,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //check if it's been 20 hours since you last updated
+
     private boolean needUpdate() {
         //check if updated within 20 hours
         LocalDateTime now = LocalDateTime.now();
@@ -437,7 +443,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return false;
     }
-
     private void getLastUpdatedFromSharedPref(){
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
@@ -452,7 +457,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //fix later
-    private void putLastUpdateToSharedPref(String lastUpdate){
+
+    private void putLastUpdateToSharedPref(){
         SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -465,7 +471,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editor.putString(PREFS_LAST_UPDATE, json);
         editor.apply();
     }
-
     private void readRawInspectionData(){
         InputStream is = getResources().openRawResource(R.raw.inspectionreports_itr1);
         BufferedReader reader = new BufferedReader(
@@ -481,8 +486,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         );
         manager.readRestaurantData(reader);
     }
-
-
 
 
     @Override
@@ -529,7 +532,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //open loading screen
             super.onPreExecute();
             openPleaseWaitDialog();
-
         }
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -550,15 +552,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             updateData.setNeedUpdate(false);
             LocalDateTime now = LocalDateTime.now();
             updateData.setLastUpdated(DateTimeToString(now));//double check this
+            putLastUpdateToSharedPref();
             //implment cancel
         }
         @Override
         protected void onCancelled(Boolean aBoolean) {
             super.onCancelled(aBoolean);
             asyncTask.cancel(true);
-            Log.d(TAG,"cancel called");
             MainActivity.getInstance().populateListView();
             updateData.setNeedUpdate(true);
+            putLastUpdateToSharedPref();
         }
     }
     private LoadingFragment loadingDialog = new LoadingFragment();
