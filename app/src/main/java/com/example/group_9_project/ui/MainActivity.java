@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity  {
 
         instance = this;
 
-        createMapIntent(mapIsOpened);
+        createMapIntent(false);
         setUpMapViewButton();
 
         Log.d(TAG, "Restaurant manager size:"+restaurants.getSize());
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity  {
         if (isServicesOK()) {
             Intent intent = MapsActivity.launchIntent(this, isOpened);
             startActivity(intent);
-            mapIsOpened = true;
+            mapIsOpened = isOpened;
             //finish();  //<- this makes the app close, not sure why it's there
         }
     }
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity  {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createMapIntent(mapIsOpened);
+                createMapIntent(false);
             }
         });
     }

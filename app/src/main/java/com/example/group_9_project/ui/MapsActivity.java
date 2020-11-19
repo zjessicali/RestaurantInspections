@@ -86,19 +86,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static boolean showPopUp = false;
     private static int index;
-    private boolean isOpened;
+    private static boolean isOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         isOpened = getIntent().getBooleanExtra("isOpened",false);
-        if(!isOpened){
-            Log.d(TAG,"First time opening maps.-----------------");
-            setUpManager();
-        }
         if(showPopUp){
             showPopUp(index);
+        }
+        else if(!isOpened){
+            Log.d(TAG,"First time opening maps.-----------------");
+            setUpManager();
         }
         getLocationPermission();
     }
@@ -107,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = new Intent(context, MapsActivity.class);
         temp=latLng;
         showPopUp = true;
+        isOpened = true;
         intent.putExtra("index", index);
         return intent;
     }
