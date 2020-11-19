@@ -22,37 +22,36 @@
             android:id="@+id/hazardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="Hazard: Moderate"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="23sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.419"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.7" />
+            app:layout_constraintTop_toBottomOf="@+id/addressText" />
 
         <TextView
             android:id="@+id/addressText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="234, sldkf street, vjlkjd 234"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="23sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.414" />
+            app:layout_constraintTop_toBottomOf="@+id/restaurantNameText" />
 
         <TextView
             android:id="@+id/restaurantNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
             android:text="Restaurant's Name"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="30sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,12 +63,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:text="@string/restaurant_summary_info"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/restIcon"
+            android:layout_width="44dp"
+            android:layout_height="51dp"
+            app:layout_constraintBottom_toTopOf="@+id/restaurantNameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/restaurant" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -94,6 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         isOpened = getIntent().getBooleanExtra("isOpened",false);
         if(showPopUp){
+            extractIndex();
             showPopUp(index);
         }
         else if(!isOpened){
@@ -110,6 +111,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         isOpened = true;
         intent.putExtra("index", index);
         return intent;
+    }
+
+    private void extractIndex(){
+        Intent intent = getIntent();
+        index = intent.getIntExtra("index", 0);
+
     }
 
     //Source: https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
@@ -219,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView addressText = contactPopupView.findViewById(R.id.addressText);
         TextView hazardText = contactPopupView.findViewById(R.id.hazardText);
 
-        nameText.setText(getResources().getString(R.string.restaurantName) + restaurant.getName());
+        nameText.setText(restaurant.getName());
         addressText.setText(getResources().getString(R.string.restaurantAddress) + restaurant.getAddress());
 
         InspectionManager inspectionManager = restaurant.getInspections();
@@ -227,25 +234,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (inspectionManager.getSize() > 0) {
             InspectionReport inspectionReport = inspectionManager.getInspection(0);
-
-            switch (inspectionReport.getHazard()) {
-                case LOW:
-                    hazard = "low";
-                    break;
-
-                case MODERATE:
-                    hazard = "moderate";
-                    break;
-
-                case HIGH:
-                    hazard = "high";
-                    break;
-            }
+            hazard = inspectionReport.getHazardStr();
+//            switch (inspectionReport.getHazard()) {
+//                case LOW:
+//                    hazard = "low";
+//                    break;
+//
+//                case MODERATE:
+//                    hazard = "moderate";
+//                    break;
+//
+//                case HIGH:
+//                    hazard = "high";
+//                    break;
+//            }
 
         } else {hazard = "unknown";}
 
         hazardText.setText(getResources().getString(R.string.restaurantHazard) + hazard);
 
+        //show image
+        ImageView restImage = contactPopupView.findViewById(R.id.restIcon);
+        String resourceId = restaurant.getRes_id();
+        int resId = MainActivity.getInstance().getResources().getIdentifier(
+                resourceId,
+                "drawable",
+                MainActivity.getInstance().getPackageName()
+        );
+        if (resId == 0) {
+            restImage.setImageResource(R.drawable.restaurant);
+        } else {
+            restImage.setImageResource(resId);
+        }
 
         dialogBuider.setView(contactPopupView);
         dialog = dialogBuider.create();

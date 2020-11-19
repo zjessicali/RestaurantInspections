@@ -33,6 +33,6 @@
     <string name="restaurantName">"Name: "</string>
     <string name="restaurantAddress">"Address: "</string>
     <string name="restaurantHazard">"Hazard: "</string>
-    <string name="restaurant_summary_info">Tap to go to full restaurant detail</string>
+    <string name="restaurant_summary_info">Tap to go to view restaurant details</string>
     <string name="map_view">Map View</string>
 </resources>
