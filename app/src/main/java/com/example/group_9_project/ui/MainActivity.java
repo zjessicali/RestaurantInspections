@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity  {
                     MainActivity.this.getPackageName()
             );
             if (resId == 0) {
-                restaurantLogo.setImageResource(R.drawable.restaurant_logo);
+                restaurantLogo.setImageResource(R.drawable.restaurant);
             } else {
                 restaurantLogo.setImageResource(resId);
             }

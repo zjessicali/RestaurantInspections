@@ -56,7 +56,7 @@ public class InspectionDetail extends AppCompatActivity {
     }
 
     private void bsckbutton() {
-        getSupportActionBar().setTitle("Violation Screen")
+        getSupportActionBar().setTitle("Inspections")
         ;
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,17 +83,17 @@ public class InspectionDetail extends AppCompatActivity {
 
       if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {
             ImageView imageView = (ImageView) findViewById(R.id.imageView2);
-            imageView.setImageResource(R.drawable.red);
+            imageView.setImageResource(R.drawable.high_risk);
             textView2.setTextColor(Color.RED);
         }
         else if(report.getHazard().equals(InspectionReport.HazardRating.MODERATE)){
             ImageView imageView=(ImageView)findViewById(R.id.imageView2);
-            imageView.setImageResource(R.drawable.orange);
+            imageView.setImageResource(R.drawable.medium_risk);
             textView2.setTextColor( Color. rgb(255, 165, 0));
         }
        else{
            ImageView imageView=(ImageView)findViewById(R.id.imageView2);
-            imageView.setImageResource(R.drawable.green);
+            imageView.setImageResource(R.drawable.low_risk);
             textView2.setTextColor(Color.rgb(51,204,90));
         }
 
@@ -142,10 +142,10 @@ public class InspectionDetail extends AppCompatActivity {
                 ImageView imageView = itemview.findViewById(R.id.imageView_critical);
                 imageView.setImageResource(R.drawable.critical);
             }
-                else {
-                    ImageView imageView1=itemview.findViewById(R.id.imageView_critical);
-                    imageView1.setImageResource(R.drawable.not_critical);
-                }
+            else {
+                ImageView imageView1=itemview.findViewById(R.id.imageView_critical);
+                imageView1.setImageResource(R.drawable.not_critical);
+            }
 
 
             if(violation.getViolTypeString().equals("Food")){
@@ -158,7 +158,7 @@ public class InspectionDetail extends AppCompatActivity {
             }
             else if(violation.getViolTypeString().equals("Chemical")){
                 ImageView imageView1=itemview.findViewById(R.id.imageView_list);
-                imageView1.setImageResource(R.drawable.equipment);
+                imageView1.setImageResource(R.drawable.chemical);
             }
             else if(violation.getViolTypeString().equals("Containers")){
                 ImageView imageView2=itemview.findViewById(R.id.imageView_list);

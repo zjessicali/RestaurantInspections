@@ -19,7 +19,7 @@
         android:id="@+id/inspectionDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
+        android:layout_marginStart="20dp"
         android:layout_marginBottom="24dp"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/hazardImageView"
@@ -29,19 +29,18 @@
         android:id="@+id/criticalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
         android:layout_marginBottom="4dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/hazardImageView"
-        app:layout_constraintStart_toEndOf="@+id/hazardImageView" />
+        app:layout_constraintStart_toStartOf="@+id/inspectionDate" />
 
     <TextView
         android:id="@+id/nonCriticalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
+        android:layout_marginStart="20dp"
         android:layout_marginBottom="4dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/hazardImageView"
-        app:layout_constraintStart_toEndOf="@+id/hazardImageView" />
+        app:layout_constraintStart_toEndOf="@+id/criticalText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

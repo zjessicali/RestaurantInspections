@@ -64,7 +64,7 @@ public class RestaurantDetail extends AppCompatActivity {
         bsckbutton();
     }
     private void bsckbutton() {
-        getSupportActionBar().setTitle("Violation Screen")
+        getSupportActionBar().setTitle("Restaurant Details")
         ;
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -125,17 +125,17 @@ public class RestaurantDetail extends AppCompatActivity {
 
             switch(currentInspection.getHazard()) {
                 case LOW:
-                    hazard.setImageResource(R.drawable.green);
+                    hazard.setImageResource(R.drawable.low_risk);
                     hazard.setContentDescription("Low Hazard");
                     break;
 
                 case MODERATE:
-                    hazard.setImageResource(R.drawable.orange);
+                    hazard.setImageResource(R.drawable.medium_risk);
                     hazard.setContentDescription("Moderate Hazard");
                     break;
 
                 case HIGH:
-                    hazard.setImageResource(R.drawable.red);
+                    hazard.setImageResource(R.drawable.high_risk);
                     hazard.setContentDescription("High Hazard");
                     break;
             }
