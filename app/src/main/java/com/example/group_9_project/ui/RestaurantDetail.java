@@ -171,7 +171,7 @@ public class RestaurantDetail extends AppCompatActivity {
         coordinateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=MapsActivity.makeIntent(RestaurantDetail.this,new LatLng(manager.getRestFromIndex(index).getLatitude(),manager.getRestFromIndex(index).getLongitude()));
+                Intent intent=MapsActivity.makeIntent(RestaurantDetail.this,index,new LatLng(manager.getRestFromIndex(index).getLatitude(),manager.getRestFromIndex(index).getLongitude()));
                 startActivity(intent);
 
             }

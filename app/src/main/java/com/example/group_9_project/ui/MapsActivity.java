@@ -83,11 +83,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private FetchItemsTask asyncTask = null;
-    public static Intent makeIntent(Context context, LatLng latLng) {
-        temp=latLng;
-        return new Intent(context,MapsActivity.class);
-    }
 
+    private static boolean showPopUp = false;
+    private static int index;
     private boolean isOpened;
 
     @Override
@@ -99,7 +97,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG,"First time opening maps.-----------------");
             setUpManager();
         }
+        if(showPopUp){
+            showPopUp(index);
+        }
         getLocationPermission();
+    }
+
+    public static Intent makeIntent(Context context, int index, LatLng latLng) {
+        Intent intent = new Intent(context, MapsActivity.class);
+        temp=latLng;
+        showPopUp = true;
+        intent.putExtra("index", index);
+        return intent;
     }
 
     //Source: https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
