@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">group_9_project</string>
+    <string name="app_name">Restaurants</string>
     <string name="gps_coordinates">GPS Coordinates</string>
     <string name="inspections">Inspections</string>
     <string name="surrey_restaurant_list">Surrey Restaurant List</string>
