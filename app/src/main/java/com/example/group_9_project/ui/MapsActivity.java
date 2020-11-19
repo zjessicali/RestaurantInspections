@@ -235,19 +235,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (inspectionManager.getSize() > 0) {
             InspectionReport inspectionReport = inspectionManager.getInspection(0);
             hazard = inspectionReport.getHazardStr();
-//            switch (inspectionReport.getHazard()) {
-//                case LOW:
-//                    hazard = "low";
-//                    break;
-//
-//                case MODERATE:
-//                    hazard = "moderate";
-//                    break;
-//
-//                case HIGH:
-//                    hazard = "high";
-//                    break;
-//            }
 
         } else {hazard = "unknown";}
 
