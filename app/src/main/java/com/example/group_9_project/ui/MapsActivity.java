@@ -95,7 +95,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         isOpened = getIntent().getBooleanExtra("isOpened",false);
         if(showPopUp){
             extractIndex();
-            showPopUp(index);
+            if(index!= -1){
+                showPopUp(index);
+            }
         }
         else if(!isOpened){
             Log.d(TAG,"First time opening maps.-----------------");
@@ -115,11 +117,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void extractIndex(){
         Intent intent = getIntent();
-        index = intent.getIntExtra("index", 0);
+        index = intent.getIntExtra("index", -1);
+        if(index == -1){
+            showPopUp = false;
+        }
 
     }
 
+    public static Intent launchIntent(Context context, boolean isOpened){
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra("isOpened", isOpened);
+        showPopUp = false;
+        return intent;
+    }
     //Source: https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
+
     private void getLocationPermission() {
         Log.i(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
@@ -166,15 +178,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
     //Source: https://www.youtube.com/watch?v=Vt6H9TOmsuo&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=4
+
     private void initMap() {
         Log.i(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsActivity.this);
     }
-
     //Source: https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=5
+
     private void getDeviceLocation() {
         Log.i(TAG, "getDeviceLocation: getting device location");
 
@@ -205,8 +217,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
-
     //Source: https://www.youtube.com/watch?v=fPFr0So1LmI&list=PLgCYzUzKIBE-vInwQhGSdnbyJ62nixHCt&index=5
+
     private void moveCamera(LatLng latLng) {
         Log.i(TAG, "moveCamera: moving the camera to lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
@@ -404,12 +416,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(temp!=null){
             moveCamera(temp);
         }
-    }
-
-    public static Intent launchIntent(Context context, boolean isOpened){
-        Intent intent = new Intent(context, MapsActivity.class);
-        intent.putExtra("isOpened", isOpened);
-        return intent;
     }
 
     private void setUpManager() {

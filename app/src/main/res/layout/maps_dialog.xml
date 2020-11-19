@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="65dp"
             android:text="Restaurant's Name"
+            android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
