@@ -5,8 +5,8 @@
     <string name="surrey_restaurant_list">Surrey Restaurant List</string>
     <string name="rest_icon">rest icon</string>
     <string name="restaurant_city">City</string>
-    <string name="restaurant_hazardlevel">HazardLevel</string>
-    <string name="restaurant_issuesfound">Issues Found</string>
+    <string name="restaurant_hazardlevel">Hazard Level</string>
+    <string name="restaurant_issuesfound">Issues: </string>
     <string name="restaurant_address">Address</string>
     <string name="restaurant_name">Restaurant Name</string>
     <string name="rate_icon">rate icon</string>
