@@ -81,8 +81,6 @@ public class InspectionReport {
         return "";
     }
 
-
-    //needs testing
     //returns "when something happened in intelligent format" as a string
     public String getInspectDateString() {
         LocalDate today = LocalDate.now();

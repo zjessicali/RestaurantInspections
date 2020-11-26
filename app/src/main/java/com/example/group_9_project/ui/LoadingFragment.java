@@ -49,9 +49,9 @@ public class LoadingFragment extends AppCompatDialogFragment {
 
         //build alert dialog
         return new AlertDialog.Builder(getActivity())
-                .setTitle("Please wait...")
+                .setTitle(R.string.waiting)
                 .setView(image)
-                .setNegativeButton("Cancel download", cancelListener )
+                .setNegativeButton(R.string.cancel_download, cancelListener )
                 .setCancelable(true)
                 .create();
     }

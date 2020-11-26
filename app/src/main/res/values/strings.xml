@@ -17,12 +17,12 @@
     <string name="restaurant_inspectionPerformedOn">"Last Inspection: "</string>
     <string name="restaurant_noInspectionAvailable_value">Unknown</string>
     <string name="restaurant_info">Address: %s, %s\nGPS: %s</string>
-    <string name="restaurant_detail">Restaurant Detail</string>
+    <string name="restaurant_detail">Restaurant Details</string>
     <string name="low">LOW</string>
     <string name="moderate">MODERATE</string>
     <string name="high">HIGH</string>
-    <string name="critical_issues"> critical issues| </string>
-    <string name="non_critical_issues"> non-critical issues| </string>
+    <string name="critical_issues"> Critical issues: </string>
+    <string name="non_critical_issues"> Non-critical issues: </string>
     <string name="hazard_level">| Hazard level:</string>
     <string name="title_activity_message_fragment">MessageFragment</string>
     <string name="num_critical">"Critical: "</string>
@@ -35,4 +35,8 @@
     <string name="restaurantHazard">"Hazard: "</string>
     <string name="restaurant_summary_info">Tap to go to view restaurant details</string>
     <string name="map_view">Map View</string>
+    <string name="update">Update?</string>
+    <string name="waiting">Please wait...</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="violation_details">Violation Details</string>
 </resources>

@@ -56,8 +56,7 @@ public class InspectionDetail extends AppCompatActivity {
     }
 
     private void bsckbutton() {
-        getSupportActionBar().setTitle("Inspections")
-        ;
+        getSupportActionBar().setTitle(R.string.inspections);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -78,7 +77,9 @@ public class InspectionDetail extends AppCompatActivity {
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
         TextView textView3=(TextView)findViewById(R.id.Critical);
-        textView3.setText("Critical errors "+report.getNumCritical()+"     Non-Critical Errors:"+(report.getManager().size()-report.getNumCritical()));
+        String issues = R.string.critical_issues + report.getNumCritical()
+                + " " + R.string.non_critical_issues + report.getNumNonCritical();
+        textView3.setText(issues);
 
 
       if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {

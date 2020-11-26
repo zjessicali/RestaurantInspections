@@ -40,7 +40,7 @@ public class MessageFragment extends AppCompatDialogFragment {
             }
         };
         return new AlertDialog.Builder(getActivity())
-                .setTitle("Violation Detail")
+                .setTitle(R.string.violation_details)
                 .setView(v)
                 .setPositiveButton(android.R.string.ok,listener)
                 .create();

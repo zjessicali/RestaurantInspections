@@ -64,7 +64,7 @@ public class RestaurantDetail extends AppCompatActivity {
         bsckbutton();
     }
     private void bsckbutton() {
-        getSupportActionBar().setTitle("Restaurant Details")
+        getSupportActionBar().setTitle(R.string.restaurant_detail)
         ;
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -140,10 +140,12 @@ public class RestaurantDetail extends AppCompatActivity {
                     break;
             }
 
-            String numCritical = String.format("%s%d", getResources().getString(R.string.num_critical), currentInspection.getNumCritical());
+            //String numCritical = String.format("%s%d", getResources().getString(R.string.num_critical), currentInspection.getNumCritical());
+            String numCritical = getString(R.string.num_critical) + currentInspection.getNumCritical();
             numCriticalText.setText(numCritical);
 
-            String numNonCritical = String.format("%s%d", getResources().getString(R.string.num__non_critical), currentInspection.getNumNonCritical());
+            //String numNonCritical = String.format("%s%d", getResources().getString(R.string.num__non_critical), currentInspection.getNumNonCritical());
+            String numNonCritical = getString(R.string.num__non_critical) + currentInspection.getNumNonCritical();
             numNonCriticalText.setText(numNonCritical);
 
             inspectionDateText.setText(currentInspection.getInspectDateString());
