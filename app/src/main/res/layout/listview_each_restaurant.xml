@@ -101,15 +101,16 @@
 
     <TextView
         android:id="@+id/restaurant_label_latestInspection"
-        android:layout_width="wrap_content"
+        android:layout_width="273dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/restaurant_image_hazardLevelValue"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="179dp"
+        android:layout_marginStart="122dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/restaurant_inspectionPerformedOn"
+        android:textAlignment="viewEnd"
         android:textSize="14sp"
         tools:ignore="RtlCompat" />
 
