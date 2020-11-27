@@ -77,8 +77,8 @@ public class InspectionDetail extends AppCompatActivity {
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
         TextView textView3=(TextView)findViewById(R.id.Critical);
-        String issues = R.string.critical_issues + report.getNumCritical()
-                + " " + R.string.non_critical_issues + report.getNumNonCritical();
+        String issues = getString(R.string.critical_issues) + report.getNumCritical()
+                + "\n" + getString(R.string.non_critical_issues) + report.getNumNonCritical();
         textView3.setText(issues);
 
 
