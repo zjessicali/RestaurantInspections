@@ -248,9 +248,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             InspectionReport inspectionReport = inspectionManager.getInspection(0);
             hazard = inspectionReport.getHazardStr();
 
-        } else {hazard = "unknown";}
+        } else {hazard = getString(R.string.unknown);}
 
-        hazardText.setText(getResources().getString(R.string.restaurantHazard) + hazard);
+        hazardText.setText(getResources().getString(R.string.restaurant_hazardlevel) + hazard);
 
         //show image
         ImageView restImage = contactPopupView.findViewById(R.id.restIcon);

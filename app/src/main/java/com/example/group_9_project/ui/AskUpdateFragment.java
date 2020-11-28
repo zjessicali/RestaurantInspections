@@ -50,7 +50,7 @@ public class AskUpdateFragment extends AppCompatDialogFragment {
 
         //build alert dialog
         return new AlertDialog.Builder(getActivity())
-                .setTitle("Update?")
+                .setTitle(R.string.update)
                 .setView(v)
                 .setPositiveButton(android.R.string.ok, okListener)
                 .setNegativeButton(android.R.string.no, noListener)

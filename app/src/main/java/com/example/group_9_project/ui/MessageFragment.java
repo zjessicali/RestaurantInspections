@@ -27,7 +27,7 @@ public class MessageFragment extends AppCompatDialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
        View v= LayoutInflater.from(getActivity()).inflate(R.layout.message,null);
         TextView textView=v.findViewById(R.id.dialog);
-        textView.setText(manager.getViolLump().get(position).toString());
+        textView.setText(manager.getViolation(position).getFullViol());
         if(manager.getViolLump().get(position).getCritical().equals("Critical"))
             textView.setTextColor(Color.RED);
         else
@@ -40,7 +40,7 @@ public class MessageFragment extends AppCompatDialogFragment {
             }
         };
         return new AlertDialog.Builder(getActivity())
-                .setTitle("Violation Detail")
+                .setTitle(R.string.violation_details)
                 .setView(v)
                 .setPositiveButton(android.R.string.ok,listener)
                 .create();

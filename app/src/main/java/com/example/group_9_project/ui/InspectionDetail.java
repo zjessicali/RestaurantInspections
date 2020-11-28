@@ -56,8 +56,7 @@ public class InspectionDetail extends AppCompatActivity {
     }
 
     private void bsckbutton() {
-        getSupportActionBar().setTitle("Inspections")
-        ;
+        getSupportActionBar().setTitle(R.string.inspections);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -78,7 +77,9 @@ public class InspectionDetail extends AppCompatActivity {
         TextView textView2 = (TextView) findViewById(R.id.Severity);
         textView2.setText("" + report.getHazard());
         TextView textView3=(TextView)findViewById(R.id.Critical);
-        textView3.setText("Critical errors "+report.getNumCritical()+"     Non-Critical Errors:"+(report.getManager().size()-report.getNumCritical()));
+        String issues = getString(R.string.critical_issues) + report.getNumCritical()
+                + "\n" + getString(R.string.non_critical_issues) + report.getNumNonCritical();
+        textView3.setText(issues);
 
 
       if(report.getHazard().equals(InspectionReport.HazardRating.HIGH)) {
@@ -137,7 +138,7 @@ public class InspectionDetail extends AppCompatActivity {
             }
             Violation violation=manager.getViolLump().get(position) ;
             TextView textView = itemview.findViewById(R.id.list_violation_header);
-            textView.setText(violation.getViolTypeString());
+            textView.setText(getViolTypeString(violation.getViolType()));
             if(violation.getCritical().equals("Critical")) {
                 ImageView imageView = itemview.findViewById(R.id.imageView_critical);
                 imageView.setImageResource(R.drawable.critical);
@@ -148,27 +149,27 @@ public class InspectionDetail extends AppCompatActivity {
             }
 
 
-            if(violation.getViolTypeString().equals("Food")){
+            if(violation.getViolType() == Violation.ViolType.FOOD){
                 ImageView imageView=itemview.findViewById(R.id.imageView_list);
                 imageView.setImageResource(R.drawable.food);
             }
-            else if(violation.getViolTypeString().equals("Equipment")){
+            else if(violation.getViolType() == Violation.ViolType.EQUIPMENT){
                 ImageView imageView1=itemview.findViewById(R.id.imageView_list);
                 imageView1.setImageResource(R.drawable.equipment);
             }
-            else if(violation.getViolTypeString().equals("Chemical")){
+            else if(violation.getViolType() == Violation.ViolType.CHEMICAL){
                 ImageView imageView1=itemview.findViewById(R.id.imageView_list);
                 imageView1.setImageResource(R.drawable.chemical);
             }
-            else if(violation.getViolTypeString().equals("Containers")){
+            else if(violation.getViolType() == Violation.ViolType.CONTAINERS){
                 ImageView imageView2=itemview.findViewById(R.id.imageView_list);
                 imageView2.setImageResource(R.drawable.utensils);
             }
-            else if(violation.getViolTypeString().equals("Location")){
+            else if(violation.getViolType() == Violation.ViolType.LOCATION){
                 ImageView imageView3=itemview.findViewById(R.id.imageView_list);
                 imageView3.setImageResource(R.drawable.location);
             }
-            else if(violation.getViolTypeString().equals("Requirements")){
+            else if(violation.getViolType() == Violation.ViolType.REQUIREMENTS){
                 ImageView imageView4=itemview.findViewById(R.id.imageView_list);
                 imageView4.setImageResource(R.drawable.requirement);
             }
@@ -206,5 +207,27 @@ public class InspectionDetail extends AppCompatActivity {
 
         if (inspections.getSize() != 0)
             inspectionIndex = intent.getIntExtra("inspectionindex", 0);
+    }
+
+    private String getViolTypeString(Violation.ViolType type){
+        switch(type){
+            case FOOD:
+                return getString(R.string.food);
+            case PEST:
+                return getString(R.string.pests);
+            case HYGIENE:
+                return getString(R.string.hygiene);
+            case CHEMICAL:
+                return getString(R.string.chemical);
+            case LOCATION:
+                return getString(R.string.location);
+            case EQUIPMENT:
+                return getString(R.string.equipment);
+            case CONTAINERS:
+                return getString(R.string.containers);
+            case REQUIREMENTS:
+                return getString(R.string.requirements);
+        }
+        return getString(R.string.no_type);
     }
 }

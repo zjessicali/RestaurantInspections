@@ -5,25 +5,25 @@
     <string name="surrey_restaurant_list">Surrey Restaurant List</string>
     <string name="rest_icon">rest icon</string>
     <string name="restaurant_city">City</string>
-    <string name="restaurant_hazardlevel">HazardLevel</string>
-    <string name="restaurant_issuesfound">Issues Found</string>
-    <string name="restaurant_address">Address</string>
+    <string name="restaurant_hazardlevel">Hazard Level: </string>
+    <string name="restaurant_issuesfound">Issues: </string>
+    <string name="restaurant_address">Address: </string>
     <string name="restaurant_name">Restaurant Name</string>
     <string name="rate_icon">rate icon</string>
     <string name="restaurant_hazardLevelHigh_value">High</string>
     <string name="restaurant_hazardLevelModerate_value">Moderate</string>
     <string name="restaurant_hazardLevelLow_value">Low</string>
     <string name="restaurant_hazardLevelNo_value">Unknown</string>
-    <string name="restaurant_inspectionPerformedOn">"Last Inspection: "</string>
-    <string name="restaurant_noInspectionAvailable_value">Unknown</string>
-    <string name="restaurant_info">Address: %s, %s\nGPS: %s</string>
-    <string name="restaurant_detail">Restaurant Detail</string>
+    <string name="restaurant_inspectionPerformedOn">Last Inspection: </string>
+<!--    <string name="restaurant_noInspectionAvailable_value">Unknown</string>-->
+<!--    <string name="restaurant_info">Address: %s, %s\nGPS: %s</string>-->
+    <string name="restaurant_detail">Restaurant Details</string>
     <string name="low">LOW</string>
     <string name="moderate">MODERATE</string>
     <string name="high">HIGH</string>
-    <string name="critical_issues"> critical issues| </string>
-    <string name="non_critical_issues"> non-critical issues| </string>
-    <string name="hazard_level">| Hazard level:</string>
+    <string name="critical_issues"> Critical issues: </string>
+    <string name="non_critical_issues"> Non-critical issues: </string>
+<!--    <string name="hazard_level">| Hazard level:</string>-->
     <string name="title_activity_message_fragment">MessageFragment</string>
     <string name="num_critical">"Critical: "</string>
     <string name="num__non_critical">"Non Critical: "</string>
@@ -32,7 +32,26 @@
     <string name="title_activity_maps">Map</string>
     <string name="restaurantName">"Name: "</string>
     <string name="restaurantAddress">"Address: "</string>
-    <string name="restaurantHazard">"Hazard: "</string>
+<!--    <string name="restaurantHazard">"Hazard: "</string>-->
     <string name="restaurant_summary_info">Tap to go to view restaurant details</string>
     <string name="map_view">Map View</string>
+    <string name="update">Update?</string>
+    <string name="waiting">Please wait…</string>
+    <string name="cancel_download">Cancel download</string>
+    <string name="violation_details">Violation Details</string>
+    <string name="unknown">unknown</string>
+    <string name="list_view">List View</string>
+    <string name="never">never</string>
+    <string name="food">Food</string>
+    <string name="pests">Pests</string>
+    <string name="hygiene">Hygiene</string>
+    <string name="chemical">Chemical</string>
+    <string name="location">Location</string>
+    <string name="equipment">Equipment</string>
+    <string name="containers">Containers</string>
+    <string name="requirements">Requirements</string>
+    <string name="no_type">No type</string>
+
+
+
 </resources>

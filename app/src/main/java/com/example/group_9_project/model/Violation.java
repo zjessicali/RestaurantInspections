@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 //Violation object, stores one violation and some info
 public class Violation {
-    enum ViolType{
+    public enum ViolType{
         FOOD,
         CHEMICAL,
         PEST,
@@ -25,35 +25,17 @@ public class Violation {
     //get full description of violation
     public String getFullViol(){
         String viol = "";
-        return viol;
+        for(String v: violation){
+            if(!v.equals(" ") && v.length() != 0){
+                viol += v+", ";
+            }
+        }
+        return viol.substring(0,viol.length()-2);
     }
 
     //get type as a ViolType
     public ViolType getViolType(){
         return type;
-    }
-
-    //get type as a string
-    public String getViolTypeString(){
-        switch(type){
-            case FOOD:
-                return "Food";
-            case PEST:
-                return "Pests";
-            case HYGIENE:
-                return "Hygiene";
-            case CHEMICAL:
-                return "Chemical";
-            case LOCATION:
-                return "Location";
-            case EQUIPMENT:
-                return "Equipment";
-            case CONTAINERS:
-                return "Containers";
-            case REQUIREMENTS:
-                return "Requirements";
-        }
-        return "No type";
     }
 
     //get violation array

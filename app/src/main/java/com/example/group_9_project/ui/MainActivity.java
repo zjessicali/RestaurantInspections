@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity  {
     private boolean mapIsOpened = false;
     private static MainActivity instance;
 
-    //NOTE TO JESSICA: DONT FORGET TO SETSHAREDPREF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity  {
         createMapIntent(false);
         setUpMapViewButton();
 
-        Log.d(TAG, "Restaurant manager size:"+restaurants.getSize());
 
         registerClickCallback();
     }
@@ -237,25 +235,26 @@ public class MainActivity extends AppCompatActivity  {
             TextView cityText = itemView.findViewById(R.id.restaurant_city);
             cityText.setText(currentRestaurant.getCity());
 
+            int lastInspectionID = R.string.restaurant_inspectionPerformedOn;
             TextView dateText = itemView.findViewById(R.id.restaurant_label_latestInspection);
             if(inspections.getSize()!=0){
-                String date = "Last inspection: "+ inspections.getInspection(0).getInspectDateString();
-                dateText.setText( date);
+                String date = getString(lastInspectionID)+ inspections.getInspection(0).getInspectDateString();
+                dateText.setText(date);
             }
             else{
-                String date = "Last inspection: never";
-                dateText.setText( date);
+                String date = getString(lastInspectionID)+ getString(R.string.never);
+                dateText.setText(date);
             }
 
+            int issuesID = R.string.restaurant_issuesfound;
             TextView issues = itemView.findViewById(R.id.restaurant_problemsFound);
             if(inspections.getSize()!= 0){
                 int problems = inspections.getInspection(0).getNumCritical() + inspections.getInspection(0).getNumNonCritical();
-                String issuesText = "Issues: "+ problems;
+                String issuesText = getString(issuesID) + problems;
                 issues.setText(issuesText);
             }
             else{
-                String issuesText = "Issues: "+ 0;
-                issues.setText(issuesText);
+                String issuesText = getString(issuesID) + 0;
                 issues.setText(issuesText);
             }
 
