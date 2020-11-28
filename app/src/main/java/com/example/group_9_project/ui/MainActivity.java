@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity  {
                 dateText.setText(date);
             }
             else{
-                String date = getString(lastInspectionID)+ "never";
+                String date = getString(lastInspectionID)+ getString(R.string.never);
                 dateText.setText(date);
             }
 

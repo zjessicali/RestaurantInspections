@@ -14,7 +14,7 @@
     <string name="restaurant_hazardLevelModerate_value">Moderate</string>
     <string name="restaurant_hazardLevelLow_value">Low</string>
     <string name="restaurant_hazardLevelNo_value">Unknown</string>
-    <string name="restaurant_inspectionPerformedOn">"Last Inspection: "</string>
+    <string name="restaurant_inspectionPerformedOn">Last Inspection: </string>
 <!--    <string name="restaurant_noInspectionAvailable_value">Unknown</string>-->
 <!--    <string name="restaurant_info">Address: %s, %s\nGPS: %s</string>-->
     <string name="restaurant_detail">Restaurant Details</string>
@@ -41,4 +41,17 @@
     <string name="violation_details">Violation Details</string>
     <string name="unknown">unknown</string>
     <string name="list_view">List View</string>
+    <string name="never">never</string>
+    <string name="food">Food</string>
+    <string name="pests">Pests</string>
+    <string name="hygiene">Hygiene</string>
+    <string name="chemical">Chemical</string>
+    <string name="location">Location</string>
+    <string name="equipment">Equipment</string>
+    <string name="containers">Containers</string>
+    <string name="requirements">Requirements</string>
+    <string name="no_type">No type</string>
+
+
+
 </resources>

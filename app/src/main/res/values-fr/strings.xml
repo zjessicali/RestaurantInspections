@@ -21,8 +21,8 @@
     <string name="low">FAIBLE</string>
     <string name="moderate">MODÉRÉ</string>
     <string name="high">HAUT</string>
-    <string name="critical_issues"> Des questions cruciales: </string>
-    <string name="non_critical_issues"> Des questions non cruciales: </string>
+    <string name="critical_issues"> Des problèmes cruciales: </string>
+    <string name="non_critical_issues"> Des problèmes non cruciales: </string>
 <!--    <string name="hazard_level">| Hazard level:</string>-->
     <string name="title_activity_message_fragment">Fragment de message</string>
     <string name="num_critical">"Cruciale: "</string>
@@ -41,4 +41,14 @@
     <string name="violation_details">Les Détails de la violations</string>
     <string name="unknown">Inconnu</string>
     <string name="list_view">La vue en liste</string>
+    <string name="never">jamais</string>
+    <string name="food">Nourriture</string>
+    <string name="pests">Nuisibles</string>
+    <string name="hygiene">Hygiène</string>
+    <string name="chemical">Chimique</string>
+    <string name="location">Emplacement</string>
+    <string name="equipment">Équipement</string>
+    <string name="containers">Contenant</string>
+    <string name="requirements">Exigences</string>
+    <string name="no_type">Aucun type</string>
 </resources>

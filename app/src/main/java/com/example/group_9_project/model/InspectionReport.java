@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 //Inspection Report with details about the inspection, as well as the violation
 public class InspectionReport {
@@ -89,10 +91,10 @@ public class InspectionReport {
         int currDate = Integer.parseInt(textDate);
 
         String inspectDateSt = "";
+        LocalDate inspect = LocalDate.of(extractYear(), extractMonth(), extractDate());
         //within 30 days
         if (inspectDate >= currDate - 100) {
             //https://www.baeldung.com/java-date-difference
-            LocalDate inspect = LocalDate.of(extractYear(), extractMonth(), extractDate());
 
             Period period = Period.between(today, inspect);
             int days = Math.abs(period.getDays());
@@ -104,7 +106,8 @@ public class InspectionReport {
             int month = extractMonth();
             int date = extractDate();
 
-            String st = Month.of(month).name();
+            String st = inspect.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
+            //String st = Month.of(month).name();
             String monthSt = st.substring(0,1) + st.substring(1, st.length()).toLowerCase();
 
             //put into string
@@ -114,7 +117,7 @@ public class InspectionReport {
             int month = extractMonth();
             int year = extractYear();
 
-            String st = Month.of(month).name();
+            String st = inspect.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
             String monthSt = st.substring(0,1) + st.substring(1, st.length()).toLowerCase();
 
             inspectDateSt = monthSt + " " + year;
@@ -141,8 +144,15 @@ public class InspectionReport {
     //gets full date, ex: May 12, 2018
     public String getFullDate(){
         String fullDate = "";
-        int month = extractMonth();
-        String st = Month.of(month).name();
+
+        DateTimeFormatter f = DateTimeFormatter.ofPattern( "yyyy-M-dd" ) ;
+        String tmp ="";
+        if(extractMonth()<10){
+            tmp = "0";
+        }
+        //LocalDate date = LocalDate.parse("" + extractYear() + "-" + tmp + extractMonth() + "-" + extractDate());
+        LocalDate date = LocalDate.of(extractYear(), extractMonth(), extractDate());
+        String st = date.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault());
         String monthSt = st.substring(0,1) + st.substring(1, st.length()).toLowerCase();
 
         fullDate += monthSt;
