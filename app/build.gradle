@@ -43,5 +43,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     compileOnly 'com.google.android.wearable:wearable:2.8.1'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
 
 }
