@@ -52,6 +52,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.maps.android.MarkerManager;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -83,6 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private FetchItemsTask asyncTask = null;
+    private ClusterManager<MyItem> clusterManager;
 
     private static boolean showPopUp = false;
     private static int index;
@@ -361,6 +367,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (inspectionManager.getSize() != 0) {
                 InspectionReport latestInspection = inspectionManager.getInspection(0);
+                newMarker.setTag(latestInspection.getHazard());
 
                 switch (latestInspection.getHazard()) {
                     case HIGH:
@@ -382,6 +389,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             else {
                 newMarker.setIcon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));}
+            newMarker.setVisible(false);
 
             markers.add(newMarker);
         }
@@ -400,6 +408,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        setUpClusterer();
+        
+
 
         // Toggle between map screen and restaurant screen
         Button button = findViewById(R.id.listViewBtn);
@@ -411,6 +422,102 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         display();
     }
+
+    // Declare a variable for the cluster manager.
+    public class MarkerClusterRenderer<T extends ClusterItem> extends DefaultClusterRenderer<T> {
+
+        public MarkerClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
+            super(context, map, clusterManager);
+
+
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
+            super.onBeforeClusterItemRendered(item, markerOptions);
+
+            String snippet = markerOptions.getSnippet();
+
+            switch (snippet) {
+                case "Hazard: high":
+                    markerOptions.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    break;
+
+                case "Hazard: moderate":
+                    markerOptions.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    break;
+
+                case "Hazard: low":
+                    markerOptions.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    break;
+
+                default:
+                    markerOptions.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+            }
+        }
+    }
+
+    private void setUpClusterer() {
+
+
+        // Initialize the manager with the context and the map.
+        clusterManager = new ClusterManager<>(this, mMap);
+        setRenderer();
+
+        // Point the map's listeners at the listeners implemented by the cluster manager.
+        mMap.setOnCameraIdleListener(clusterManager);
+        mMap.setOnMarkerClickListener(clusterManager);
+
+        clusterManager.cluster();
+
+        // Add cluster items (markers) to the cluster manager.
+        addItems();
+    }
+
+    private void addItems() {
+
+        // Add ten cluster items in close proximity, for purposes of this example.
+        for (int i = 0; i < markers.size(); i++) {
+                MyItem item = new MyItem(new LatLng(markers.get(i).getPosition().latitude,markers.get(i).getPosition().longitude), markers.get(i).getTitle()
+                , markers.get(i).getSnippet());
+                item.setIndex(i);
+                clusterManager.addItem(item);
+        }
+
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+            @Override
+            public boolean onClusterItemClick(MyItem myItem) {
+                showPopUp(myItem.getIndex());
+                return false;
+            }
+        });
+        clusterManager.cluster();
+    }
+
+    private void setRenderer() {
+        MarkerClusterRenderer<MyItem> renderer = new MarkerClusterRenderer<>(this, mMap, clusterManager);
+        clusterManager.setRenderer(renderer);
+    }
+
+    private void onClusterItemClick() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                for(int i = 0; i < markers.size(); i++) {
+                    if (marker.equals(markers.get(i))) {
+                        int index = (int) marker.getTag();
+                        showPopUp(index);
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
 
     private void display() {
         if(temp!=null){
