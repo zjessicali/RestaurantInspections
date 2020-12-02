@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +76,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
-
+    ArrayList<Restaurant> filter;
+    String search_name;
+///
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
 
@@ -110,6 +113,149 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             setUpManager();
         }
         getLocationPermission();
+        search();
+    }
+
+    private void search() {
+        SearchView searchView=findViewById(R.id.search_input);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+
+                return false;
+            }
+
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                search_name=newText;
+                sorting();
+                date();
+
+                return false;
+            }
+        });
+    }
+
+    private void sorting() {
+         filter = new ArrayList<Restaurant>();
+        RestaurantManager manager=RestaurantManager.getInstance();
+        for(int i=0;i<manager.getSize();i++){
+           Restaurant restaurant=manager.getRestFromIndex(i);
+            if(restaurant.getName().toLowerCase().contains(search_name.toLowerCase())){
+                filter.add(restaurant);
+            }
+            else
+                continue;
+
+        }
+    }
+
+    private void date() {
+        mMap.clear();
+        clusterManager.clearItems();
+        clusterManager.getMarkerCollection().clear();
+        markers.clear();
+        for (int i = 0; i < filter.size(); i++) {
+            Restaurant restaurant = filter.get(i);
+            LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            final MarkerOptions marker = new MarkerOptions();
+            marker.position(restaurantLocation);
+            marker.title(restaurant.getName());
+
+            InspectionManager inspectionManager = restaurant.getInspections();
+
+            if (inspectionManager.getSize() != 0) {
+                String hazard = "";
+
+
+                InspectionReport latestInspection = inspectionManager.getInspection(0);
+
+                switch (latestInspection.getHazard()) {
+                    case HIGH:
+                        hazard = "high";
+                        break;
+
+                    case MODERATE:
+                        hazard = "moderate";
+                        break;
+
+                    case LOW:
+                        hazard = "low";
+                        break;
+
+                    default:
+                        hazard = "unknown";
+                }
+
+
+                marker.snippet("Hazard: " + hazard);
+            } else { marker.snippet("Hazard: unknown");}
+
+            Marker newMarker = mMap.addMarker(marker);
+            newMarker.setTag(i);
+
+
+            if (inspectionManager.getSize() != 0) {
+                InspectionReport latestInspection = inspectionManager.getInspection(0);
+                newMarker.setTag(latestInspection.getHazard());
+
+                switch (latestInspection.getHazard()) {
+                    case HIGH:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        break;
+
+                    case MODERATE:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        break;
+
+                    case LOW:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        break;
+                }
+            }
+            else {
+                newMarker.setIcon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));}
+            newMarker.setVisible(false);
+
+            markers.add(newMarker);
+        }
+
+        // Interact with peg to show more information
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                for(int i = 0; i < markers.size(); i++) {
+                    if (marker.equals(markers.get(i))) {
+                        int index = (int) marker.getTag();
+                        showPopUp(index);
+                    }
+                }
+                return false;
+            }
+        });
+
+        setUpClusterer();
+
+
+
+        // Toggle between map screen and restaurant screen
+        Button button = findViewById(R.id.listViewBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        display();
+
+
     }
 
     public static Intent makeIntent(Context context, int index, LatLng latLng) {
