@@ -45,6 +45,9 @@ public class RestaurantManager {
     public Restaurant getRestFromIndex(int i){
         return manager.get(i);
     }
+    public List<Restaurant> getRestaurants(){
+        return manager;
+    }
 
     //access Restaurant with tracking number t
     public Restaurant getRestFromTracking(String t){

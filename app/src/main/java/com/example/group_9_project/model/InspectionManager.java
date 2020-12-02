@@ -15,6 +15,16 @@ InspectionManager {
 
     //getters
 
+    public int getListSize() {
+        return manager.size();
+    }
+
+    public InspectionReport getLatest() {
+        if (manager.size() == 0)
+            return null;
+        return manager.get(0);
+    }
+
     //returns inspection report at element i
     public InspectionReport getInspection(int i){
         return manager.get(i);
