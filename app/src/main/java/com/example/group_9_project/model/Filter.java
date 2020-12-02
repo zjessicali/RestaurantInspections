@@ -10,7 +10,6 @@ public class Filter {
     private InspectionReport.HazardRating hazard;
     private int criticalViolations;
     private boolean greaterThanOrEqualTo; //Is true when critical inspections is >= and false when <=
-    private boolean isFavourite;
 
 
     //Getters and Setters
@@ -37,14 +36,6 @@ public class Filter {
 
     public void setGreaterThanOrEqualTo(boolean greaterThanOrEqualTo) {
         this.greaterThanOrEqualTo = greaterThanOrEqualTo;
-    }
-
-    public boolean isFavourite() {
-        return isFavourite;
-    }
-
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
     }
 
     //Other member functions
@@ -99,10 +90,16 @@ public class Filter {
         return restaurants;
     }
 
-    //DO THIS LATER
-//
-//    public ArrayList<Restaurant> filterFavourites(ArrayList<Restaurant> filter) {
-//
-//    }
+    public ArrayList<Restaurant> filterFavourites(ArrayList<Restaurant> filter) {
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+
+        for(Restaurant restaurant : filter) {
+            if (restaurant.isFav()) {
+                restaurants.add(restaurant);
+            }
+        }
+
+        return restaurants;
+    }
 
 }

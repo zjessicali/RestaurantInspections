@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity  {
         setupHazardButton();
         setupViolationsButton();
         setupResetButton();
+        setupFavouritesButton();
 
 
         registerClickCallback();
@@ -131,6 +132,23 @@ public class MainActivity extends AppCompatActivity  {
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
         ListView list = findViewById(R.id.restaurant_list);
         list.setAdapter(adapter);
+    }
+
+    private void filterFavourites() {
+        Filter filterer = new Filter();
+        filter = filterer.filterFavourites(filter);
+        populateList();
+    }
+
+    private void setupFavouritesButton() {
+        Button favouritesButton = findViewById(R.id.favouritesListBtn);
+        favouritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterFavourites();
+            }
+        });
+
     }
 
     private void filterHazard(InspectionReport.HazardRating hazard) {

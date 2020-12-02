@@ -123,7 +123,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         search();
         setupHazardButton();
         setupViolationsButton();
+        setupFavouritesButton();
         setupResetButton();
+    }
+
+    private void filterFavourites() {
+        Filter filterer = new Filter();
+        filter = filterer.filterFavourites(filter);
+        date();
+    }
+
+    private void setupFavouritesButton() {
+        Button favouritesButton = findViewById(R.id.favouritesBtn);
+        favouritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterFavourites();
+            }
+        });
+
     }
 
     private void setupResetButton() {
