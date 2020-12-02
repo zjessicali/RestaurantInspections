@@ -69,13 +69,14 @@ public class MainActivity extends AppCompatActivity  {
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
     private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
-    private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
+    private static final String PREFS_FAVORITES = "FavoritesPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private boolean isClicked[] = {false, false};
     ArrayList<Restaurant> filter = new ArrayList<>();
 
 
     private boolean mapIsOpened = false;
+    private int populated = 0;
     private static MainActivity instance;
 
     @Override
@@ -342,17 +343,42 @@ public class MainActivity extends AppCompatActivity  {
         return false;
     }
 
-    private void getLastUpdatedFromSharedPref(){
+    private void getFavsFromSharedPref(){
+        Log.d("MyActivity", "RUNNING GETFAVSFROMSHAREDPREFS");
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         Gson lensGson = new Gson();
-        String lensJson = prefs.getString(PREFS_LAST_UPDATE,null );
-        Type type = new TypeToken<List<UpdateData>>() {}.getType();
-        List<UpdateData> storedData = lensGson.fromJson(lensJson, type);
+        String lensJson = prefs.getString(PREFS_FAVORITES,null );
+        Type type = new TypeToken<List<String>>() {}.getType();
+        List<String> favIDs = lensGson.fromJson(lensJson, type);
 
-        if(storedData != null) {
-            updateData = storedData.get(0);
+        if(favIDs != null) {
+            for(int i = 0; i < favIDs.size(); i++){
+                String ID = favIDs.get(i);
+                Restaurant r = restaurants.getRestFromTracking(ID);
+                r.setFav(true);
+                Log.d("MyActivity", "ID: "+ID);
+            }
         }
+    }
+
+    private void putFavsToSharedPref(){
+        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        List<String> favIDs = new ArrayList<>();
+
+        for(int i = 0; i < restaurants.getSize(); i++){
+            Restaurant r = restaurants.getRestFromIndex(i);
+            if(r.isFav()){
+                favIDs.add(r.getRes_id());
+            }
+        }
+
+        String json = gson.toJson(favIDs);
+        editor.putString(PREFS_FAVORITES, json);
+        editor.apply();
     }
 
     private void registerClickCallback() {
@@ -362,6 +388,7 @@ public class MainActivity extends AppCompatActivity  {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Intent intent = RestaurantDetail.launchIntent(MainActivity.this, findRestaurantIndex(position));
                 startActivity(intent);
+                //populateListView();
             }
         });
     }
@@ -369,7 +396,6 @@ public class MainActivity extends AppCompatActivity  {
 
     public void populateListView() {
         populateFilter();
-        Log.d("MyActivity", "populate List size: "+ResList.size());
         //clear what was before first
         int resListSize = ResList.size();
         for(int i = 0; i < resListSize; i++){
@@ -381,6 +407,7 @@ public class MainActivity extends AppCompatActivity  {
         }
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
         ListView list = findViewById(R.id.restaurant_list);
+        Log.d("MyActivity", "------------------------RUNNING ADAPTER");
         list.setAdapter(adapter);
 
     }

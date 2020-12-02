@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,6 +32,7 @@ import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
 import com.example.group_9_project.model.RestaurantManager;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
@@ -40,6 +43,8 @@ import java.util.List;
 //displays details about a restaurant
 public class RestaurantDetail extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "AppPrefs";
+    private static final String PREFS_FAVORITES = "FavoritesPrefs";
     private RestaurantManager manager;
     private List<InspectionReport> inspections;
     private int index;
@@ -61,8 +66,55 @@ public class RestaurantDetail extends AppCompatActivity {
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
+        setFavBtn();
         backbutton();
     }
+
+    private void putFavsToSharedPref(){
+        Log.d("MyActivity", "RUNNING PUTFAVSTOSHAREDPREFS");
+        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        List<String> favIDs = new ArrayList<>();
+
+        for(int i = 0; i < manager.getSize(); i++){
+            Restaurant r = manager.getRestFromIndex(i);
+            if(r.isFav()){
+                favIDs.add(r.getTrackingNum());
+            }
+        }
+
+        String json = gson.toJson(favIDs);
+        editor.putString(PREFS_FAVORITES, json);
+        editor.apply();
+    }
+
+    private void setFavBtn() {
+        final Button btn = findViewById(R.id.favBtn);
+        final Restaurant rest = manager.getRestFromIndex(index);
+
+        if (rest.isFav()) {
+            btn.setBackgroundResource(android.R.drawable.btn_star_big_on);
+        }
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!rest.isFav()){//not fav, set fav
+                    rest.setFav(true);
+                    btn.setBackgroundResource(android.R.drawable.btn_star_big_on);
+                }
+                else{//unfavorite
+                    rest.setFav(false);
+                    btn.setBackgroundResource(android.R.drawable.btn_star_big_off);
+                }
+                putFavsToSharedPref();
+                MainActivity.getInstance().populateListView();
+            }
+        });
+
+    }
+
     private void backbutton() {
         getSupportActionBar().setTitle(R.string.restaurant_detail)
         ;
