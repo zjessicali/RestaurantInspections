@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity  {
         createMapIntent(false);
         setUpMapViewButton();
 
-
         registerClickCallback();
     }
 
