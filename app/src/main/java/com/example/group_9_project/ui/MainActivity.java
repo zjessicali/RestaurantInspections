@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity  {
             InspectionManager inspections = currentRestaurant.getInspections();
 
             ImageView imageView = itemView.findViewById(R.id.restaurant_image_icon);
-          //  **************************
+
             ImageView restaurantLogo = itemView.findViewById(R.id.restaurant_image_icon);
             String resourceId = currentRestaurant.getRes_id();
 
@@ -207,8 +207,6 @@ public class MainActivity extends AppCompatActivity  {
             } else {
                 restaurantLogo.setImageResource(resId);
             }
-
-            //    imageView.setImageResource(R.drawable.restaurant_logo);
 
             ImageView hazardImage = itemView.findViewById(R.id.restaurant_image_hazardLevelValue);
             if(inspections.getSize() != 0){

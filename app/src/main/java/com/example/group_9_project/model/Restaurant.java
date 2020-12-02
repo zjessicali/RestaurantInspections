@@ -2,7 +2,7 @@ package com.example.group_9_project.model;
 
 //Restaurant object with data about the restaurant as well as all the inspections
 public class
-Restaurant {
+ Restaurant {
     private String trackingNum;
     private String name;
     private String address;
