@@ -415,6 +415,14 @@ public class MainActivity extends AppCompatActivity  {
                 restaurantLogo.setImageResource(resId);
             }
 
+            ImageView fav = itemView.findViewById(R.id.favorite);
+            if(currentRestaurant.isFav()){
+                fav.setImageResource(android.R.drawable.btn_star_big_on);
+            }
+            else{
+                fav.setImageResource(android.R.drawable.btn_star_big_off);
+            }
+
             ImageView hazardImage = itemView.findViewById(R.id.restaurant_image_hazardLevelValue);
             if(inspections.getSize() != 0){
                 switch(inspections.getInspection(0).getHazard()){
@@ -462,6 +470,7 @@ public class MainActivity extends AppCompatActivity  {
                 String issuesText = getString(issuesID) + 0;
                 issues.setText(issuesText);
             }
+
 
             return itemView;
         }
