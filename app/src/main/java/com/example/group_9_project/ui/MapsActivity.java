@@ -292,6 +292,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void populateFilter() {
+        filter.clear();
         for(int i = 0; i < manager.getSize(); i++) {
             filter.add(manager.getRestFromIndex(i));
         }

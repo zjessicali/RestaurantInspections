@@ -1,10 +1,10 @@
 package com.example.group_9_project.ui;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,12 +23,15 @@ import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.Filter;
 import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
@@ -68,6 +71,9 @@ public class MainActivity extends AppCompatActivity  {
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
     private UpdateData updateData = UpdateData.getInstance();
+    private boolean isClicked[] = {false, false};
+    ArrayList<Restaurant> filter = new ArrayList<>();
+
 
     private boolean mapIsOpened = false;
     private static MainActivity instance;
@@ -83,10 +89,199 @@ public class MainActivity extends AppCompatActivity  {
 
         createMapIntent(false);
         setUpMapViewButton();
-
+        setupHazardButton();
+        setupViolationsButton();
+        setupResetButton();
 
         registerClickCallback();
     }
+
+    private void clicked(int index) {
+        isClicked[index] = true;
+    }
+
+    private void unclicked(int index) {
+        isClicked[index] = false;
+    }
+
+    private boolean isClicked(int index) {
+        return isClicked[index];
+    }
+
+    private void populateFilter() {
+        filter.clear();
+        for(int i = 0; i < restaurants.getSize(); i++) {
+            filter.add(restaurants.getRestFromIndex(i));
+        }
+    }
+
+    private void populateList() {
+        Log.d("MyActivity", "populate List size: "+ResList.size());
+        //clear what was before first
+        int resListSize = ResList.size();
+        for(int i = 0; i < resListSize; i++){
+            ResList.remove(0);
+            Log.d("MyActivity", "ResList index: " + i);
+        }
+        for (int i = 0; i < filter.size(); i++) {
+            ResList.add(filter.get(i));
+        }
+        ArrayAdapter<Restaurant> adapter = new MyListAdapter();
+        ListView list = findViewById(R.id.restaurant_list);
+        list.setAdapter(adapter);
+    }
+
+    private void filterHazard(InspectionReport.HazardRating hazard) {
+        Filter filterer = new Filter();
+        filterer.setHazard(hazard);
+        filter = filterer.filterHazard(filter);
+        populateList();
+
+    }
+
+    private void showHazardPopup() {
+        final android.app.AlertDialog.Builder dialogBuilder;
+        final android.app.AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_hazard_dialog_box, null);
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        Button lowButton = contactPopupView.findViewById(R.id.lowBtn);
+        Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
+        Button highButton = contactPopupView.findViewById(R.id.highBtn);
+
+
+        lowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
+                filterHazard(InspectionReport.HazardRating.LOW);
+                dialog.dismiss();
+            }
+        });
+
+        moderateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
+                filterHazard(InspectionReport.HazardRating.MODERATE);
+                dialog.dismiss();
+            }
+        });
+
+        highButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
+                filterHazard(InspectionReport.HazardRating.HIGH);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void setupHazardButton() {
+        Button hazardButton = findViewById(R.id.hazardListBtn);
+        hazardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHazardPopup();
+            }
+        });
+    }
+
+    private void showViolationsPopup() {
+        final AlertDialog.Builder dialogBuilder;
+        final AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_violations_dialog_box, null);
+
+        final Spinner spinner = contactPopupView.findViewById(R.id.lessOrGreater);
+
+        List<String> categories = new ArrayList<>();
+        categories.add("<=");
+        categories.add(">=");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, categories);
+
+        dataAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        spinner.setAdapter(dataAdapter);
+
+        final EditText criticalViolationsText = contactPopupView.findViewById(R.id.violationsEditTxt);
+        criticalViolationsText.setHint(getString(R.string.text_hint));
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        Button enterButton = contactPopupView.findViewById(R.id.enterBtn);
+
+        enterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (criticalViolationsText.getText().toString().length() == 0) {
+                    Toast.makeText(MainActivity.this, getString(R.string.length_zero), Toast.LENGTH_SHORT)
+                            .show();
+                    dialog.dismiss();
+                    return;
+                }
+                if (isClicked(1)) {
+                    populateFilter();
+                }
+                clicked(1);
+                int criticalViolations = Integer.parseInt(criticalViolationsText.getText().toString());
+                boolean flag = (spinner.getSelectedItemPosition() == 1);
+                filterViolations(flag, criticalViolations);
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void filterViolations(boolean flag, int criticalViolations) {
+        Filter filterer = new Filter();
+        filterer.setGreaterThanOrEqualTo(flag);
+        filterer.setCriticalViolations(criticalViolations);
+        filter = filterer.filterViolations(filter);
+        populateList();
+    }
+
+    private void setupViolationsButton() {
+        Button violationsButton = findViewById(R.id.violationsListBtn);
+        violationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showViolationsPopup();
+            }
+        });
+    }
+
+    private void setupResetButton() {
+        Button resetButton = findViewById(R.id.resetListBtn);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateListView();
+                unclicked(0);
+                unclicked(1);
+            }
+        });
+    }
+
 
     public static MainActivity getInstance() {
         return instance;
@@ -109,6 +304,17 @@ public class MainActivity extends AppCompatActivity  {
                 createMapIntent(true);
             }
         });
+    }
+
+    private int findRestaurantIndex(int index) {
+        int result = -1;
+        String trackingNum = filter.get(index).getTrackingNum();
+        for (int i = 0; i < restaurants.getSize(); i++) {
+            if(restaurants.getRestFromIndex(i).getTrackingNum() == trackingNum)
+                result = i;
+        }
+
+        return result;
     }
 
     //Permissions for google map
@@ -153,7 +359,7 @@ public class MainActivity extends AppCompatActivity  {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-                Intent intent = RestaurantDetail.launchIntent(MainActivity.this, position);
+                Intent intent = RestaurantDetail.launchIntent(MainActivity.this, findRestaurantIndex(position));
                 startActivity(intent);
             }
         });
@@ -161,6 +367,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     public void populateListView() {
+        populateFilter();
         Log.d("MyActivity", "populate List size: "+ResList.size());
         //clear what was before first
         int resListSize = ResList.size();
@@ -168,8 +375,8 @@ public class MainActivity extends AppCompatActivity  {
             ResList.remove(0);
             Log.d("MyActivity", "ResList index: " + i);
         }
-        for (int i = 0; i < restaurants.getSize(); i++) {
-            ResList.add(restaurants.getRestFromIndex(i));
+        for (int i = 0; i < filter.size(); i++) {
+            ResList.add(filter.get(i));
         }
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
         ListView list = findViewById(R.id.restaurant_list);

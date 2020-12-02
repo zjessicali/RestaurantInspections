@@ -10,12 +10,10 @@
 
     <ListView
         android:id="@+id/restaurant_list"
-        android:layout_width="410dp"
-        android:layout_height="593dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="409dp"
+        android:layout_height="455dp"
+        android:layout_marginTop="136dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,10 +21,53 @@
         android:id="@+id/mapViewBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="668dp"
         android:layout_marginEnd="304dp"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="#FFFFFF"
         android:text="@string/map_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:layout_width="402dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/restaurant_list"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/hazardListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/hazard" />
+
+        <Button
+            android:id="@+id/violationsListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/violations" />
+
+        <Button
+            android:id="@+id/favouritesListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/favourites" />
+
+        <Button
+            android:id="@+id/resetListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/reset" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
