@@ -51,4 +51,9 @@
     <string name="containers">Contenant</string>
     <string name="requirements">Exigences</string>
     <string name="no_type">Aucun type</string>
+    <string name="filter_by">Filtrer par:</string>
+    <string name="hazard">Danger</string>
+    <string name="violations">Violations</string>
+    <string name="favourites">Favoris</string>
+    <string name="hazard_level_of_the_latest_inspection">Niveau de risque de la dernière inspection</string>
 </resources>

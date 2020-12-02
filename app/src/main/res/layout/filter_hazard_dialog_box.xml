@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="Hazard level of the latest inspection"
+            android:text="@string/hazard_level_of_the_latest_inspection"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -38,21 +38,21 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/lowBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#4CAF50"
                 android:text="Low" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/moderateBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF9800"
                 android:text="Moderate" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/highBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF0000"

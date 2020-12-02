@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.Filter;
 import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
@@ -65,6 +66,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -116,7 +118,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         populateFilter();
         getLocationPermission();
         search();
+        setupHazardButton();
     }
+
+    private void showHazardPopup(View V) {
+        final AlertDialog.Builder dialogBuilder;
+        final AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_hazard_dialog_box, null);
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        Button lowButton = contactPopupView.findViewById(R.id.lowBtn);
+        Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
+        Button highButton = contactPopupView.findViewById(R.id.highBtn);
+
+        lowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterHazard(InspectionReport.HazardRating.LOW);
+                dialog.dismiss();
+            }
+        });
+
+        moderateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterHazard(InspectionReport.HazardRating.MODERATE);
+                dialog.dismiss();
+            }
+        });
+
+        highButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterHazard(InspectionReport.HazardRating.HIGH);
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void filterHazard(InspectionReport.HazardRating hazard) {
+        Filter filterer = new Filter();
+        filterer.setHazard(hazard);
+        filter = filterer.filterHazard(filter);
+    }
+
+    private void setupHazardButton() {
+        Button hazardButton = findViewById(R.id.hazardBtn);
+        hazardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHazardPopup(v);
+            }
+        });
+    }
+
 
     private void populateFilter() {
         for(int i = 0; i < manager.getSize(); i++) {
@@ -233,20 +294,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             markers.add(newMarker);
         }
-
-        // Interact with peg to show more information
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                for(int i = 0; i < markers.size(); i++) {
-                    if (marker.equals(markers.get(i))) {
-                        int index = (int) marker.getTag();
-                        showPopUp(index);
-                    }
-                }
-                return false;
-            }
-        });
 
         setUpClusterer();
 

@@ -55,6 +55,7 @@
     <string name="hazard">Hazard</string>
     <string name="violations">Violations</string>
     <string name="favourites">Favourites</string>
+    <string name="hazard_level_of_the_latest_inspection">Hazard level of the latest inspection</string>
 
 
 </resources>
