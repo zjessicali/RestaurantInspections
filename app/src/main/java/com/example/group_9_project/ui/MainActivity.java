@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity  {
         setupViolationsButton();
         setupResetButton();
 
+
         registerClickCallback();
     }
 
