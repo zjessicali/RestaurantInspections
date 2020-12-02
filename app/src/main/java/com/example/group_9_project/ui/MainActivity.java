@@ -154,25 +154,6 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    private void putFavsToSharedPref(){
-        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        List<String> favIDs = new ArrayList<>();
-
-        for(int i = 0; i < restaurants.getSize(); i++){
-            Restaurant r = restaurants.getRestFromIndex(i);
-            if(r.isFav()){
-                favIDs.add(r.getRes_id());
-            }
-        }
-
-        String json = gson.toJson(favIDs);
-        editor.putString(PREFS_FAVORITES, json);
-        editor.apply();
-    }
-
     private void registerClickCallback() {
         ListView list = findViewById(R.id.restaurant_list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,11 +161,9 @@ public class MainActivity extends AppCompatActivity  {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Intent intent = RestaurantDetail.launchIntent(MainActivity.this, position);
                 startActivity(intent);
-                //populateListView();
             }
         });
     }
-
 
     public void populateListView() {
         if(populated == 0){

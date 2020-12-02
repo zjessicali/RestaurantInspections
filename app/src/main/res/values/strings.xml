@@ -10,7 +10,7 @@
     <string name="restaurant_address">Address: </string>
     <string name="restaurant_name">Restaurant Name</string>
     <string name="rate_icon">rate icon</string>
-    <string name="restaurant_hazardLevel">Hazard Level: %s</string>
+<!--    <string name="restaurant_hazardLevel">Hazard Level: %s</string>-->
     <string name="restaurant_hazardLevelHigh_value">High</string>
     <string name="restaurant_hazardLevelModerate_value">Moderate</string>
     <string name="restaurant_hazardLevelLow_value">Low</string>
@@ -53,7 +53,8 @@
     <string name="requirements">Requirements</string>
     <string name="no_type">No type</string>
     <string name="favouriteselection">favouriteSelection</string>
-    <string name="favorite_restaurants_with_new_inspections">Favorite Restaurants with New Inspections</string>
+    <string name="favorite_restaurants_with_new_inspections">New Updates from Favourites: </string>
+    <string name="ok">Ok</string>
 
 
 </resources>

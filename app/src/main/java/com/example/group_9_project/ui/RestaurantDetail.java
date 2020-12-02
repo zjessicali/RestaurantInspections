@@ -58,7 +58,7 @@ public class RestaurantDetail extends AppCompatActivity {
         manager = RestaurantManager.getInstance();
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.restaurant_detail);
+        actionBar.setTitle(R.string.favorite_restaurants_with_new_inspections);
 
         extractData();
         populateInspectionsList();
@@ -90,6 +90,14 @@ public class RestaurantDetail extends AppCompatActivity {
         editor.apply();
     }
 
+    private void putDatesSharedPref(String ID, int date){
+        SharedPreferences prefs = this.getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putInt(ID, date);
+        editor.apply();
+    }
+
     private void setFavBtn() {
         final Button btn = findViewById(R.id.favBtn);
         final Restaurant rest = manager.getRestFromIndex(index);
@@ -103,10 +111,12 @@ public class RestaurantDetail extends AppCompatActivity {
                 if(!rest.isFav()){//not fav, set fav
                     rest.setFav(true);
                     btn.setBackgroundResource(android.R.drawable.btn_star_big_on);
+                    putDatesSharedPref(rest.getTrackingNum(), rest.getInspections().getLastInspDate());
                 }
                 else{//unfavorite
                     rest.setFav(false);
                     btn.setBackgroundResource(android.R.drawable.btn_star_big_off);
+                    putDatesSharedPref(rest.getTrackingNum(),0);
                 }
                 putFavsToSharedPref();
                 MainActivity.getInstance().populateListView();
