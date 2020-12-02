@@ -24,9 +24,12 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +83,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
     ArrayList<Restaurant> filter = new ArrayList<>();
     String search_name;
-///
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
 
@@ -88,6 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static LatLng temp=null;
+    private boolean isClicked[] = {false, false};
 
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
@@ -119,9 +122,104 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getLocationPermission();
         search();
         setupHazardButton();
+        setupViolationsButton();
+        setupResetButton();
     }
 
-    private void showHazardPopup(View V) {
+    private void setupResetButton() {
+        Button resetButton = findViewById(R.id.resetBtn);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateFilter();
+                date();
+                unclicked(0);
+                unclicked(1);
+            }
+        });
+    }
+
+    private void clicked(int index) {
+        isClicked[index] = true;
+    }
+
+    private void unclicked(int index) {
+        isClicked[index] = false;
+    }
+
+    private boolean isClicked(int index) {
+        return isClicked[index];
+    }
+
+    private void showViolationsPopup() {
+        final AlertDialog.Builder dialogBuilder;
+        final AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_violations_dialog_box, null);
+
+        final Spinner spinner = contactPopupView.findViewById(R.id.lessOrGreater);
+
+        List<String> categories = new ArrayList<>();
+        categories.add("<=");
+        categories.add(">=");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, categories);
+
+        dataAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        spinner.setAdapter(dataAdapter);
+
+        final EditText criticalViolationsText = contactPopupView.findViewById(R.id.violationsEditTxt);
+        criticalViolationsText.setHint(getString(R.string.text_hint));
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        Button enterButton = contactPopupView.findViewById(R.id.enterBtn);
+
+        enterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (criticalViolationsText.getText().toString().length() == 0) {
+                    Toast.makeText(MapsActivity.this, getString(R.string.length_zero), Toast.LENGTH_SHORT)
+                    .show();
+                    dialog.dismiss();
+                    return;
+                }
+                if (isClicked(1)) {
+                    populateFilter();
+                }
+                clicked(1);
+                int criticalViolations = Integer.parseInt(criticalViolationsText.getText().toString());
+                boolean flag = (spinner.getSelectedItemPosition() == 1);
+                filterViolations(flag, criticalViolations);
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void filterViolations(boolean flag, int criticalViolations) {
+        Filter filterer = new Filter();
+        filterer.setGreaterThanOrEqualTo(flag);
+        filterer.setCriticalViolations(criticalViolations);
+        filter = filterer.filterViolations(filter);
+        date();
+    }
+
+    private void setupViolationsButton() {
+        Button violationsButton = findViewById(R.id.violationsBtn);
+        violationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showViolationsPopup();
+            }
+        });
+    }
+
+    private void showHazardPopup() {
         final AlertDialog.Builder dialogBuilder;
         final AlertDialog dialog;
 
@@ -136,9 +234,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
         Button highButton = contactPopupView.findViewById(R.id.highBtn);
 
+
         lowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
                 filterHazard(InspectionReport.HazardRating.LOW);
                 dialog.dismiss();
             }
@@ -147,6 +250,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         moderateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
                 filterHazard(InspectionReport.HazardRating.MODERATE);
                 dialog.dismiss();
             }
@@ -155,6 +262,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         highButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
                 filterHazard(InspectionReport.HazardRating.HIGH);
                 dialog.dismiss();
             }
@@ -166,6 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Filter filterer = new Filter();
         filterer.setHazard(hazard);
         filter = filterer.filterHazard(filter);
+        date();
     }
 
     private void setupHazardButton() {
@@ -173,7 +285,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         hazardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showHazardPopup(v);
+                showHazardPopup();
             }
         });
     }

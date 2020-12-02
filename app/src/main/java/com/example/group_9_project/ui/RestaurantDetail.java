@@ -126,17 +126,17 @@ public class RestaurantDetail extends AppCompatActivity {
             switch(currentInspection.getHazard()) {
                 case LOW:
                     hazard.setImageResource(R.drawable.low_risk);
-                    hazard.setContentDescription("Low Hazard");
+                    hazard.setContentDescription(getString(R.string.low_content_description));
                     break;
 
                 case MODERATE:
                     hazard.setImageResource(R.drawable.medium_risk);
-                    hazard.setContentDescription("Moderate Hazard");
+                    hazard.setContentDescription(getString(R.string.moderate_content_description));
                     break;
 
                 case HIGH:
                     hazard.setImageResource(R.drawable.high_risk);
-                    hazard.setContentDescription("High Hazard");
+                    hazard.setContentDescription(getString(R.string.high_content_description));
                     break;
             }
 

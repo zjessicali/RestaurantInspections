@@ -9,7 +9,7 @@ public class Filter {
 
     private InspectionReport.HazardRating hazard;
     private int criticalViolations;
-    private boolean lessThanOrEqualTo; //Is true when critical inspections is <= and false when >=
+    private boolean greaterThanOrEqualTo; //Is true when critical inspections is >= and false when <=
     private boolean isFavourite;
 
 
@@ -31,12 +31,12 @@ public class Filter {
         this.criticalViolations = criticalViolations;
     }
 
-    public boolean isLessThanOrEqualTo() {
-        return lessThanOrEqualTo;
+    public boolean isGreaterThanOrEqualTo() {
+        return greaterThanOrEqualTo;
     }
 
-    public void setLessThanOrEqualTo(boolean lessThanOrEqualTo) {
-        this.lessThanOrEqualTo = lessThanOrEqualTo;
+    public void setGreaterThanOrEqualTo(boolean greaterThanOrEqualTo) {
+        this.greaterThanOrEqualTo = greaterThanOrEqualTo;
     }
 
     public boolean isFavourite() {
@@ -52,10 +52,12 @@ public class Filter {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
         for(Restaurant restaurant : filter) {
-            InspectionManager inspectionManager = restaurant.getInspections();
-            InspectionReport inspectionReport = inspectionManager.getInspection(0);
-            if (inspectionReport.getHazard() == this.hazard) {
-                restaurants.add(restaurant);
+            if (restaurant.getInspections().getSize() > 0) {
+                InspectionManager inspectionManager = restaurant.getInspections();
+                InspectionReport inspectionReport = inspectionManager.getInspection(0);
+                if (inspectionReport.getHazard() == this.hazard) {
+                    restaurants.add(restaurant);
+                }
             }
         }
 
@@ -70,6 +72,7 @@ public class Filter {
 
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
+
         for(Restaurant restaurant : filter) {
             int numCriticalViol = 0;
             InspectionManager inspectionManager = restaurant.getInspections();
@@ -77,6 +80,17 @@ public class Filter {
                 InspectionReport report = inspectionManager.getInspection(i);
                 int inspectDate = report.getInspectDate();
                 if (inspectDate > currDate - 10000) {
+                    numCriticalViol++;
+                }
+            }
+
+            if(this.greaterThanOrEqualTo) {
+                if(numCriticalViol >= this.criticalViolations) {
+                    restaurants.add(restaurant);
+                }
+            }
+            else {
+                if (numCriticalViol <= this.criticalViolations) {
                     restaurants.add(restaurant);
                 }
             }
