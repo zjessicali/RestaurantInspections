@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
-    ArrayList<Restaurant> filter;
+    ArrayList<Restaurant> filter = new ArrayList<>();
     String search_name;
 ///
     private Boolean mLocationPermissionGranted = false;
@@ -101,6 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         isOpened = getIntent().getBooleanExtra("isOpened",false);
         if(showPopUp){
             extractIndex();
@@ -112,8 +113,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG,"First time opening maps.-----------------");
             setUpManager();
         }
+        populateFilter();
         getLocationPermission();
         search();
+    }
+
+    private void populateFilter() {
+        for(int i = 0; i < manager.getSize(); i++) {
+            filter.add(manager.getRestFromIndex(i));
+        }
     }
 
     private void search() {
@@ -140,8 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void sorting() {
-         filter = new ArrayList<Restaurant>();
-        RestaurantManager manager=RestaurantManager.getInstance();
+        filter.clear();
         for(int i=0;i<manager.getSize();i++){
            Restaurant restaurant=manager.getRestFromIndex(i);
             if(restaurant.getName().toLowerCase().contains(search_name.toLowerCase())){
@@ -376,9 +383,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
+    private int findRestaurantIndex(int index) {
+        int result = -1;
+        String trackingNum = filter.get(index).getTrackingNum();
+        for (int i = 0; i < manager.getSize(); i++) {
+            if(manager.getRestFromIndex(i).getTrackingNum() == trackingNum)
+                result = i;
+        }
+
+        return result;
+    }
+
     private void showPopUp(int index) {
 
-        Restaurant restaurant = manager.getRestFromIndex(index);
+        Restaurant restaurant = filter.get(index);
 
         AlertDialog.Builder dialogBuider;
         AlertDialog dialog;
@@ -427,7 +445,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         popup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = RestaurantDetail.launchIntent(MapsActivity.this, finalIndex);
+                Intent intent = RestaurantDetail.launchIntent(MapsActivity.this, findRestaurantIndex(finalIndex));
                 startActivity(intent);
             }
         });
@@ -471,8 +489,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Display pegs on all restaurant's location
-        for (int i = 0; i < manager.getSize(); i++) {
-            Restaurant restaurant = manager.getRestFromIndex(i);
+        for (int i = 0; i < filter.size(); i++) {
+            Restaurant restaurant = filter.get(i);
             LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
             final MarkerOptions marker = new MarkerOptions();
             marker.position(restaurantLocation);
@@ -555,7 +573,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         setUpClusterer();
-        
+
 
 
         // Toggle between map screen and restaurant screen
@@ -649,22 +667,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         clusterManager.setRenderer(renderer);
     }
 
-    private void onClusterItemClick() {
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                for(int i = 0; i < markers.size(); i++) {
-                    if (marker.equals(markers.get(i))) {
-                        int index = (int) marker.getTag();
-                        showPopUp(index);
-                    }
-                }
-                return false;
-            }
-        });
-    }
-
-
     private void display() {
         if(temp!=null){
             moveCamera(temp);
@@ -677,6 +679,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
             readRawRestaurantData();
             readRawInspectionData();
+
+
 
             //first time running means last update more than 20 hours -> ask if they want to update
             Log.d("MapsActivity", "it should ask update");

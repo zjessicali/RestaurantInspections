@@ -51,7 +51,10 @@
     <string name="containers">Containers</string>
     <string name="requirements">Requirements</string>
     <string name="no_type">No type</string>
-
+    <string name="filter_by">Filter by:</string>
+    <string name="hazard">Hazard</string>
+    <string name="violations">Violations</string>
+    <string name="favourites">Favourites</string>
 
 
 </resources>

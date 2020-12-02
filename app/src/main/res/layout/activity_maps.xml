@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout3"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:backgroundTint="#FFFFFF">
 
     <fragment
         android:id="@+id/map"
@@ -49,5 +50,51 @@
         map:layout_constraintTop_toTopOf="parent"
         map:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="306dp"
+        android:layout_height="83dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/search_input">
+
+        <Button
+            android:id="@+id/hazardBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/hazard" />
+
+        <Button
+            android:id="@+id/violationsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/violations" />
+
+        <Button
+            android:id="@+id/favouritesBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/favourites" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/filterByTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:text="@string/filter_by"
+        android:textSize="20sp"
+        map:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+        map:layout_constraintTop_toBottomOf="@+id/search_input" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

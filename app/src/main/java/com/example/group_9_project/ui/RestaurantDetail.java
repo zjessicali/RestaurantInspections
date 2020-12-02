@@ -61,9 +61,9 @@ public class RestaurantDetail extends AppCompatActivity {
         setupRestaurantName();
         setupRestaurantAddress();
         setupGPSCoordinates();
-        bsckbutton();
+        backbutton();
     }
-    private void bsckbutton() {
+    private void backbutton() {
         getSupportActionBar().setTitle(R.string.restaurant_detail)
         ;
         getSupportActionBar().setDisplayShowCustomEnabled(true);
