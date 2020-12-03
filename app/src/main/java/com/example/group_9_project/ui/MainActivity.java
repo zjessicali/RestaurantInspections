@@ -179,6 +179,8 @@ public class MainActivity extends AppCompatActivity {
     private void filterHazard(InspectionReport.HazardRating hazard) {
         filterer.setHazard(hazard);
         filter = filterer.filterHazard(filter);
+        Button btn = findViewById(R.id.hazardListBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
         populateList();
 
     }
@@ -240,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 filter = filterer.unFilterHazard();
+                Button btn = findViewById(R.id.hazardListBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
                 populateList();
                 dialog.dismiss();
             }
@@ -316,6 +320,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 filter = filterer.unFilterViolations();
                 populateList();
+                Button btn = findViewById(R.id.violationsListBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
                 dialog.dismiss();
             }
         });
@@ -329,6 +335,8 @@ public class MainActivity extends AppCompatActivity {
         filter = filterer.filterViolations(filter);
         Log.d("FILTER", "flag: "+ flag+"# violations set: " + criticalViolations);
         populateList();
+        Button btn = findViewById(R.id.violationsListBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
     }
 
     private void setupViolationsButton() {
@@ -356,8 +364,14 @@ public class MainActivity extends AppCompatActivity {
                 unclicked(0);
                 unclicked(1);
                 filterer.setFavSelected(false);
+                Button btn3 = findViewById(R.id.favouritesListBtn);
+                btn3.setTextColor(Color.parseColor("#000000"));
                 filterer.setHazardSelected(false);
+                Button btn = findViewById(R.id.hazardListBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
                 filterer.setViolSelected(false);
+                Button btn2 = findViewById(R.id.violationsListBtn);
+                btn2.setTextColor(Color.parseColor("#000000"));
             }
         });
     }

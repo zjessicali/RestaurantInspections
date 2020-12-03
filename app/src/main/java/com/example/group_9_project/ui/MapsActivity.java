@@ -135,8 +135,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        // filter = filterer.filterFavourites(filter);
 
         if(filterer.isFavSelected()){//unselect favorites
-
             filter = filterer.unFilterFavorites();
+            filterer.setFavSelected(false);
         }
         else{
             Log.d("Filter", "yes, filterfavorites working");
@@ -175,8 +175,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 unclicked(0);
                 unclicked(1);
                 filterer.setFavSelected(false);
+                Button btn3 = findViewById(R.id.favouritesBtn);
+                btn3.setTextColor(Color.parseColor("#000000"));
                 filterer.setHazardSelected(false);
+                Button btn = findViewById(R.id.hazardBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
                 filterer.setViolSelected(false);
+                Button btn2 = findViewById(R.id.violationsBtn);
+                btn2.setTextColor(Color.parseColor("#000000"));
             }
         });
     }
@@ -246,6 +252,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 filter = filterer.unFilterViolations();
+                filterer.setHazardSelected(false);
+                Button btn2 = findViewById(R.id.violationsBtn);
+                btn2.setTextColor(Color.parseColor("#000000"));
                 date();
                 dialog.dismiss();
             }
@@ -258,6 +267,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         filterer.setGreaterThanOrEqualTo(flag);
         filterer.setCriticalViolations(criticalViolations);
         filter = filterer.filterViolations(filter);
+        Button btn = findViewById(R.id.violationsBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
         date();
     }
 
@@ -333,6 +344,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 filter = filterer.unFilterHazard();
+                Button btn = findViewById(R.id.hazardBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
                 date();
                 dialog.dismiss();
             }
@@ -343,6 +356,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Filter filterer = new Filter();
         filterer.setHazard(hazard);
         filter = filterer.filterHazard(filter);
+        Button btn = findViewById(R.id.hazardBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
         date();
     }
 

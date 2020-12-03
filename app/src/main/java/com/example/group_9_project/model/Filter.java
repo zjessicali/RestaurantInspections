@@ -136,6 +136,7 @@ public class Filter {
             }
         }
 
+        violSelected = true;
         return restaurants;
     }
 
@@ -153,6 +154,7 @@ public class Filter {
             restaurants = filterFavourites(restaurants);
         }
 
+        violSelected = false;
         return restaurants;
     }
 
