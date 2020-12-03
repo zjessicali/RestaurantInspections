@@ -24,12 +24,17 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.group_9_project.R;
+import com.example.group_9_project.model.Filter;
 import com.example.group_9_project.model.InspectionManager;
 import com.example.group_9_project.model.InspectionReport;
 import com.example.group_9_project.model.Restaurant;
@@ -64,6 +69,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -75,7 +81,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
-
+    ArrayList<Restaurant> filter = new ArrayList<>();
+    String search_name;
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
 
@@ -83,6 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static LatLng temp=null;
+    private boolean isClicked[] = {false, false};
 
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
@@ -98,6 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         isOpened = getIntent().getBooleanExtra("isOpened",false);
         if(showPopUp){
             extractIndex();
@@ -109,7 +118,329 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG,"First time opening maps.-----------------");
             setUpManager();
         }
+        populateFilter();
         getLocationPermission();
+        search();
+        setupHazardButton();
+        setupViolationsButton();
+        setupFavouritesButton();
+        setupResetButton();
+    }
+
+    private void filterFavourites() {
+        Filter filterer = new Filter();
+        filter = filterer.filterFavourites(filter);
+        date();
+    }
+
+    private void setupFavouritesButton() {
+        Button favouritesButton = findViewById(R.id.favouritesBtn);
+        favouritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filterFavourites();
+            }
+        });
+
+    }
+
+    private void setupResetButton() {
+        Button resetButton = findViewById(R.id.resetBtn);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateFilter();
+                date();
+                unclicked(0);
+                unclicked(1);
+            }
+        });
+    }
+
+    private void clicked(int index) {
+        isClicked[index] = true;
+    }
+
+    private void unclicked(int index) {
+        isClicked[index] = false;
+    }
+
+    private boolean isClicked(int index) {
+        return isClicked[index];
+    }
+
+    private void showViolationsPopup() {
+        final AlertDialog.Builder dialogBuilder;
+        final AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_violations_dialog_box, null);
+
+        final Spinner spinner = contactPopupView.findViewById(R.id.lessOrGreater);
+
+        List<String> categories = new ArrayList<>();
+        categories.add("<=");
+        categories.add(">=");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, categories);
+
+        dataAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        spinner.setAdapter(dataAdapter);
+
+        final EditText criticalViolationsText = contactPopupView.findViewById(R.id.violationsEditTxt);
+        criticalViolationsText.setHint(getString(R.string.text_hint));
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        Button enterButton = contactPopupView.findViewById(R.id.enterBtn);
+
+        enterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (criticalViolationsText.getText().toString().length() == 0) {
+                    Toast.makeText(MapsActivity.this, getString(R.string.length_zero), Toast.LENGTH_SHORT)
+                    .show();
+                    dialog.dismiss();
+                    return;
+                }
+                if (isClicked(1)) {
+                    populateFilter();
+                }
+                clicked(1);
+                int criticalViolations = Integer.parseInt(criticalViolationsText.getText().toString());
+                boolean flag = (spinner.getSelectedItemPosition() == 1);
+                filterViolations(flag, criticalViolations);
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void filterViolations(boolean flag, int criticalViolations) {
+        Filter filterer = new Filter();
+        filterer.setGreaterThanOrEqualTo(flag);
+        filterer.setCriticalViolations(criticalViolations);
+        filter = filterer.filterViolations(filter);
+        date();
+    }
+
+    private void setupViolationsButton() {
+        Button violationsButton = findViewById(R.id.violationsBtn);
+        violationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showViolationsPopup();
+            }
+        });
+    }
+
+    private void showHazardPopup() {
+        final AlertDialog.Builder dialogBuilder;
+        final AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_hazard_dialog_box, null);
+
+        dialogBuilder.setView(contactPopupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        Button lowButton = contactPopupView.findViewById(R.id.lowBtn);
+        Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
+        Button highButton = contactPopupView.findViewById(R.id.highBtn);
+
+
+        lowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
+                filterHazard(InspectionReport.HazardRating.LOW);
+                dialog.dismiss();
+            }
+        });
+
+        moderateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
+                filterHazard(InspectionReport.HazardRating.MODERATE);
+                dialog.dismiss();
+            }
+        });
+
+        highButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isClicked(0)) {
+                    populateFilter();
+                }
+                clicked(0);
+                filterHazard(InspectionReport.HazardRating.HIGH);
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+    private void filterHazard(InspectionReport.HazardRating hazard) {
+        Filter filterer = new Filter();
+        filterer.setHazard(hazard);
+        filter = filterer.filterHazard(filter);
+        date();
+    }
+
+    private void setupHazardButton() {
+        Button hazardButton = findViewById(R.id.hazardBtn);
+        hazardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHazardPopup();
+            }
+        });
+    }
+
+
+    private void populateFilter() {
+        filter.clear();
+        for(int i = 0; i < manager.getSize(); i++) {
+            filter.add(manager.getRestFromIndex(i));
+        }
+    }
+
+    private void search() {
+        SearchView searchView=findViewById(R.id.search_input);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+
+                return false;
+            }
+
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                search_name=newText;
+                sorting();
+                date();
+
+                return false;
+            }
+        });
+    }
+
+    private void sorting() {
+        filter.clear();
+        for(int i=0;i<manager.getSize();i++){
+           Restaurant restaurant=manager.getRestFromIndex(i);
+            if(restaurant.getName().toLowerCase().contains(search_name.toLowerCase())){
+                filter.add(restaurant);
+            }
+            else
+                continue;
+
+        }
+    }
+
+    private void date() {
+        mMap.clear();
+        clusterManager.clearItems();
+        clusterManager.getMarkerCollection().clear();
+        markers.clear();
+        for (int i = 0; i < filter.size(); i++) {
+            Restaurant restaurant = filter.get(i);
+            LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+            final MarkerOptions marker = new MarkerOptions();
+            marker.position(restaurantLocation);
+            marker.title(restaurant.getName());
+
+            InspectionManager inspectionManager = restaurant.getInspections();
+
+            if (inspectionManager.getSize() != 0) {
+                String hazard = "";
+
+
+                InspectionReport latestInspection = inspectionManager.getInspection(0);
+
+                switch (latestInspection.getHazard()) {
+                    case HIGH:
+                        hazard = "high";
+                        break;
+
+                    case MODERATE:
+                        hazard = "moderate";
+                        break;
+
+                    case LOW:
+                        hazard = "low";
+                        break;
+
+                    default:
+                        hazard = "unknown";
+                }
+
+
+                marker.snippet("Hazard: " + hazard);
+            } else { marker.snippet("Hazard: unknown");}
+
+            Marker newMarker = mMap.addMarker(marker);
+            newMarker.setTag(i);
+
+
+            if (inspectionManager.getSize() != 0) {
+                InspectionReport latestInspection = inspectionManager.getInspection(0);
+                newMarker.setTag(latestInspection.getHazard());
+
+                switch (latestInspection.getHazard()) {
+                    case HIGH:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        break;
+
+                    case MODERATE:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                        break;
+
+                    case LOW:
+                        newMarker.setIcon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        break;
+                }
+            }
+            else {
+                newMarker.setIcon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));}
+            newMarker.setVisible(false);
+
+            markers.add(newMarker);
+        }
+
+        setUpClusterer();
+
+
+
+        // Toggle between map screen and restaurant screen
+        Button button = findViewById(R.id.listViewBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        display();
+
+
     }
 
     public static Intent makeIntent(Context context, int index, LatLng latLng) {
@@ -230,9 +561,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
     }
 
+    private int findRestaurantIndex(int index) {
+        int result = -1;
+        String trackingNum = filter.get(index).getTrackingNum();
+        for (int i = 0; i < manager.getSize(); i++) {
+            if(manager.getRestFromIndex(i).getTrackingNum() == trackingNum)
+                result = i;
+        }
+
+        return result;
+    }
+
     private void showPopUp(int index) {
 
-        Restaurant restaurant = manager.getRestFromIndex(index);
+        Restaurant restaurant = filter.get(index);
 
         AlertDialog.Builder dialogBuider;
         AlertDialog dialog;
@@ -281,7 +623,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         popup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = RestaurantDetail.launchIntent(MapsActivity.this, finalIndex);
+                Intent intent = RestaurantDetail.launchIntent(MapsActivity.this, findRestaurantIndex(finalIndex));
                 startActivity(intent);
             }
         });
@@ -325,8 +667,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Display pegs on all restaurant's location
-        for (int i = 0; i < manager.getSize(); i++) {
-            Restaurant restaurant = manager.getRestFromIndex(i);
+        for (int i = 0; i < filter.size(); i++) {
+            Restaurant restaurant = filter.get(i);
             LatLng restaurantLocation = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
             final MarkerOptions marker = new MarkerOptions();
             marker.position(restaurantLocation);
@@ -409,7 +751,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         setUpClusterer();
-        
+
 
 
         // Toggle between map screen and restaurant screen
@@ -503,22 +845,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         clusterManager.setRenderer(renderer);
     }
 
-    private void onClusterItemClick() {
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                for(int i = 0; i < markers.size(); i++) {
-                    if (marker.equals(markers.get(i))) {
-                        int index = (int) marker.getTag();
-                        showPopUp(index);
-                    }
-                }
-                return false;
-            }
-        });
-    }
-
-
     private void display() {
         if(temp!=null){
             moveCamera(temp);
@@ -531,6 +857,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(updateData.getNeedUpdate() == null){//first time running, fill with itr1
             readRawRestaurantData();
             readRawInspectionData();
+
+
 
             //first time running means last update more than 20 hours -> ask if they want to update
             Log.d("MapsActivity", "it should ask update");

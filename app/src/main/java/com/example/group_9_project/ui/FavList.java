@@ -83,6 +83,7 @@ public class FavList extends AppCompatActivity {
         list.setAdapter(adapter);
     }
 
+
     //    ListView adapter build
     private class MyListAdapter extends ArrayAdapter<Restaurant> {
 
