@@ -60,6 +60,7 @@ public class Filter {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String textDate = today.format(formatter);
         int currDate = Integer.parseInt(textDate);
+        LocalDate yearAgo = intToDate(currDate-10000);
 
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
@@ -70,8 +71,9 @@ public class Filter {
             for (int i = 0; i < inspectionManager.getSize(); i++) {
                 InspectionReport report = inspectionManager.getInspection(i);
                 int inspectDate = report.getInspectDate();
-                if (inspectDate > currDate - 10000) {
-                    numCriticalViol++;
+                LocalDate inspectDateTime = intToDate(inspectDate);
+                if (inspectDateTime.isAfter(yearAgo)) {
+                    numCriticalViol = numCriticalViol +  report.getNumCritical();
                 }
             }
 
@@ -88,6 +90,21 @@ public class Filter {
         }
 
         return restaurants;
+    }
+
+    private LocalDate intToDate(int d){
+        DateTimeFormatter f = DateTimeFormatter.ofPattern( "yyyy-MM-dd" ) ;
+        //String tmp ="";
+        int month = (d % 10000) / 100;
+        int date = d % 100;
+        int year = d / 10000;
+//        if(month <10){
+//            tmp = "0";
+//        }
+
+        LocalDate dateTime = LocalDate.of(year, month, date);
+        return dateTime;
+
     }
 
     public ArrayList<Restaurant> filterFavourites(ArrayList<Restaurant> filter) {

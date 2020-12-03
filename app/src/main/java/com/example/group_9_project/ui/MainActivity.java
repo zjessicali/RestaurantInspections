@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity  {
 
         createMapIntent(false);
         setUpMapViewButton();
+
         setupHazardButton();
         setupViolationsButton();
         setupResetButton();
@@ -281,6 +282,7 @@ public class MainActivity extends AppCompatActivity  {
         filterer.setGreaterThanOrEqualTo(flag);
         filterer.setCriticalViolations(criticalViolations);
         filter = filterer.filterViolations(filter);
+        Log.d("FILTER", "flag: "+ flag+"# violations set: " + criticalViolations);
         populateList();
     }
 
@@ -328,7 +330,7 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
     public static void sorting() {
-        ResList.clear();;
+        ResList.clear();
          ResList = new ArrayList<Restaurant>();
         RestaurantManager manager=RestaurantManager.getInstance();
         for(int i=0;i<manager.getSize();i++){
