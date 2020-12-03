@@ -81,8 +81,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
-    public static ArrayList<Restaurant> filter = new ArrayList<>();
-    public static String search_name;
+    public static List<Restaurant> filter = new ArrayList<>();
+    public static String search_name="";
 
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
@@ -126,6 +126,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setupViolationsButton();
         setupFavouritesButton();
         setupResetButton();
+        check();
+    }
+
+    private void check() {
+        if(!filter.isEmpty()){
+            search();
+            sorting();
+            SearchView searchView=findViewById(R.id.search_input);
+
+
+        }
     }
 
     private void filterFavourites() {
@@ -244,7 +255,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         dialogBuilder = new AlertDialog.Builder(this);
         final View contactPopupView = getLayoutInflater().inflate(R.layout.filter_hazard_dialog_box, null);
-
         dialogBuilder.setView(contactPopupView);
         dialog = dialogBuilder.create();
         dialog.show();
@@ -478,6 +488,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    public static Intent launchIntent(Context context, boolean isOpened,List<Restaurant>fil, String query){
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra("isOpened", isOpened);
+        showPopUp = false;
+        filter=fil;
+        search_name=query;
+        return intent;
+    }
     public static Intent launchIntent(Context context, boolean isOpened){
         Intent intent = new Intent(context, MapsActivity.class);
         intent.putExtra("isOpened", isOpened);
@@ -776,6 +794,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent=MainActivity.launchIntent(MapsActivity.this,filter,search_name);
+                startActivity(intent);
                 finish();
             }
         });

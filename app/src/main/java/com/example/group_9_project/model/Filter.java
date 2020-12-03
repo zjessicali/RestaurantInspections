@@ -3,6 +3,7 @@ package com.example.group_9_project.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Filter {
     private RestaurantManager manager = RestaurantManager.getInstance();
@@ -39,7 +40,7 @@ public class Filter {
     }
 
     //Other member functions
-    public ArrayList<Restaurant> filterHazard(ArrayList<Restaurant> filter) {
+    public ArrayList<Restaurant> filterHazard(List<Restaurant> filter) {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
         for(Restaurant restaurant : filter) {
@@ -55,7 +56,7 @@ public class Filter {
         return restaurants;
     }
 
-    public ArrayList<Restaurant>  filterViolations(ArrayList<Restaurant> filter) {
+    public ArrayList<Restaurant>  filterViolations(List<Restaurant> filter) {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String textDate = today.format(formatter);
@@ -90,7 +91,7 @@ public class Filter {
         return restaurants;
     }
 
-    public ArrayList<Restaurant> filterFavourites(ArrayList<Restaurant> filter) {
+    public ArrayList<Restaurant> filterFavourites(List<Restaurant> filter) {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
         for(Restaurant restaurant : filter) {

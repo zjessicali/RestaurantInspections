@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity  {
     private static List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
     private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
-     private static String search_name;
+     private static String search_name="";
     private static final String PREFS_FAVORITES = "FavoritesPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private boolean isClicked[] = {false, false};
@@ -101,6 +101,14 @@ public class MainActivity extends AppCompatActivity  {
 
         search();
         registerClickCallback();
+        check();
+    }
+
+    private void check() {
+        if(!ResList.isEmpty()){
+            sorting();
+            updateUI();
+        }
     }
 
     private void clicked(int index) {
@@ -307,6 +315,12 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    public static Intent launchIntent(Context context, List<Restaurant>fil,String name){
+        Intent intent = new Intent(context, MapsActivity.class);
+        ResList=fil;
+        search_name=name;
+        return intent;
+    }
     private void search() {
         SearchView searchView=findViewById(R.id.search_main);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -347,6 +361,8 @@ public class MainActivity extends AppCompatActivity  {
 
         MyListAdapter adapter=new MyListAdapter(MainActivity.this,R.layout.activity_main,ResList);
         list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        list.deferNotifyDataSetChanged();
 
     }
 
@@ -356,8 +372,16 @@ public class MainActivity extends AppCompatActivity  {
 
     private void createMapIntent(boolean isOpened) {
         if (isServicesOK()) {
-            Intent intent = MapsActivity.launchIntent(this, isOpened);
-            startActivity(intent);
+            if(!search_name.equals("")) {
+                Intent intent = MapsActivity.launchIntent(this, isOpened, ResList, search_name);
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent = MapsActivity.launchIntent(this, isOpened, ResList, search_name);
+                startActivity(intent);
+
+            }
             mapIsOpened = isOpened;
             //finish();  //<- this makes the app close, not sure why it's there
         }
