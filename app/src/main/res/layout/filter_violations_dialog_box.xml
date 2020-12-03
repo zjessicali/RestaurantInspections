@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="Number of critical violations in the past year"
+            android:text="@string/number_of_critical_violations_in_the_past_year"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -54,7 +54,7 @@
             android:layout_marginTop="160dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="#2196F3"
-            android:text="Enter"
+            android:text="@string/enter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

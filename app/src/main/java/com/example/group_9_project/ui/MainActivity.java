@@ -150,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void filterFavourites() {
         if(filterer.isFavSelected()){//unselect favorites
+//            if(search_name.length()!=0){
+//                filter = filterer.unFilterFavorites(filter);
+//                Log.d("Filter", "Searched Text: "+search_name);
+//            }
             filter = filterer.unFilterFavorites();
         }
         else{
@@ -390,27 +394,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                search_name=newText;
-                sorting();
+
+                sorting(filter);
                 updateUI();
 
                 return false;
             }
         });
     }
-    public static void sorting() {
+    public static ArrayList<Restaurant> sorting(ArrayList<Restaurant> filter) {
         ResList.clear();
-         ResList = new ArrayList<Restaurant>();
+         //ResList = new ArrayList<Restaurant>();
         RestaurantManager manager=RestaurantManager.getInstance();
-        for(int i=0;i<manager.getSize();i++){
-            Restaurant restaurant=manager.getRestFromIndex(i);
+        ArrayList<Restaurant> newFilter = new ArrayList<>();
 
+        for(int i=0;i<filter.size();i++){
+            //Restaurant restaurant=manager.getRestFromIndex(i);
+            Restaurant restaurant = filter.get(i);
             if(restaurant.getName().toLowerCase().contains(search_name.toLowerCase())){
                 ResList.add(restaurant);
+                newFilter.add(restaurant);
             }
             else
                 continue;
 
         }
+        return newFilter;
     }
 
     private void updateUI() {
