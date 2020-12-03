@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                search_name=newText;
 
-                sorting(filter);
+                filter = sorting(filter);
                 updateUI();
 
                 return false;
