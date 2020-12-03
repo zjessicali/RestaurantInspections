@@ -55,10 +55,6 @@
     <string name="favouriteselection">favouriteSelection</string>
     <string name="favorite_restaurants_with_new_inspections">New Updates from Favourites: </string>
     <string name="ok">Ok</string>
-
-    <string name="favouriteselection">favouriteSelection</string>
-    <string name="favorite_restaurants_with_new_inspections">Favorite Restaurants with New Inspections</string>
-
     <string name="filter_by">Filter by:</string>
     <string name="hazard">Hazard</string>
     <string name="violations">Violations</string>
