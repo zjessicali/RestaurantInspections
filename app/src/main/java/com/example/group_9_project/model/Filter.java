@@ -187,6 +187,7 @@ public class Filter {
     }
 
     public ArrayList<Restaurant> unFilterFavorites(){
+        //if searching, make restaurants = filter
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for(Restaurant r:manager.getRestaurants()){
             restaurants.add(r);
@@ -203,5 +204,24 @@ public class Filter {
         favSelected = false;
         return restaurants;
     }
+
+    public ArrayList<Restaurant> unFilterFavorites(ArrayList<Restaurant> filter){
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        for(Restaurant r:filter){
+            restaurants.add(r);
+        }
+
+        if(hazardSelected){
+            restaurants = filterHazard(restaurants);
+        }
+
+        if(violSelected){
+            restaurants = filterViolations(restaurants);
+        }
+
+        favSelected = false;
+        return restaurants;
+    }
+
 
 }

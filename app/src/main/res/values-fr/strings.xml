@@ -69,4 +69,7 @@
     <string name="length_zero">Entrez un numéro valide</string>
     <string name="reset">Réinitialiser</string>
     <string name="ok">D\'accord</string>
+    <string name="clear">Débarrasser</string>
+    <string name="enter">Entrer</string>
+    <string name="number_of_critical_violations_in_the_past_year">Nombre de violations critiques au cours de l\'année écoulée</string>
 </resources>
