@@ -7,8 +7,8 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="338dp"
-        android:layout_height="236dp"
+        android:layout_width="342dp"
+        android:layout_height="320dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,8 +29,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:layout_width="127dp"
-            android:layout_height="140dp"
+            android:layout_width="125dp"
+            android:layout_height="203dp"
             android:layout_marginStart="105dp"
             android:layout_marginTop="60dp"
             android:orientation="vertical"
@@ -57,6 +57,12 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF0000"
                 android:text="@string/restaurant_hazardLevelHigh_value" />
+
+            <Button
+                android:id="@+id/clear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clear" />
 
         </LinearLayout>
 

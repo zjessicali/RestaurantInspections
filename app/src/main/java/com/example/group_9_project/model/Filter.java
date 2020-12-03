@@ -80,6 +80,25 @@ public class Filter {
             }
         }
 
+        hazardSelected = true;
+        return restaurants;
+    }
+
+    public ArrayList<Restaurant> unFilterHazard(){
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        for(Restaurant r:manager.getRestaurants()){
+            restaurants.add(r);
+        }
+
+        if(favSelected){
+            restaurants = filterFavourites(restaurants);
+        }
+
+        if(violSelected){
+            restaurants = filterViolations(restaurants);
+        }
+
+        hazardSelected = false;
         return restaurants;
     }
 
@@ -115,6 +134,23 @@ public class Filter {
                     restaurants.add(restaurant);
                 }
             }
+        }
+
+        return restaurants;
+    }
+
+    public ArrayList<Restaurant>  unFilterViolations(){
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        for(Restaurant r:manager.getRestaurants()){
+            restaurants.add(r);
+        }
+
+        if(hazardSelected){
+            restaurants = filterHazard(restaurants);
+        }
+
+        if(favSelected){
+            restaurants = filterFavourites(restaurants);
         }
 
         return restaurants;
