@@ -1,8 +1,7 @@
 package com.example.group_9_project.model;
 
 //Restaurant object with data about the restaurant as well as all the inspections
-public class
-Restaurant {
+public class Restaurant {
     private String trackingNum;
     private String name;
     private String address;
@@ -14,12 +13,14 @@ Restaurant {
     private int iconID;
     private String res_id;
     public InspectionManager inspections;
+    private boolean fav;
 
 
     public Restaurant(String tracking) {
         this.trackingNum = tracking;
         this.type = FacType.RESTAURANT;
         this.inspections = new InspectionManager();
+        this.fav = false;
     }
 
     public Restaurant(String name, String address, String city, int iconID) {
@@ -27,6 +28,7 @@ Restaurant {
         this.address = address;
         this.city = city;
         this.iconID=iconID;
+        this.fav = false;
     }
 
     public int getIconID(){
@@ -75,6 +77,10 @@ Restaurant {
         return "";
     }
 
+    public boolean isFav(){
+        return fav;
+    }
+
     //returns the inspection manager
     public InspectionManager getInspections() {
         return inspections;
@@ -120,6 +126,10 @@ Restaurant {
         if(s == "Restaurant"){
             this.type = FacType.RESTAURANT;
         }
+    }
+
+    public void setFav(boolean b){
+        fav = b;
     }
 
     public String getGPS(){

@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout3"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:backgroundTint="#FFFFFF">
 
     <fragment
         android:id="@+id/map"
@@ -49,5 +50,53 @@
         map:layout_constraintTop_toTopOf="parent"
         map:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="403dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/search_input">
+
+        <Button
+            android:id="@+id/hazardBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/hazard"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/violationsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/violations"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/favouritesBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/favourites"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/resetBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/reset"
+            android:textSize="13sp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

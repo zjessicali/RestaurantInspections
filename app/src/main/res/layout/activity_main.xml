@@ -24,9 +24,52 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp"
         android:layout_marginEnd="32dp"
+        android:backgroundTint="#FFFFFF"
         android:text="@string/map_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:layout_width="402dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/restaurant_list"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/hazardListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/hazard" />
+
+        <Button
+            android:id="@+id/violationsListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/violations" />
+
+        <Button
+            android:id="@+id/favouritesListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/favourites" />
+
+        <Button
+            android:id="@+id/resetListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:text="@string/reset" />
+    </LinearLayout>
 
     <SearchView
         android:id="@+id/search_main"
