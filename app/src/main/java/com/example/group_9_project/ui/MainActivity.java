@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,10 +67,12 @@ import com.android.volley.toolbox.Volley;
 public class MainActivity extends AppCompatActivity  {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
-
+    ListView list;
     private RestaurantManager restaurants = RestaurantManager.getInstance();//feel free to rename
-    private List<Restaurant>ResList = new ArrayList<Restaurant>(){};
+    private static List<Restaurant>ResList = new ArrayList<Restaurant>(){};
     private static final String PREFS_NAME = "AppPrefs";
+    private static final String PREFS_LAST_UPDATE = "LastUpdatedPrefs";
+     private static String search_name;
     private static final String PREFS_FAVORITES = "FavoritesPrefs";
     private UpdateData updateData = UpdateData.getInstance();
     private boolean isClicked[] = {false, false};
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity  {
         setupResetButton();
         setupFavouritesButton();
 
+        search();
         registerClickCallback();
     }
 
@@ -302,6 +307,49 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    private void search() {
+        SearchView searchView=findViewById(R.id.search_main);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               search_name=newText;
+                sorting();
+                updateUI();
+
+                return false;
+            }
+        });
+    }
+    public static void sorting() {
+        ResList.clear();;
+         ResList = new ArrayList<Restaurant>();
+        RestaurantManager manager=RestaurantManager.getInstance();
+        for(int i=0;i<manager.getSize();i++){
+            Restaurant restaurant=manager.getRestFromIndex(i);
+
+            if(restaurant.getName().toLowerCase().contains(search_name.toLowerCase())){
+                ResList.add(restaurant);
+            }
+            else
+                continue;
+
+        }
+    }
+
+    private void updateUI() {
+
+        MyListAdapter adapter=new MyListAdapter(MainActivity.this,R.layout.activity_main,ResList);
+        list.setAdapter(adapter);
+
+    }
+
     public static MainActivity getInstance() {
         return instance;
     }
@@ -380,7 +428,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void registerClickCallback() {
-        ListView list = findViewById(R.id.restaurant_list);
+        list = findViewById(R.id.restaurant_list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
@@ -407,7 +455,6 @@ public class MainActivity extends AppCompatActivity  {
         }
         ArrayAdapter<Restaurant> adapter = new MyListAdapter();
         ListView list = findViewById(R.id.restaurant_list);
-        Log.d("MyActivity", "------------------------RUNNING ADAPTER");
         list.setAdapter(adapter);
 
     }
@@ -415,6 +462,9 @@ public class MainActivity extends AppCompatActivity  {
     private class MyListAdapter extends ArrayAdapter<Restaurant>{
         public MyListAdapter(){
             super(MainActivity.this, R.layout.listview_each_restaurant, ResList);
+        }
+        public MyListAdapter(Context context,int resource,List<Restaurant>restaurantList){
+            super(MainActivity.this, resource, restaurantList);
         }
         @Override
         public  View getView(int position, View convertView, ViewGroup parent){

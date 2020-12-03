@@ -10,32 +10,36 @@
 
     <ListView
         android:id="@+id/restaurant_list"
-        android:layout_width="409dp"
-        android:layout_height="455dp"
-        android:layout_marginTop="136dp"
+        android:layout_width="413dp"
+        android:layout_height="480dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.502" />
 
     <Button
         android:id="@+id/mapViewBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="304dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="5dp"
         android:backgroundTint="#FFFFFF"
         android:text="@string/map_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="402dp"
         android:layout_height="61dp"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/restaurant_list"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_main">
 
         <Button
             android:id="@+id/hazardListBtn"
@@ -69,5 +73,16 @@
             android:backgroundTint="#FFFFFF"
             android:text="@string/reset" />
     </LinearLayout>
+
+    <SearchView
+        android:id="@+id/search_main"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFFFFF"
+        android:elevation="10dp"
+        android:iconifiedByDefault="false"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="18dp"
+        tools:layout_editor_absoluteY="61dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

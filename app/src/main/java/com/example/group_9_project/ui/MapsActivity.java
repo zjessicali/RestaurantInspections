@@ -81,8 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
-    ArrayList<Restaurant> filter = new ArrayList<>();
-    String search_name;
+    public static ArrayList<Restaurant> filter = new ArrayList<>();
+    public static String search_name;
+
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
 
@@ -339,8 +340,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void sorting() {
+    public static void sorting() {
         filter.clear();
+        RestaurantManager manager=RestaurantManager.getInstance();
         for(int i=0;i<manager.getSize();i++){
            Restaurant restaurant=manager.getRestFromIndex(i);
             if(restaurant.getName().toLowerCase().contains(search_name.toLowerCase())){
@@ -425,6 +427,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             markers.add(newMarker);
         }
+
+        //merge note: delete?
+        // Interact with peg to show more information
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                for(int i = 0; i < markers.size(); i++) {
+                    if (marker.equals(markers.get(i))) {
+                        int index = (int) marker.getTag();
+                        showPopUp(index);
+                    }
+                }
+                return false;
+            }
+        });
 
         setUpClusterer();
 
@@ -844,6 +861,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MarkerClusterRenderer<MyItem> renderer = new MarkerClusterRenderer<>(this, mMap, clusterManager);
         clusterManager.setRenderer(renderer);
     }
+
+    //merge note: delete?
+    private void onClusterItemClick() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                for(int i = 0; i < markers.size(); i++) {
+                    if (marker.equals(markers.get(i))) {
+                        int index = (int) marker.getTag();
+                        showPopUp(index);
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
 
     private void display() {
         if(temp!=null){
