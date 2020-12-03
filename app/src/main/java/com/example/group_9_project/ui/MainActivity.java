@@ -343,6 +343,9 @@ public class MainActivity extends AppCompatActivity {
                 populateListView();
                 unclicked(0);
                 unclicked(1);
+                filterer.setFavSelected(false);
+                filterer.setHazardSelected(false);
+                filterer.setViolSelected(false);
             }
         });
     }

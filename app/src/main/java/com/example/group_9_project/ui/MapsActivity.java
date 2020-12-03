@@ -103,6 +103,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int index;
     private static boolean isOpened;
 
+    Filter filterer = new Filter();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,9 +131,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void filterFavourites() {
-        Filter filterer = new Filter();
-        filter = filterer.filterFavourites(filter);
+       // filter = filterer.filterFavourites(filter);
+
+        if(filterer.isFavSelected()){//unselect favorites
+
+            filter = filterer.unFilterFavorites();
+        }
+        else{
+            Log.d("Filter", "yes, filterfavorites working");
+            filter = filterer.filterFavourites(filter);
+        }
+
         date();
+
     }
 
     private void setupFavouritesButton() {
@@ -154,6 +166,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 date();
                 unclicked(0);
                 unclicked(1);
+                filterer.setFavSelected(false);
+                filterer.setHazardSelected(false);
+                filterer.setViolSelected(false);
             }
         });
     }
@@ -197,6 +212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show();
 
         Button enterButton = contactPopupView.findViewById(R.id.enterBtn);
+        Button clear = contactPopupView.findViewById(R.id.clear2);
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +230,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int criticalViolations = Integer.parseInt(criticalViolationsText.getText().toString());
                 boolean flag = (spinner.getSelectedItemPosition() == 1);
                 filterViolations(flag, criticalViolations);
+                dialog.dismiss();
+            }
+        });
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter = filterer.unFilterViolations();
+                date();
                 dialog.dismiss();
             }
         });
@@ -252,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button lowButton = contactPopupView.findViewById(R.id.lowBtn);
         Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
         Button highButton = contactPopupView.findViewById(R.id.highBtn);
-
+        Button clear = contactPopupView.findViewById(R.id.clear);
 
         lowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,6 +315,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter = filterer.unFilterHazard();
+                date();
+                dialog.dismiss();
+            }
+        });
     }
 
     private void filterHazard(InspectionReport.HazardRating hazard) {
