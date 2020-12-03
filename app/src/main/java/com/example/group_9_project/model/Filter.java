@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+//class that stores filter data and contains methods to filter with
 public class Filter {
     private RestaurantManager manager = RestaurantManager.getInstance();
 
