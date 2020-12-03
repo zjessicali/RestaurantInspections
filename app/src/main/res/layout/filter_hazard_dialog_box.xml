@@ -42,21 +42,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#4CAF50"
-                android:text="@string/low_hazard" />
+                android:text="@string/restaurant_hazardLevelLow_value" />
 
             <Button
                 android:id="@+id/moderateBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF9800"
-                android:text="@string/moderate_hazard" />
+                android:text="@string/restaurant_hazardLevelModerate_value" />
 
             <Button
                 android:id="@+id/highBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#FF0000"
-                android:text="@string/high_hazard" />
+                android:text="@string/restaurant_hazardLevelHigh_value" />
 
         </LinearLayout>
 

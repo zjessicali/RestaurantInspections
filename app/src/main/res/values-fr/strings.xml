@@ -53,5 +53,20 @@
     <string name="no_type">Aucun type</string>
     <string name="favouriteselection">favouriteSelection</string>
     <string name="favorite_restaurants_with_new_inspections">Les Mise à jours nouvelles des favoris: </string>
+    <string name="filter_by">Filtrer par: </string>
+    <string name="hazard">Danger</string>
+    <string name="violations">Violations</string>
+    <string name="favourites">Favoris</string>
+    <string name="hazard_level_of_the_latest_inspection">Niveau de danger de la dernière inspection</string>
+    <string name="low_hazard">Low</string>
+    <string name="high_hazard">High</string>
+    <string name="moderate_hazard">Moderate</string>
+    <string name="none_hazard">Aucun</string>
+    <string name="low_content_description">Low Hazard</string>
+    <string name="moderate_content_description">Moderate Hazard</string>
+    <string name="high_content_description">High Hazard</string>
+    <string name="text_hint">Nombre de violations critiques</string>
+    <string name="length_zero">Entrez un numéro valide</string>
+    <string name="reset">Réinitialiser</string>
     <string name="ok">D\'accord</string>
 </resources>
