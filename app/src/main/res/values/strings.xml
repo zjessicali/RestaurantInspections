@@ -70,5 +70,6 @@
     <string name="text_hint">Number of critical violations</string>
     <string name="length_zero">Enter a valid number</string>
     <string name="reset">Reset</string>
+    <string name="clear">Clear</string>
 
 </resources>

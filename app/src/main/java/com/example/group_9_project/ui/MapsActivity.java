@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationProvider;
@@ -103,6 +104,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int index;
     private static boolean isOpened;
 
+    Filter filterer = new Filter();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,17 +132,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void filterFavourites() {
-        Filter filterer = new Filter();
-        filter = filterer.filterFavourites(filter);
+       // filter = filterer.filterFavourites(filter);
+
+        if(filterer.isFavSelected()){//unselect favorites
+            filter = filterer.unFilterFavorites();
+            filterer.setFavSelected(false);
+        }
+        else{
+            Log.d("Filter", "yes, filterfavorites working");
+            filter = filterer.filterFavourites(filter);
+        }
+
         date();
+
     }
 
     private void setupFavouritesButton() {
-        Button favouritesButton = findViewById(R.id.favouritesBtn);
+        final Button favouritesButton = findViewById(R.id.favouritesBtn);
         favouritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterFavourites();
+                if(filterer.isFavSelected()){
+                    //change button color
+                    favouritesButton.setTextColor(Color.parseColor("#083c99"));
+                }
+                else{
+                    favouritesButton.setTextColor(Color.parseColor("#000000"));
+                }
             }
         });
 
@@ -154,6 +174,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 date();
                 unclicked(0);
                 unclicked(1);
+                filterer.setFavSelected(false);
+                Button btn3 = findViewById(R.id.favouritesBtn);
+                btn3.setTextColor(Color.parseColor("#000000"));
+                filterer.setHazardSelected(false);
+                Button btn = findViewById(R.id.hazardBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
+                filterer.setViolSelected(false);
+                Button btn2 = findViewById(R.id.violationsBtn);
+                btn2.setTextColor(Color.parseColor("#000000"));
             }
         });
     }
@@ -197,6 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show();
 
         Button enterButton = contactPopupView.findViewById(R.id.enterBtn);
+        Button clear = contactPopupView.findViewById(R.id.clear2);
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,6 +248,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter = filterer.unFilterViolations();
+                filterer.setHazardSelected(false);
+                Button btn2 = findViewById(R.id.violationsBtn);
+                btn2.setTextColor(Color.parseColor("#000000"));
+                date();
+                dialog.dismiss();
+            }
+        });
+
     }
 
     private void filterViolations(boolean flag, int criticalViolations) {
@@ -225,15 +267,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         filterer.setGreaterThanOrEqualTo(flag);
         filterer.setCriticalViolations(criticalViolations);
         filter = filterer.filterViolations(filter);
+        Button btn = findViewById(R.id.violationsBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
         date();
     }
 
     private void setupViolationsButton() {
-        Button violationsButton = findViewById(R.id.violationsBtn);
+        final Button violationsButton = findViewById(R.id.violationsBtn);
         violationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showViolationsPopup();
+                if(filterer.isViolSelected()){
+                    violationsButton.setTextColor(Color.parseColor("#083c99"));
+                }
+                else{
+                    violationsButton.setTextColor(Color.parseColor("#000000"));
+                }
             }
         });
     }
@@ -252,7 +302,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button lowButton = contactPopupView.findViewById(R.id.lowBtn);
         Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
         Button highButton = contactPopupView.findViewById(R.id.highBtn);
-
+        Button clear = contactPopupView.findViewById(R.id.clear);
 
         lowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,21 +340,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter = filterer.unFilterHazard();
+                Button btn = findViewById(R.id.hazardBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
+                date();
+                dialog.dismiss();
+            }
+        });
     }
 
     private void filterHazard(InspectionReport.HazardRating hazard) {
         Filter filterer = new Filter();
         filterer.setHazard(hazard);
         filter = filterer.filterHazard(filter);
+        Button btn = findViewById(R.id.hazardBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
         date();
     }
 
     private void setupHazardButton() {
-        Button hazardButton = findViewById(R.id.hazardBtn);
+        final Button hazardButton = findViewById(R.id.hazardBtn);
         hazardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showHazardPopup();
+
+                if(filterer.isHazardSelected()){
+                    hazardButton.setTextColor(Color.parseColor("#083c99"));
+                }
+                else{
+                    hazardButton.setTextColor(Color.parseColor("#000000"));
+                }
             }
         });
     }

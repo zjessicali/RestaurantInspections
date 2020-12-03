@@ -2,6 +2,7 @@ package com.example.group_9_project.ui;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import android.app.AlertDialog;
@@ -12,6 +13,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlendMode;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.media.MediaCodec;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -64,7 +69,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
     ListView list;
@@ -75,13 +80,16 @@ public class MainActivity extends AppCompatActivity  {
      private static String search_name;
     private static final String PREFS_FAVORITES = "FavoritesPrefs";
     private UpdateData updateData = UpdateData.getInstance();
-    private boolean isClicked[] = {false, false};
+    private boolean[] isClicked = {false, false};
+    private boolean[] selected = {false, false, false};//hazard,viol,fav
     ArrayList<Restaurant> filter = new ArrayList<>();
 
 
     private boolean mapIsOpened = false;
     private int populated = 0;
     private static MainActivity instance;
+
+    private Filter filterer = new Filter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +102,7 @@ public class MainActivity extends AppCompatActivity  {
 
         createMapIntent(false);
         setUpMapViewButton();
+
         setupHazardButton();
         setupViolationsButton();
         setupResetButton();
@@ -138,27 +147,40 @@ public class MainActivity extends AppCompatActivity  {
         list.setAdapter(adapter);
     }
 
+
     private void filterFavourites() {
-        Filter filterer = new Filter();
-        filter = filterer.filterFavourites(filter);
+        if(filterer.isFavSelected()){//unselect favorites
+            filter = filterer.unFilterFavorites();
+        }
+        else{
+            filter = filterer.filterFavourites(filter);
+        }
         populateList();
     }
 
     private void setupFavouritesButton() {
-        Button favouritesButton = findViewById(R.id.favouritesListBtn);
+        final Button favouritesButton = findViewById(R.id.favouritesListBtn);
         favouritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filterFavourites();
+                if(filterer.isFavSelected()){
+                    //change button color
+                    favouritesButton.setTextColor(Color.parseColor("#083c99"));
+                }
+                else{
+                    favouritesButton.setTextColor(Color.parseColor("#000000"));
+                }
             }
         });
 
     }
 
     private void filterHazard(InspectionReport.HazardRating hazard) {
-        Filter filterer = new Filter();
         filterer.setHazard(hazard);
         filter = filterer.filterHazard(filter);
+        Button btn = findViewById(R.id.hazardListBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
         populateList();
 
     }
@@ -177,6 +199,7 @@ public class MainActivity extends AppCompatActivity  {
         Button lowButton = contactPopupView.findViewById(R.id.lowBtn);
         Button moderateButton = contactPopupView.findViewById(R.id.moderateBtn);
         Button highButton = contactPopupView.findViewById(R.id.highBtn);
+        Button clear = contactPopupView.findViewById(R.id.clear);
 
 
         lowButton.setOnClickListener(new View.OnClickListener() {
@@ -214,14 +237,31 @@ public class MainActivity extends AppCompatActivity  {
                 dialog.dismiss();
             }
         });
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter = filterer.unFilterHazard();
+                Button btn = findViewById(R.id.hazardListBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
+                populateList();
+                dialog.dismiss();
+            }
+        });
     }
 
     private void setupHazardButton() {
-        Button hazardButton = findViewById(R.id.hazardListBtn);
+        final Button hazardButton = findViewById(R.id.hazardListBtn);
         hazardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showHazardPopup();
+                if(filterer.isHazardSelected()){
+                    hazardButton.setTextColor(Color.parseColor("#083c99"));
+                }
+                else{
+                    hazardButton.setTextColor(Color.parseColor("#000000"));
+                }
             }
         });
     }
@@ -253,6 +293,7 @@ public class MainActivity extends AppCompatActivity  {
         dialog.show();
 
         Button enterButton = contactPopupView.findViewById(R.id.enterBtn);
+        Button clear = contactPopupView.findViewById(R.id.clear2);
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,6 +315,17 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filter = filterer.unFilterViolations();
+                populateList();
+                Button btn = findViewById(R.id.violationsListBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
+                dialog.dismiss();
+            }
+        });
+
     }
 
     private void filterViolations(boolean flag, int criticalViolations) {
@@ -281,15 +333,24 @@ public class MainActivity extends AppCompatActivity  {
         filterer.setGreaterThanOrEqualTo(flag);
         filterer.setCriticalViolations(criticalViolations);
         filter = filterer.filterViolations(filter);
+        Log.d("FILTER", "flag: "+ flag+"# violations set: " + criticalViolations);
         populateList();
+        Button btn = findViewById(R.id.violationsListBtn);
+        btn.setTextColor(Color.parseColor("#083c99"));
     }
 
     private void setupViolationsButton() {
-        Button violationsButton = findViewById(R.id.violationsListBtn);
+        final Button violationsButton = findViewById(R.id.violationsListBtn);
         violationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showViolationsPopup();
+                if(filterer.isViolSelected()){
+                    violationsButton.setTextColor(Color.parseColor("#083c99"));
+                }
+                else{
+                    violationsButton.setTextColor(Color.parseColor("#000000"));
+                }
             }
         });
     }
@@ -302,6 +363,15 @@ public class MainActivity extends AppCompatActivity  {
                 populateListView();
                 unclicked(0);
                 unclicked(1);
+                filterer.setFavSelected(false);
+                Button btn3 = findViewById(R.id.favouritesListBtn);
+                btn3.setTextColor(Color.parseColor("#000000"));
+                filterer.setHazardSelected(false);
+                Button btn = findViewById(R.id.hazardListBtn);
+                btn.setTextColor(Color.parseColor("#000000"));
+                filterer.setViolSelected(false);
+                Button btn2 = findViewById(R.id.violationsListBtn);
+                btn2.setTextColor(Color.parseColor("#000000"));
             }
         });
     }
@@ -328,7 +398,7 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
     public static void sorting() {
-        ResList.clear();;
+        ResList.clear();
          ResList = new ArrayList<Restaurant>();
         RestaurantManager manager=RestaurantManager.getInstance();
         for(int i=0;i<manager.getSize();i++){

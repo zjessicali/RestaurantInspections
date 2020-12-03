@@ -145,7 +145,7 @@ public class InspectionReport {
     public String getFullDate(){
         String fullDate = "";
 
-        DateTimeFormatter f = DateTimeFormatter.ofPattern( "yyyy-M-dd" ) ;
+        DateTimeFormatter f = DateTimeFormatter.ofPattern( "yyyy-MM-dd" ) ;
         String tmp ="";
         if(extractMonth()<10){
             tmp = "0";
