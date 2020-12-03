@@ -76,9 +76,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final float DEFAULT_ZOOM = 15f;
-    ArrayList<Restaurant> filter;
-    String search_name;
-///
+    public static ArrayList<Restaurant> filter;
+    public static String search_name;
+
     private Boolean mLocationPermissionGranted = false;
     private RestaurantManager manager = RestaurantManager.getInstance();
 
@@ -139,7 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void sorting() {
+    public static void sorting() {
          filter = new ArrayList<Restaurant>();
         RestaurantManager manager=RestaurantManager.getInstance();
         for(int i=0;i<manager.getSize();i++){
