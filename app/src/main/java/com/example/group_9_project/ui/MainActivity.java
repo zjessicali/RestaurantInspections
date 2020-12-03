@@ -75,13 +75,16 @@ public class MainActivity extends AppCompatActivity  {
      private static String search_name;
     private static final String PREFS_FAVORITES = "FavoritesPrefs";
     private UpdateData updateData = UpdateData.getInstance();
-    private boolean isClicked[] = {false, false};
+    private boolean[] isClicked = {false, false};
+    private boolean[] selected = {false, false, false};//hazard,viol,fav
     ArrayList<Restaurant> filter = new ArrayList<>();
 
 
     private boolean mapIsOpened = false;
     private int populated = 0;
     private static MainActivity instance;
+
+    private Filter filterer = new Filter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,9 +142,14 @@ public class MainActivity extends AppCompatActivity  {
         list.setAdapter(adapter);
     }
 
+
     private void filterFavourites() {
-        Filter filterer = new Filter();
-        filter = filterer.filterFavourites(filter);
+        if(filterer.isFavSelected()){//unselect favorites
+            filter = filterer.unFilterFavorites();
+        }
+        else{
+            filter = filterer.filterFavourites(filter);
+        }
         populateList();
     }
 
@@ -151,6 +159,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 filterFavourites();
+
             }
         });
 

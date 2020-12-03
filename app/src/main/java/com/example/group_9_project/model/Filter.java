@@ -11,6 +11,10 @@ public class Filter {
     private int criticalViolations;
     private boolean greaterThanOrEqualTo; //Is true when critical inspections is >= and false when <=
 
+    private boolean hazardSelected = false;
+    private boolean violSelected = false;
+    private boolean favSelected = false;
+
 
     //Getters and Setters
 
@@ -36,6 +40,30 @@ public class Filter {
 
     public void setGreaterThanOrEqualTo(boolean greaterThanOrEqualTo) {
         this.greaterThanOrEqualTo = greaterThanOrEqualTo;
+    }
+
+    public boolean isHazardSelected() {
+        return hazardSelected;
+    }
+
+    public void setHazardSelected(boolean hazardSelected) {
+        this.hazardSelected = hazardSelected;
+    }
+
+    public boolean isViolSelected() {
+        return violSelected;
+    }
+
+    public void setViolSelected(boolean violSelected) {
+        this.violSelected = violSelected;
+    }
+
+    public boolean isFavSelected() {
+        return favSelected;
+    }
+
+    public void setFavSelected(boolean favSelected) {
+        this.favSelected = favSelected;
     }
 
     //Other member functions
@@ -115,7 +143,26 @@ public class Filter {
                 restaurants.add(restaurant);
             }
         }
+        favSelected = true;
 
+        return restaurants;
+    }
+
+    public ArrayList<Restaurant> unFilterFavorites(){
+        ArrayList<Restaurant> restaurants = new ArrayList<>();
+        for(Restaurant r:manager.getRestaurants()){
+            restaurants.add(r);
+        }
+
+        if(hazardSelected){
+            restaurants = filterHazard(restaurants);
+        }
+
+        if(violSelected){
+            restaurants = filterViolations(restaurants);
+        }
+
+        favSelected = false;
         return restaurants;
     }
 
