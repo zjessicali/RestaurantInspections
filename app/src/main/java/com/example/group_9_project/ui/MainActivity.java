@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity  {
         setupResetButton();
         setupFavouritesButton();
 
-
         registerClickCallback();
     }
 
@@ -380,25 +379,6 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    private void putFavsToSharedPref(){
-        SharedPreferences prefs = this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        List<String> favIDs = new ArrayList<>();
-
-        for(int i = 0; i < restaurants.getSize(); i++){
-            Restaurant r = restaurants.getRestFromIndex(i);
-            if(r.isFav()){
-                favIDs.add(r.getRes_id());
-            }
-        }
-
-        String json = gson.toJson(favIDs);
-        editor.putString(PREFS_FAVORITES, json);
-        editor.apply();
-    }
-
     private void registerClickCallback() {
         ListView list = findViewById(R.id.restaurant_list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -406,19 +386,21 @@ public class MainActivity extends AppCompatActivity  {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Intent intent = RestaurantDetail.launchIntent(MainActivity.this, findRestaurantIndex(position));
                 startActivity(intent);
-                //populateListView();
             }
         });
     }
 
-
     public void populateListView() {
         populateFilter();
+        if(populated == 0){
+            Log.d("MyActivity", "populated = 0");
+            getFavsFromSharedPref();
+            populated++;
+        }
         //clear what was before first
         int resListSize = ResList.size();
         for(int i = 0; i < resListSize; i++){
             ResList.remove(0);
-            Log.d("MyActivity", "ResList index: " + i);
         }
         for (int i = 0; i < filter.size(); i++) {
             ResList.add(filter.get(i));

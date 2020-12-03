@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
         android:marqueeRepeatLimit="marquee_forever"
@@ -38,29 +38,23 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlCompat" />
 
-    <TextView
-        android:id="@+id/fav_hazard_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:layout_marginEnd="32dp"
-        android:text="Hazard Level"
-        android:textColor="@android:color/black"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/fav_hazard_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlCompat" />
-
     <ImageView
         android:id="@+id/fav_hazard_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="60dp"
         android:contentDescription="@string/rate_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/low_risk"
         tools:ignore="RtlCompat" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="5dp"
+        android:layout_height="20dp"
+        app:layout_constraintStart_toStartOf="@+id/fav_latestInspection"
+        app:layout_constraintTop_toBottomOf="@+id/fav_latestInspection" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1011,7 +1011,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LocalDateTime now = LocalDateTime.now();
             updateData.setLastUpdated(DateTimeToString(now));//double check this
             putLastUpdateToSharedPref();
-            //implment cancel
+            //show favorites here
+            Log.d("FavList", "before it all");
+            Intent i = FavList.makeIntent(MapsActivity.this);
+            Log.d("FavList", "make intent");
+            startActivity(i);
+            Log.d("FavList", "activity done starting");
         }
         @Override
         protected void onCancelled(Boolean aBoolean) {

@@ -31,10 +31,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".ui.FavList" />
         <activity
             android:name=".ui.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".ui.InspectionDetail"></activity> <!-- <activity android:name=".ui.Story3" /> -->
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".ui.InspectionDetail" /> <!-- <activity android:name=".ui.Story3" /> -->
         <activity android:name=".ui.RestaurantDetail" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
